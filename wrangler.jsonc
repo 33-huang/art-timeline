@@ -1,0 +1,8 @@
+{
+  // 静态站点：把构建产物 dist 作为静态资源部署到 Cloudflare（无需 token，构建环境自带 Workers 认证）
+  "name": "art-timeline",
+  "compatibility_date": "2026-06-18",
+  "assets": {
+    "directory": "./dist"
+  }
+}
