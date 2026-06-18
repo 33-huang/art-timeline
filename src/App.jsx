@@ -46,7 +46,7 @@ export default function App() {
 
   return (
     <>
-      <div style={topBarStyle}>
+      <div className="toolbar">
         <FilterBar filter={filter} onFilterChange={setFilter} />
         <TokenSettings hasToken={hasToken} onTokenChange={setHasToken} />
       </div>
@@ -67,13 +67,4 @@ export default function App() {
       />
     </>
   )
-}
-
-const topBarStyle = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  padding: '0 16px 0 0',
-  background: '#1a1a2e',
-  borderBottom: '1px solid #2a2a4a',
 }

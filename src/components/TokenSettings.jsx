@@ -24,7 +24,7 @@ export default function TokenSettings({ hasToken, onTokenChange }) {
     <div style={{ position: 'relative' }}>
       <button
         onClick={() => setOpen(o => !o)}
-        style={styles.gearBtn}
+        className="gear-btn"
         title="Token 设置"
         aria-label="Token 设置"
       >
@@ -85,16 +85,6 @@ export default function TokenSettings({ hasToken, onTokenChange }) {
 }
 
 const styles = {
-  gearBtn: {
-    background: 'none',
-    border: '1px solid #3a3a5a',
-    borderRadius: 5,
-    color: '#888',
-    fontSize: 14,
-    cursor: 'pointer',
-    padding: '4px 8px',
-    lineHeight: 1,
-  },
   backdrop: {
     position: 'fixed',
     inset: 0,

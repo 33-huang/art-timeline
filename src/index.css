@@ -1,13 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap');
+
 *, *::before, *::after { box-sizing: border-box; }
 
-body {
-  margin: 0;
-  font-family: system-ui, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  background: #1a1a2e;
-  color: #e0e0e0;
+/* ── CSS 变量 (亮色主题默认) ─────────────────────────────── */
+:root {
+  --bg:               #FAFAF8;
+  --text:             #1a1a1a;
+  --text-muted:       #555;
+  --grid-major:       rgba(0,0,0,.10);
+  --grid-minor:       rgba(0,0,0,.04);
+  --bar-artist-bg:    rgba(0,0,0,.07);
+  --label-bg:         rgba(250,250,248,.88);
+  --label-text:       #222;
+  --axis-bg:          rgba(250,250,248,.95);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:            #181818;
+    --text:          #d8d8d8;
+    --text-muted:    #888;
+    --grid-major:    rgba(255,255,255,.10);
+    --grid-minor:    rgba(255,255,255,.04);
+    --bar-artist-bg: rgba(255,255,255,.07);
+    --label-bg:      rgba(24,24,24,.90);
+    --label-text:    #ccc;
+    --axis-bg:       rgba(24,24,24,.95);
+  }
 }
 
+html, body { margin: 0; padding: 0; overflow: hidden; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans SC', system-ui, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
 #root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ── 顶部工具栏 ───────────────────────────────────────────── */
+.toolbar {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 7px 12px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--grid-major);
+  flex-shrink: 0;
+}
+.toolbar-left { display: flex; gap: 6px; align-items: center; }
+
+/* ── 过滤器按钮 ───────────────────────────────────────────── */
+.filter-btn {
+  padding: 3px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--grid-major);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s, color .15s;
+}
+.filter-btn.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: transparent;
+}
+
+/* ── Gear 按钮 (继承自 TokenSettings) ───────────────────── */
+.gear-btn {
+  background: none;
+  border: 1px solid var(--grid-major);
+  border-radius: 5px;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 3px 8px;
+  line-height: 1;
+  font-family: inherit;
+}
+
+/* ── 时间轴容器 ───────────────────────────────────────────── */
+.timeline-wrap {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* ── 年份轴列 (左侧固定) ─────────────────────────────────── */
+.axis-col {
+  width: 48px;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+  background: var(--axis-bg);
+  border-right: 1px solid var(--grid-major);
+}
+.axis-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  min-height: 100svh;
+}
+.axis-label {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  font-size: 9px;
+  color: var(--text-muted);
+  text-align: center;
+  transform: translateY(-50%);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── 滚动区域 ─────────────────────────────────────────────── */
+.scroll-area {
+  flex: 1;
+  overflow: auto;
+}
+.timeline-canvas {
+  position: relative;
+}
+
+/* ── 网格线 ───────────────────────────────────────────────── */
+.grid-line {
+  position: absolute;
+  left: 0;
+  height: 1px;
+  background: var(--grid-minor);
+  pointer-events: none;
+}
+.grid-line.major { background: var(--grid-major); }
+
+/* ── 流派条 / 艺术家条 ────────────────────────────────────── */
+.mv-bar {
+  position: absolute;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: opacity .15s;
+}
+.art-bar {
+  position: absolute;
+  cursor: pointer;
+  border-radius: 1px;
+  transition: opacity .15s;
+}
+.dimmed { opacity: .1; }
+
+/* ── 标签 ─────────────────────────────────────────────────── */
+.bar-label {
+  position: absolute;
+  font-size: 10px;
+  line-height: 1.35;
+  color: var(--label-text);
+  background: var(--label-bg);
+  padding: 1px 2px;
+  border-radius: 2px;
+  white-space: nowrap;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: opacity .15s;
+  user-select: none;
+}
+.bar-label.art { font-size: 9px; }
+.lbl-sub { font-size: 8.5px; color: var(--text-muted); }
+.lbl-yr  { font-size: 9px;   color: var(--text-muted); }
+
+/* ── 连接线 (标签 → 色块) ────────────────────────────────── */
+.bar-conn {
+  position: absolute;
+  width: 0;
+  border-left: 1px dashed;
+  pointer-events: none;
+  transition: opacity .15s;
 }
