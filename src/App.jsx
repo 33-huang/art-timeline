@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react'
-import { loadData } from './lib/dataStore'
+import { loadData, saveData, TOKEN_KEY } from './lib/dataStore'
 import Timeline from './components/Timeline'
 import DetailCard from './components/DetailCard'
 import FilterBar from './components/FilterBar'
 import TokenSettings from './components/TokenSettings'
-
-const TOKEN_KEY = 'gh_token'
 
 export default function App() {
   const [movements, setMovements] = useState(null)
@@ -13,7 +11,6 @@ export default function App() {
   const [error, setError] = useState(null)
   const [selected, setSelected] = useState(null)
   const [filter, setFilter] = useState('all')
-  // 启动时从 localStorage 读 token 是否存在（不读 token 值本身进内存）
   const [hasToken, setHasToken] = useState(() => !!localStorage.getItem(TOKEN_KEY))
 
   useEffect(() => {
@@ -24,6 +21,17 @@ export default function App() {
       })
       .catch(err => setError(err.message))
   }, [])
+
+  // 编辑保存：更新内存数组 → saveData 写整个文件 → 更新 state + selected
+  async function handleSave(type, updatedItem) {
+    const filename = type === 'movement' ? 'movements.json' : 'artists.json'
+    const list = type === 'movement' ? movements : artists
+    const updatedList = list.map(item => item.id === updatedItem.id ? updatedItem : item)
+    await saveData(filename, updatedList)          // 写整个数组，throws on error
+    if (type === 'movement') setMovements(updatedList)
+    else setArtists(updatedList)
+    setSelected({ type, data: updatedItem })       // 更新选中项反映最新内容
+  }
 
   if (error) return (
     <div style={{ padding: '2rem', color: '#f88', fontFamily: 'sans-serif' }}>
@@ -38,7 +46,6 @@ export default function App() {
 
   return (
     <>
-      {/* 顶栏：过滤器（左）+ Token 设置入口（右） */}
       <div style={topBarStyle}>
         <FilterBar filter={filter} onFilterChange={setFilter} />
         <TokenSettings hasToken={hasToken} onTokenChange={setHasToken} />
@@ -56,6 +63,7 @@ export default function App() {
         artists={artists}
         onClose={() => setSelected(null)}
         hasToken={hasToken}
+        onSave={handleSave}
       />
     </>
   )

@@ -1,6 +1,5 @@
 import { useState } from 'react'
-
-const TOKEN_KEY = 'gh_token'
+import { TOKEN_KEY } from '../lib/dataStore'
 
 export default function TokenSettings({ hasToken, onTokenChange }) {
   const [open, setOpen] = useState(false)
