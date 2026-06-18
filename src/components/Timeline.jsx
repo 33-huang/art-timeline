@@ -6,19 +6,16 @@ const MIN_YEAR = 1580
 const MAX_YEAR = 1990
 const PX_PER_YEAR = 4.5
 
-const MV_ROW_H = 30       // px per movement row
-const MV_TOP_PAD = 20     // top padding before first movement row
-const ARTIST_GAP = 16     // gap between movement area and artist dots
-const ARTIST_DOT_AREA_H = 80  // vertical space for dots + rotated labels
-const RULER_H = 28        // space for year ruler
+const MV_ROW_H = 30
+const MV_TOP_PAD = 20
+const ARTIST_GAP = 16
+const ARTIST_DOT_AREA_H = 80
+const RULER_H = 28
 
-// Greedy row-packing: sort by start, assign to the first row where last item ended
 function assignRows(movements) {
   const rowOf = new Map()
-  const rowEnds = [] // end year of last item in each row
-
+  const rowEnds = []
   const sorted = [...movements].sort((a, b) => a.start - b.start)
-
   for (const mv of sorted) {
     let placed = false
     for (let r = 0; r < rowEnds.length; r++) {
@@ -37,23 +34,33 @@ function assignRows(movements) {
   return { rowOf, rowCount: rowEnds.length }
 }
 
-export default function Timeline({ movements, artists, onSelect }) {
-  const totalWidth = (MAX_YEAR - MIN_YEAR) * PX_PER_YEAR  // 1845px
+export default function Timeline({ movements, artists, onSelect, filter }) {
+  const totalWidth = (MAX_YEAR - MIN_YEAR) * PX_PER_YEAR
 
   const { rowOf, rowCount } = useMemo(() => assignRows(movements), [movements])
 
-  // movement id → color lookup for artist dots
   const colorByMvId = useMemo(() => {
     const map = new Map()
     for (const m of movements) map.set(m.id, m.color)
     return map
   }, [movements])
 
-  const mvAreaH = MV_TOP_PAD + rowCount * MV_ROW_H
-  const artistTop = mvAreaH + ARTIST_GAP
-  const totalH = artistTop + ARTIST_DOT_AREA_H + RULER_H
+  const showMovements = filter !== 'artists'
+  const showArtists   = filter !== 'movements'
 
-  // Year ruler ticks every 50 years
+  // 流派区高度（始终按完整行数算，用于定位）
+  const mvAreaH = MV_TOP_PAD + rowCount * MV_ROW_H
+
+  // 艺术家圆点的 top：
+  //   有流派区时跟在流派区下方；只有艺术家时贴近顶部
+  const artistTop = showMovements ? mvAreaH + ARTIST_GAP : MV_TOP_PAD
+
+  // 年份刻度的 top：
+  //   有艺术家区时跟在艺术家区下方；只有流派时跟在流派区下方
+  const rulerTop = showArtists ? artistTop + ARTIST_DOT_AREA_H : mvAreaH
+
+  const totalH = rulerTop + RULER_H
+
   const ticks = []
   for (let y = Math.ceil(MIN_YEAR / 50) * 50; y <= MAX_YEAR; y += 50) {
     ticks.push(y)
@@ -63,8 +70,8 @@ export default function Timeline({ movements, artists, onSelect }) {
     <div style={{ overflowX: 'auto', overflowY: 'hidden', width: '100%', background: '#1a1a2e' }}>
       <div style={{ position: 'relative', width: totalWidth, height: totalH }}>
 
-        {/* Movement bars */}
-        {movements.map(mv => (
+        {/* 流派色块：filter !== 'artists' 时显示 */}
+        {showMovements && movements.map(mv => (
           <MovementBar
             key={mv.id}
             movement={mv}
@@ -77,9 +84,8 @@ export default function Timeline({ movements, artists, onSelect }) {
           />
         ))}
 
-        {/* Artist dots */}
-        {artists.map(artist => {
-          // artist.color 覆盖优先，否则用第一个所属流派的颜色
+        {/* 艺术家圆点：filter !== 'movements' 时显示 */}
+        {showArtists && artists.map(artist => {
           const dotColor = artist.color ?? colorByMvId.get(artist.movements?.[0]) ?? '#888'
           return (
             <ArtistDot
@@ -94,14 +100,14 @@ export default function Timeline({ movements, artists, onSelect }) {
           )
         })}
 
-        {/* Year ruler */}
+        {/* 年份刻度：始终显示 */}
         {ticks.map(y => (
           <div
             key={y}
             style={{
               position: 'absolute',
               left: (y - MIN_YEAR) * PX_PER_YEAR,
-              top: artistTop + ARTIST_DOT_AREA_H,
+              top: rulerTop,
               transform: 'translateX(-50%)',
               display: 'flex',
               flexDirection: 'column',
