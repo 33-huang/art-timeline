@@ -1,10 +1,11 @@
-export default function MovementBar({ movement, row, minYear, pxPerYear, rowH, topPad }) {
+export default function MovementBar({ movement, row, minYear, pxPerYear, rowH, topPad, onClick }) {
   const left = (movement.start - minYear) * pxPerYear
   const width = Math.max((movement.end - movement.start) * pxPerYear, 14)
   const top = topPad + row * rowH
 
   return (
     <div
+      onClick={e => { e.stopPropagation(); onClick?.({ type: 'movement', data: movement }) }}
       style={{
         position: 'absolute',
         left,
@@ -19,7 +20,7 @@ export default function MovementBar({ movement, row, minYear, pxPerYear, rowH, t
         paddingLeft: 5,
         overflow: 'hidden',
         boxSizing: 'border-box',
-        cursor: 'default',
+        cursor: 'pointer',
       }}
     >
       <span style={{

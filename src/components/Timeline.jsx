@@ -37,7 +37,7 @@ function assignRows(movements) {
   return { rowOf, rowCount: rowEnds.length }
 }
 
-export default function Timeline({ movements, artists }) {
+export default function Timeline({ movements, artists, onSelect }) {
   const totalWidth = (MAX_YEAR - MIN_YEAR) * PX_PER_YEAR  // 1845px
 
   const { rowOf, rowCount } = useMemo(() => assignRows(movements), [movements])
@@ -73,6 +73,7 @@ export default function Timeline({ movements, artists }) {
             pxPerYear={PX_PER_YEAR}
             rowH={MV_ROW_H}
             topPad={MV_TOP_PAD}
+            onClick={onSelect}
           />
         ))}
 
@@ -88,6 +89,7 @@ export default function Timeline({ movements, artists }) {
               minYear={MIN_YEAR}
               pxPerYear={PX_PER_YEAR}
               top={artistTop}
+              onClick={onSelect}
             />
           )
         })}

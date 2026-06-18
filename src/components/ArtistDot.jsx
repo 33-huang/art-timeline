@@ -1,12 +1,13 @@
 const DOT_R = 5
 
-export default function ArtistDot({ artist, color, minYear, pxPerYear, top }) {
+export default function ArtistDot({ artist, color, minYear, pxPerYear, top, onClick }) {
   // posStart 覆盖：若存在则用 posStart 定位，否则用 birth（亨利·卢梭等用此字段）
   const xYear = artist.posStart ?? artist.birth
   const left = (xYear - minYear) * pxPerYear
 
   return (
     <div
+      onClick={e => { e.stopPropagation(); onClick?.({ type: 'artist', data: artist }) }}
       style={{
         position: 'absolute',
         left: left - DOT_R,
@@ -15,6 +16,7 @@ export default function ArtistDot({ artist, color, minYear, pxPerYear, top }) {
         flexDirection: 'column',
         alignItems: 'center',
         gap: 3,
+        cursor: 'pointer',
       }}
     >
       <div

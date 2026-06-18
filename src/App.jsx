@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { loadData } from './lib/dataStore'
 import Timeline from './components/Timeline'
+import DetailCard from './components/DetailCard'
 
 export default function App() {
   const [movements, setMovements] = useState(null)
   const [artists, setArtists] = useState(null)
   const [error, setError] = useState(null)
+  const [selected, setSelected] = useState(null) // { type: 'movement'|'artist', data: {...} }
 
   useEffect(() => {
     Promise.all([loadData('movements.json'), loadData('artists.json')])
@@ -27,5 +29,19 @@ export default function App() {
     </div>
   )
 
-  return <Timeline movements={movements} artists={artists} />
+  return (
+    <>
+      <Timeline
+        movements={movements}
+        artists={artists}
+        onSelect={setSelected}
+      />
+      <DetailCard
+        selected={selected}
+        movements={movements}
+        artists={artists}
+        onClose={() => setSelected(null)}
+      />
+    </>
+  )
 }
