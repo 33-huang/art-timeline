@@ -84,7 +84,7 @@ function ArtistCard({ data, movements }) {
 }
 
 // 主组件
-export default function DetailCard({ selected, movements, artists, onClose }) {
+export default function DetailCard({ selected, movements, artists, onClose, hasToken }) {
   if (!selected) return null
   const { type, data } = selected
 
@@ -102,14 +102,15 @@ export default function DetailCard({ selected, movements, artists, onClose }) {
           ? <MovementCard data={data} artists={artists} />
           : <ArtistCard data={data} movements={movements} />}
 
-        {/* 编辑占位按钮 — Step 9 实现 */}
-        <button
-          disabled
-          style={styles.editBtn}
-          // TODO Step 9: 连接 token / GitHub Contents API 写回逻辑
-        >
-          编辑
-        </button>
+        {/* 有 token 才显示编辑按钮；没有 token 时纯只读，不显示 */}
+        {hasToken && (
+          <button
+            onClick={() => { /* TODO Step 9: 连接 GitHub Contents API 写回逻辑 */ }}
+            style={styles.editBtn}
+          >
+            编辑
+          </button>
+        )}
       </div>
     </>
   )
@@ -211,12 +212,12 @@ const styles = {
   editBtn: {
     marginTop: 16,
     padding: '6px 16px',
-    background: '#2a2a4a',
-    border: '1px solid #3a3a5a',
+    background: '#2a3a5a',
+    border: '1px solid #4a6a9a',
     borderRadius: 5,
-    color: '#666',
+    color: '#acd',
     fontSize: 12,
-    cursor: 'not-allowed',
+    cursor: 'pointer',
     width: '100%',
   },
 }
