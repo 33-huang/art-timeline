@@ -9,18 +9,13 @@ function MovementView({ data, artists }) {
     <>
       <div style={s.title}>{data.zh}</div>
       <div style={s.meta}>
-        {data.start}–{data.end}{data.region ? `　${data.region}` : ''}
+        {data.start}–{data.end}{data.region ? ` · ${data.region}` : ''}
       </div>
       {reps.length > 0 && (
-        <div style={s.section}>
-          <div style={s.sectionTitle}>代表艺术家</div>
-          <div style={s.tagList}>
-            {reps.map(a => <span key={a.id} style={s.tag}>{a.zh}</span>)}
-          </div>
-        </div>
+        <div style={s.metaTight}>代表艺术家：{reps.map(a => a.zh).join('、')}</div>
       )}
       {data.description && (
-        <div style={s.description} dangerouslySetInnerHTML={{ __html: data.description }} />
+        <div style={{ ...s.description, marginTop: 8 }} dangerouslySetInnerHTML={{ __html: data.description }} />
       )}
       {data.url && (
         <div style={{ marginTop: 6 }}>
@@ -446,8 +441,8 @@ export default function DetailCard({
 const s = {
   backdrop: { position: 'fixed', inset: 0, zIndex: 10 },
   card: {
-    position: 'fixed', right: 24, top: 24,
-    width: 320, maxHeight: 'calc(100vh - 48px)', overflowY: 'auto',
+    position: 'fixed', right: 24, top: 56,
+    width: 320, maxHeight: 'calc(100vh - 72px)', overflowY: 'auto',
     background: 'var(--tip-bg)', border: '1px solid var(--tip-border)', borderRadius: 10,
     padding: '12px 14px', zIndex: 11,
     color: 'var(--text)', fontFamily: "'Noto Sans SC', system-ui, sans-serif",
@@ -460,7 +455,8 @@ const s = {
   },
   title:       { fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 2, paddingRight: 24 },
   sub:         { fontSize: 10, color: 'var(--text-faint)', marginBottom: 2, fontStyle: 'italic' },
-  meta:        { fontSize: 11, color: 'var(--text-faint)', marginBottom: 6 },
+  meta:        { fontSize: 11, color: 'var(--text-faint)', marginBottom: 3 },
+  metaTight:   { fontSize: 11, color: 'var(--text-faint)' },
   description: { fontSize: 11.5, lineHeight: 1.7, color: 'var(--text-muted)' },
   section:     { marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--axis-border)' },
   sectionTitle:{ fontSize: 10, fontWeight: 600, color: 'var(--text-faint)', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '.5px' },
