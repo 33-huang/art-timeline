@@ -120,23 +120,26 @@ function MovementEditForm({ formData, onChange }) {
 
 // ── 编辑表单：艺术家 ────────────────────────────────────
 function ArtistEditForm({ formData, onChange, allMovements }) {
+  // 兜底：切换表单类型时 formData 可能短暂残留流派形状（无 works/movements 数组）
+  const works = formData.works ?? []
+  const mvIds = formData.movements ?? []
   function updateWork(i, field, value) {
-    const works = formData.works.map((w, idx) =>
+    const next = works.map((w, idx) =>
       idx === i ? { ...w, [field]: value } : w
     )
-    onChange({ ...formData, works })
+    onChange({ ...formData, works: next })
   }
   function addWork() {
-    onChange({ ...formData, works: [...formData.works, { title: '', url: '' }] })
+    onChange({ ...formData, works: [...works, { title: '', url: '' }] })
   }
   function removeWork(i) {
-    onChange({ ...formData, works: formData.works.filter((_, idx) => idx !== i) })
+    onChange({ ...formData, works: works.filter((_, idx) => idx !== i) })
   }
   function toggleMv(mvId) {
-    const mvs = formData.movements.includes(mvId)
-      ? formData.movements.filter(id => id !== mvId)
-      : [...formData.movements, mvId]
-    onChange({ ...formData, movements: mvs })
+    const next = mvIds.includes(mvId)
+      ? mvIds.filter(id => id !== mvId)
+      : [...mvIds, mvId]
+    onChange({ ...formData, movements: next })
   }
 
   return (
@@ -165,7 +168,7 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
       <label style={s.label}>所属流派</label>
       <div style={s.mvSelector}>
         {allMovements.filter(m => !m.isEvent).map(m => {
-          const checked = formData.movements.includes(m.id)
+          const checked = mvIds.includes(m.id)
           return (
             <span key={m.id} onClick={() => toggleMv(m.id)} style={{
               ...s.mvChip,
@@ -188,7 +191,7 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
         onChange={e => onChange({ ...formData, url: e.target.value })} placeholder="https://..." />
 
       <label style={s.label}>代表作</label>
-      {formData.works.map((w, i) => (
+      {works.map((w, i) => (
         <div key={i} style={s.workRow}>
           <input
             style={{ ...s.input, flex: 1, marginBottom: 0 }}
