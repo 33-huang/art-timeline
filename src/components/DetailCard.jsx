@@ -36,12 +36,10 @@ function ArtistView({ data, movements }) {
       {data.sub && <div style={s.sub}>{data.sub}</div>}
       <div style={s.meta}>{data.birth}–{data.death}</div>
       {mvNames.length > 0 && (
-        <div style={s.tagList}>
-          {mvNames.map(name => <span key={name} style={s.tag}>{name}</span>)}
-        </div>
+        <div style={s.metaTight}>所属流派：{mvNames.join('、')}</div>
       )}
       {data.description && (
-        <div style={s.description} dangerouslySetInnerHTML={{ __html: data.description }} />
+        <div style={{ ...s.description, marginTop: 8 }} dangerouslySetInnerHTML={{ __html: data.description }} />
       )}
       {data.works?.length > 0 && (
         <div style={s.section}>
