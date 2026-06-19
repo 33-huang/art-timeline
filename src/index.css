@@ -55,6 +55,24 @@ body {
 }
 .toolbar-left { display: flex; gap: 6px; align-items: center; }
 
+/* ── 新增按钮（+流派 / +艺术家）──────────────────────────── */
+.add-btn {
+  padding: 3px 10px;
+  border: 1px solid var(--grid-major);
+  border-radius: 14px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 12px;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: all .15s;
+}
+.add-btn:hover {
+  border-color: var(--text-muted);
+  color: var(--text);
+}
+
 /* ── 过滤器按钮 ───────────────────────────────────────────── */
 .filter-btn {
   padding: 3px 12px;
