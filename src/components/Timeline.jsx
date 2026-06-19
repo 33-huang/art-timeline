@@ -193,7 +193,7 @@ function buildRenderData(lo) {
       labelInfos.push({
         id: 'm:' + m.id, anchorX: barCx, anchorY: y1, lblW, lblH,
         idealTop: y1 - LABEL_GAP - lblH,
-        html: `<span class="lbl-name">${m.zh}</span>${hasSub ? `<span class="lbl-sub">${m.sub}</span>` : ''}<span class="lbl-yr">${m.start}—${m.end}</span>`,
+        html: `<span class="lbl-name" style="color:${m.color}">${m.zh}</span>${hasSub ? `<span class="lbl-sub">${m.sub}</span>` : ''}<span class="lbl-yr">${m.start}—${m.end}</span>`,
         sel: { type: 'movement', data: m }, art: false, color: m.color,
       })
     }
@@ -217,7 +217,7 @@ function buildRenderData(lo) {
           labelInfos.push({
             id: 'a:' + a.id, anchorX: artCx, anchorY: ay1, lblW, lblH,
             idealTop: ay1 - LABEL_GAP - lblH,
-            html: `<span class="lbl-name">${a.zh}</span>${hasSub ? `<span class="lbl-sub">${a.sub}</span>` : ''}<span class="lbl-yr">${a.birth}—${a.death}</span>`,
+            html: `<span class="lbl-name" style="color:${m.color}">${a.zh}</span>${hasSub ? `<span class="lbl-sub">${a.sub}</span>` : ''}<span class="lbl-yr">${a.birth}—${a.death}</span>`,
             sel: { type: 'artist', data: a }, art: true, color: m.color,
           })
         })
@@ -243,7 +243,7 @@ function buildRenderData(lo) {
     if (connH > 3) {
       conns.push({
         id: info.id,
-        style: { left: info.anchorX, top: connTop, height: connH, borderLeftColor: hexRgba(info.color, info.art ? 0.18 : 0.28) },
+        style: { left: info.anchorX, top: connTop, height: connH },
       })
     }
   })
