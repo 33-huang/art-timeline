@@ -337,7 +337,7 @@ export default function DetailCard({
     }
   }
 
-  const showForm = isAdding || editing
+  const showForm = (isAdding || editing) && formData
 
   return (
     <>
@@ -387,7 +387,7 @@ export default function DetailCard({
               </button>
             )}
           </>
-        ) : (
+        ) : data ? (
           <>
             {type === 'movement'
               ? <MovementView data={data} artists={artists} />
@@ -397,7 +397,7 @@ export default function DetailCard({
               <button onClick={enterEdit} style={s.editEntryBtn}>编辑</button>
             )}
           </>
-        )}
+        ) : null}
       </div>
 
       {/* 确认删除弹窗 */}
