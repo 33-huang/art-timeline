@@ -299,7 +299,9 @@ export default function Timeline({
 
       <div className="scroll-area" ref={scrollRef} onScroll={onScroll}>
         <div className="timeline-canvas" style={{ width: lo.canvasW, height: lo.canvasH }}
-          onClick={handleCanvasClick}>
+          onClick={handleCanvasClick}
+          onMouseMove={e => { if (!e.target.closest('[data-bar-id]')) onBarLeave?.() }}
+          onMouseLeave={() => onBarLeave?.()}>
 
           {rd.gridLines.map(({ y, major }) => (
             <div key={y} className={major ? 'grid-line major' : 'grid-line'}

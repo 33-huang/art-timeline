@@ -122,6 +122,14 @@ export default function App() {
     }
   }, [pinnedId, addingType])
 
+  // 切换过滤器：同时清掉 hover/固定/新增，避免被隐藏项的卡片残留
+  const handleFilterChange = useCallback((f) => {
+    setFilter(f)
+    setHoveredId(null); setHoveredSel(null); hoverMouse.current = null
+    setPinnedId(null); setPinnedSel(null); setPinPos(null)
+    setAddingType(null)
+  }, [])
+
   // 点空白：取消固定
   const onCanvasClick = useCallback(() => {
     if (pinnedId) {
@@ -226,7 +234,7 @@ export default function App() {
   return (
     <>
       <div className="toolbar">
-        <FilterBar filter={filter} onFilterChange={setFilter} />
+        <FilterBar filter={filter} onFilterChange={handleFilterChange} />
         <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
           {hasToken && (
             <>
