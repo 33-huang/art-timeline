@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 
 const COLOR_PALETTE = ['#9B7DC8','#5B9FD4','#D4924A','#4EAA72','#D45878','#C8A832','#B89020','#7A6DC8','#C44868','#4A8FC4','#C46848','#C48030','#8A6DC8','#4878B8']
 
-// ── 只读：流派 ──────────────────────────────────────────
 function MovementView({ data, artists }) {
   const reps = artists.filter(a => a.movements.includes(data.id))
   return (
@@ -26,7 +25,6 @@ function MovementView({ data, artists }) {
   )
 }
 
-// ── 只读：艺术家 ────────────────────────────────────────
 function ArtistView({ data, movements }) {
   const mvMap = new Map(movements.map(m => [m.id, m]))
   const mvNames = data.movements.map(id => mvMap.get(id)?.zh).filter(Boolean)
@@ -64,7 +62,6 @@ function ArtistView({ data, movements }) {
   )
 }
 
-// ── 编辑表单：流派 ──────────────────────────────────────
 function MovementEditForm({ formData, onChange }) {
   return (
     <div style={s.form}>
@@ -73,13 +70,11 @@ function MovementEditForm({ formData, onChange }) {
         <input style={s.input} value={formData.zh}
           onChange={e => onChange({ ...formData, zh: e.target.value })} />
       </div>
-
       <div style={s.field}>
         <label style={s.fieldLabel}>副标题</label>
         <input style={s.input} value={formData.sub}
           onChange={e => onChange({ ...formData, sub: e.target.value })} placeholder="可选" />
       </div>
-
       <div style={s.field}>
         <label style={s.fieldLabel}>年份</label>
         <div style={{ flex: 1, display: 'flex', gap: 6 }}>
@@ -89,25 +84,21 @@ function MovementEditForm({ formData, onChange }) {
             onChange={e => onChange({ ...formData, end: e.target.value === '' ? '' : Number(e.target.value) })} />
         </div>
       </div>
-
       <div style={s.field}>
         <label style={s.fieldLabel}>国别</label>
         <input style={s.input} value={formData.region}
           onChange={e => onChange({ ...formData, region: e.target.value })} />
       </div>
-
       <div style={s.fieldBlock}>
         <label style={s.blockLabel}>简介</label>
         <textarea style={s.textarea} rows={5} value={formData.description}
           onChange={e => onChange({ ...formData, description: e.target.value })} />
       </div>
-
       <div style={s.field}>
         <label style={s.fieldLabel}>链接</label>
         <input style={s.input} value={formData.url}
           onChange={e => onChange({ ...formData, url: e.target.value })} placeholder="https://..." />
       </div>
-
       <div style={{ ...s.field, marginTop: 2 }}>
         <label style={{ ...s.fieldLabel, cursor: 'pointer' }}>
           <input type="checkbox" checked={formData.isEvent} style={{ marginRight: 4 }}
@@ -119,20 +110,16 @@ function MovementEditForm({ formData, onChange }) {
   )
 }
 
-// ── 搜索式流派选择器（v2 ef-mv-wrap 风格）────────────────
 function MvSelector({ selected, allMovements, onChange }) {
   const [search, setSearch] = useState('')
   const [open, setOpen] = useState(false)
-
   const filtered = allMovements.filter(m =>
     !m.isEvent && (!search.trim() || m.zh.includes(search.trim()))
   )
-
   function toggle(mvId) {
     if (selected.includes(mvId)) onChange(selected.filter(id => id !== mvId))
     else onChange([...selected, mvId])
   }
-
   return (
     <div style={s.mvWrap}>
       {selected.length > 0 && (
@@ -148,23 +135,16 @@ function MvSelector({ selected, allMovements, onChange }) {
           })}
         </div>
       )}
-      <input
-        style={s.mvSearch}
-        placeholder="搜索流派…"
-        value={search}
+      <input style={s.mvSearch} placeholder="搜索流派…" value={search}
         onChange={e => setSearch(e.target.value)}
         onFocus={() => setOpen(true)}
-        onBlur={() => setTimeout(() => setOpen(false), 150)}
-      />
+        onBlur={() => setTimeout(() => setOpen(false), 150)} />
       {open && (
         <div style={s.mvDropdown}>
           {filtered.length > 0 ? filtered.map(m => (
             <div key={m.id}
               onMouseDown={e => { e.preventDefault(); toggle(m.id) }}
-              style={{
-                ...s.mvOption,
-                ...(selected.includes(m.id) ? { color: 'var(--text)', fontWeight: 500 } : {}),
-              }}>
+              style={{ ...s.mvOption, ...(selected.includes(m.id) ? { color: 'var(--text)', fontWeight: 500 } : {}) }}>
               {m.zh}{selected.includes(m.id) ? ' ✓' : ''}
             </div>
           )) : (
@@ -176,7 +156,6 @@ function MvSelector({ selected, allMovements, onChange }) {
   )
 }
 
-// ── 编辑表单：艺术家 ────────────────────────────────────
 function ArtistEditForm({ formData, onChange, allMovements }) {
   const works = formData.works ?? []
   const mvIds = formData.movements ?? []
@@ -184,13 +163,8 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
     const next = works.map((w, idx) => idx === i ? { ...w, [field]: value } : w)
     onChange({ ...formData, works: next })
   }
-  function addWork() {
-    onChange({ ...formData, works: [...works, { title: '', url: '' }] })
-  }
-  function removeWork(i) {
-    onChange({ ...formData, works: works.filter((_, idx) => idx !== i) })
-  }
-
+  function addWork() { onChange({ ...formData, works: [...works, { title: '', url: '' }] }) }
+  function removeWork(i) { onChange({ ...formData, works: works.filter((_, idx) => idx !== i) }) }
   return (
     <div style={s.form}>
       <div style={s.field}>
@@ -198,13 +172,11 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
         <input style={s.input} value={formData.zh}
           onChange={e => onChange({ ...formData, zh: e.target.value })} />
       </div>
-
       <div style={s.field}>
         <label style={s.fieldLabel}>副标题</label>
         <input style={s.input} value={formData.sub}
           onChange={e => onChange({ ...formData, sub: e.target.value })} placeholder="可选" />
       </div>
-
       <div style={s.field}>
         <label style={s.fieldLabel}>年份</label>
         <div style={{ flex: 1, display: 'flex', gap: 6 }}>
@@ -214,7 +186,6 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
             onChange={e => onChange({ ...formData, death: e.target.value === '' ? '' : Number(e.target.value) })} />
         </div>
       </div>
-
       <div style={s.field}>
         <label style={s.fieldLabel}>流派</label>
         <div style={{ flex: 1 }}>
@@ -222,19 +193,16 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
             onChange={mvs => onChange({ ...formData, movements: mvs })} />
         </div>
       </div>
-
       <div style={s.fieldBlock}>
         <label style={s.blockLabel}>简介</label>
         <textarea style={s.textarea} rows={4} value={formData.description}
           onChange={e => onChange({ ...formData, description: e.target.value })} />
       </div>
-
       <div style={s.field}>
         <label style={s.fieldLabel}>链接</label>
         <input style={s.input} value={formData.url}
           onChange={e => onChange({ ...formData, url: e.target.value })} placeholder="https://..." />
       </div>
-
       <div style={s.worksSection}>
         <div style={s.worksHd}><label style={s.blockLabel}>代表作</label></div>
         {works.map((w, i) => (
@@ -255,9 +223,10 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
 }
 
 // ── 主组件 ──────────────────────────────────────────────
+// mode: 'hover' | 'pinned' | 'adding' | null
 export default function DetailCard({
-  selected, movements, artists, onClose, hasToken, onSave,
-  adding, onAdd, onDelete,
+  mode, selected, movements, artists, onClose, hasToken, onSave,
+  adding, onAdd, onDelete, pinPos, cardRef,
 }) {
   const [editing, setEditing] = useState(false)
   const [formData, setFormData] = useState(null)
@@ -278,20 +247,23 @@ export default function DetailCard({
     if (adding === 'movement') {
       const color = COLOR_PALETTE[movements.length % COLOR_PALETTE.length]
       setFormData({ zh: '', sub: '', start: '', end: '', region: '', description: '', url: '', color, isEvent: false })
-      setSaveError(null)
-      setConfirming(false)
+      setSaveError(null); setConfirming(false)
     } else if (adding === 'artist') {
       setFormData({ zh: '', sub: '', birth: '', death: '', description: '', works: [], movements: [], url: '' })
-      setSaveError(null)
-      setConfirming(false)
+      setSaveError(null); setConfirming(false)
     }
   }, [adding, movements?.length])
 
-  if (!selected && !adding) return null
-
-  const isAdding = !!adding
+  const isAdding = mode === 'adding'
+  const isHover  = mode === 'hover'
+  const isPinned = mode === 'pinned'
   const type = isAdding ? adding : selected?.type
   const data = selected?.data
+
+  // 无 mode 时渲染隐藏容器（保持 ref 活着供 App 定位用）
+  if (!mode) {
+    return <div ref={cardRef} style={{ ...s.card, display: 'none' }} />
+  }
 
   function enterEdit() {
     if (type === 'movement') {
@@ -299,8 +271,7 @@ export default function DetailCard({
         zh: data.zh ?? '', sub: data.sub ?? '',
         start: data.start, end: data.end,
         region: data.region ?? '', description: data.description ?? '',
-        url: data.url ?? '',
-        color: data.color ?? '#888888', isEvent: !!data.isEvent,
+        url: data.url ?? '', color: data.color ?? '#888888', isEvent: !!data.isEvent,
       })
     } else {
       setFormData({
@@ -311,14 +282,12 @@ export default function DetailCard({
         movements: data.movements ?? [], url: data.url ?? '',
       })
     }
-    setSaveError(null)
-    setEditing(true)
+    setSaveError(null); setEditing(true)
   }
 
   async function handleSave() {
     if (!formData) return
     const isMovement = type === 'movement'
-
     if (!formData.zh?.trim()) { setSaveError('名称不能为空'); return }
     if (isMovement) {
       const sv = Number(formData.start), ev = Number(formData.end)
@@ -327,35 +296,19 @@ export default function DetailCard({
       const bv = Number(formData.birth), dv = Number(formData.death)
       if (!bv || !dv || bv >= dv) { setSaveError('年份无效（需要 出生 < 逝世）'); return }
     }
-
-    setSaving(true)
-    setSaveError(null)
+    setSaving(true); setSaveError(null)
     try {
-      if (isAdding) {
-        await onAdd(type, formData)
-      } else {
-        const updatedItem = { ...data, ...formData }
-        await onSave(type, updatedItem)
-        setEditing(false)
-      }
-    } catch (err) {
-      setSaveError(err.message)
-    } finally {
-      setSaving(false)
-    }
+      if (isAdding) { await onAdd(type, formData) }
+      else { await onSave(type, { ...data, ...formData }); setEditing(false) }
+    } catch (err) { setSaveError(err.message) }
+    finally { setSaving(false) }
   }
 
   async function handleConfirmDelete() {
-    setSaving(true)
-    setSaveError(null)
-    try {
-      await onDelete(type, data.id)
-    } catch (err) {
-      setSaveError(err.message)
-      setConfirming(false)
-    } finally {
-      setSaving(false)
-    }
+    setSaving(true); setSaveError(null)
+    try { await onDelete(type, data.id) }
+    catch (err) { setSaveError(err.message); setConfirming(false) }
+    finally { setSaving(false) }
   }
 
   function handleCancel() {
@@ -365,11 +318,24 @@ export default function DetailCard({
 
   const showForm = (isAdding || editing) && formData
 
+  // 卡片定位
+  let cardStyle
+  if (isHover) {
+    cardStyle = { ...s.card, right: 'auto', pointerEvents: 'none' }
+  } else if (isPinned && pinPos) {
+    cardStyle = { ...s.card, left: pinPos.x, top: pinPos.y, right: 'auto' }
+  } else {
+    // adding 模式：右上角
+    cardStyle = { ...s.card, right: 24, top: 56 }
+  }
+
   return (
     <>
-      <div onClick={onClose} style={s.backdrop} />
-      <div style={s.card}>
-        <button onClick={onClose} style={s.closeBtn} aria-label="关闭">×</button>
+      {/* 背景遮罩：pinned/adding 模式点击关闭 */}
+      {(isPinned || isAdding) && <div onClick={onClose} style={s.backdrop} />}
+
+      <div ref={cardRef} style={cardStyle}>
+        {!isHover && <button onClick={onClose} style={s.closeBtn} aria-label="关闭">×</button>}
 
         {showForm ? (
           <>
@@ -378,13 +344,10 @@ export default function DetailCard({
                 ? (type === 'movement' ? '新增流派' : '新增艺术家')
                 : `编辑：${data.zh}`}
             </div>
-
             {type === 'movement'
               ? <MovementEditForm formData={formData} onChange={setFormData} />
               : <ArtistEditForm formData={formData} onChange={setFormData} allMovements={movements} />}
-
             {saveError && <div style={s.errorMsg}>{saveError}</div>}
-
             <div style={s.editBtnRow}>
               <button onClick={handleCancel} disabled={saving} style={s.cancelBtn}>取消</button>
               <button onClick={handleSave} disabled={saving}
@@ -392,7 +355,6 @@ export default function DetailCard({
                 {saving ? '保存中…' : (isAdding ? '添加' : '保存')}
               </button>
             </div>
-
             {!isAdding && hasToken && (
               <button onClick={() => setConfirming(true)} disabled={saving} style={s.deleteBtn}>
                 删除此条目
@@ -404,8 +366,7 @@ export default function DetailCard({
             {type === 'movement'
               ? <MovementView data={data} artists={artists} />
               : <ArtistView data={data} movements={movements} />}
-
-            {hasToken && (
+            {isPinned && hasToken && (
               <div style={s.editBtnRow}>
                 <button onClick={enterEdit} style={s.editEntryBtn}>编辑</button>
               </div>
@@ -418,9 +379,7 @@ export default function DetailCard({
         <>
           <div onClick={() => setConfirming(false)} style={s.confirmOverlay} />
           <div style={s.confirmBox}>
-            <div style={s.confirmMsg}>
-              确定删除「{data.zh}」？此操作无法撤销。
-            </div>
+            <div style={s.confirmMsg}>确定删除「{data.zh}」？此操作无法撤销。</div>
             <div style={s.confirmBtns}>
               <button onClick={() => setConfirming(false)} style={s.cancelBtn}>取消</button>
               <button onClick={handleConfirmDelete} disabled={saving}
@@ -435,12 +394,11 @@ export default function DetailCard({
   )
 }
 
-// ── 样式（v2 浅色主题 — 全部用 CSS 变量）────────────────────
 const s = {
   backdrop: { position: 'fixed', inset: 0, zIndex: 10 },
   card: {
-    position: 'fixed', right: 24, top: 56,
-    width: 320, maxHeight: 'calc(100vh - 72px)', overflowY: 'auto',
+    position: 'fixed',
+    width: 320, maxHeight: 'calc(100vh - 48px)', overflowY: 'auto',
     background: 'var(--tip-bg)', border: '1px solid var(--tip-border)', borderRadius: 10,
     padding: '12px 14px', zIndex: 11,
     color: 'var(--text)', fontFamily: "'Noto Sans SC', system-ui, sans-serif",
@@ -458,18 +416,14 @@ const s = {
   description: { fontSize: 11.5, lineHeight: 1.7, color: 'var(--text-muted)' },
   section:     { marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--axis-border)' },
   sectionTitle:{ fontSize: 10, fontWeight: 600, color: 'var(--text-faint)', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '.5px' },
-  tagList:     { display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 6 },
-  tag:         { fontSize: 11.5, color: 'var(--text-muted)' },
   link:        { color: 'inherit', opacity: 0.55, fontSize: 10.5, textDecoration: 'none' },
   workLink:    { fontSize: 11.5, borderBottom: '1px solid currentColor', opacity: 0.75, whiteSpace: 'nowrap' },
-
-  // 编辑表单（照 v2 tooltip edit form）
-  editTitle: { fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 8, paddingRight: 24 },
-  form:      { display: 'flex', flexDirection: 'column', gap: 6 },
-  field:     { display: 'flex', alignItems: 'center', gap: 8 },
-  fieldLabel:{ fontSize: 10, color: 'var(--text-faint)', whiteSpace: 'nowrap', flexShrink: 0, width: 46, textAlign: 'left' },
-  fieldBlock:{ display: 'flex', flexDirection: 'column', gap: 3 },
-  blockLabel:{ fontSize: 10, color: 'var(--text-faint)' },
+  editTitle:   { fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 8, paddingRight: 24 },
+  form:        { display: 'flex', flexDirection: 'column', gap: 6 },
+  field:       { display: 'flex', alignItems: 'center', gap: 8 },
+  fieldLabel:  { fontSize: 10, color: 'var(--text-faint)', whiteSpace: 'nowrap', flexShrink: 0, width: 46, textAlign: 'left' },
+  fieldBlock:  { display: 'flex', flexDirection: 'column', gap: 3 },
+  blockLabel:  { fontSize: 10, color: 'var(--text-faint)' },
   input: {
     flex: 1, minWidth: 0, width: '100%',
     border: '1px solid var(--axis-border)', borderRadius: 6,
@@ -483,8 +437,6 @@ const s = {
     fontFamily: 'inherit', fontSize: 11.5, lineHeight: 1.6,
     padding: '4px 7px', outline: 'none', resize: 'none', boxSizing: 'border-box',
   },
-
-  // 代表作编辑（照 v2 ef-work-*）
   worksSection: { display: 'flex', flexDirection: 'column', gap: 6 },
   worksHd:      { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
   workEntry:    { display: 'flex', flexDirection: 'column', gap: 4, padding: '6px 8px', border: '1px solid var(--axis-border)', borderRadius: 6 },
@@ -505,8 +457,6 @@ const s = {
     background: 'none', border: '1px solid var(--axis-border)', color: 'var(--text-muted)',
     borderRadius: 6, fontSize: 10, padding: '2px 8px', cursor: 'pointer', fontFamily: 'inherit',
   },
-
-  // 按钮行
   editBtnRow:  { display: 'flex', gap: 6, marginTop: 6 },
   saveBtn: {
     flex: 1, background: 'var(--text)', color: 'var(--bg)', border: 'none',
@@ -527,8 +477,6 @@ const s = {
     borderRadius: 6, fontSize: 10.5, cursor: 'pointer', fontFamily: 'inherit',
   },
   errorMsg: { color: '#e55', fontSize: 11, marginTop: 6, lineHeight: 1.5 },
-
-  // 流派搜索选择器
   mvWrap:     { display: 'flex', flexDirection: 'column', gap: 4 },
   mvTags:     { display: 'flex', flexWrap: 'wrap', gap: 4 },
   mvTag: {
@@ -551,11 +499,9 @@ const s = {
     padding: '3px 7px', borderRadius: 4, fontSize: 11, color: 'var(--text-muted)',
     cursor: 'pointer',
   },
-
-  // 确认弹窗
   confirmOverlay: {
     position: 'fixed', inset: 0, background: 'rgba(0,0,0,.35)',
-    zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center',
+    zIndex: 100,
   },
   confirmBox: {
     position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
