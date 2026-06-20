@@ -152,14 +152,14 @@ function buildRenderData(lo) {
         const evW = Math.round(mvW * 0.55)
         const evX = x + Math.round((mvW - evW) / 2)
         bars.push({
-          id: 'm:' + m.id, cls: 'mv-bar',
+          key: 'm:' + m.id, id: 'm:' + m.id, cls: 'mv-bar',
           geom: { left: evX, top: y1, width: evW, height: barH },
           color: m.color, isEvent: true, isArt: false,
           sel: { type: 'movement', data: m },
         })
       } else {
         bars.push({
-          id: 'm:' + m.id, cls: 'mv-bar',
+          key: 'm:' + m.id, id: 'm:' + m.id, cls: 'mv-bar',
           geom: { left: x, top: y1, width: mvW, height: barH, border: `1.5px solid ${m.color}` },
           color: m.color, isEvent: false, isArt: false,
           sel: { type: 'movement', data: m },
@@ -169,7 +169,7 @@ function buildRenderData(lo) {
       const hasSub = !!m.sub
       const { w: lblW, h: lblH } = estimateLblSize(m.zh, 10, hasSub, m.start, m.end)
       labelInfos.push({
-        id: 'm:' + m.id, anchorX: barCx, anchorY: y1, lblW, lblH,
+        key: 'm:' + m.id, id: 'm:' + m.id, anchorX: barCx, anchorY: y1, lblW, lblH,
         idealTop: y1 - LABEL_GAP - lblH,
         html: `<span class="lbl-name" style="color:${m.color}">${m.zh}</span>${hasSub ? `<span class="lbl-sub">${m.sub}</span>` : ''}<span class="lbl-yr">${m.start}—${m.end}</span>`,
         sel: { type: 'movement', data: m }, art: false, color: m.color,
@@ -185,7 +185,7 @@ function buildRenderData(lo) {
           const ay1 = yearToY(a.birth)
           const ah  = Math.max(yearToY(a.death) - ay1, 6)
           bars.push({
-            id: 'a:' + a.id, cls: 'art-bar',
+            key: 'a:' + m.id + ':' + a.id, id: 'a:' + a.id, cls: 'art-bar',
             geom: { left: artX, top: ay1, width: artW, height: ah, border: `1px solid ${m.color}` },
             color: m.color, isEvent: false, isArt: true,
             sel: { type: 'artist', data: a },
@@ -193,7 +193,7 @@ function buildRenderData(lo) {
           const hasSub = !!a.sub
           const { w: lblW, h: lblH } = estimateLblSize(a.zh, 9, hasSub, a.birth, a.death)
           labelInfos.push({
-            id: 'a:' + a.id, anchorX: artCx, anchorY: ay1, lblW, lblH,
+            key: 'a:' + m.id + ':' + a.id, id: 'a:' + a.id, anchorX: artCx, anchorY: ay1, lblW, lblH,
             idealTop: ay1 - LABEL_GAP - lblH,
             html: `<span class="lbl-name" style="color:${m.color}">${a.zh}</span>${hasSub ? `<span class="lbl-sub">${a.sub}</span>` : ''}<span class="lbl-yr">${a.birth}—${a.death}</span>`,
             sel: { type: 'artist', data: a }, art: true, color: m.color,
@@ -210,14 +210,14 @@ function buildRenderData(lo) {
   labelInfos.forEach(info => {
     const left = Math.max(0, Math.min(info.anchorX - info.lblW / 2, canvasW - info.lblW))
     labels.push({
-      id: info.id, html: info.html,
+      key: info.key, id: info.id, html: info.html,
       style: { left, top: info.resolvedTop },
       sel: info.sel, art: info.art,
     })
     const connTop = info.resolvedTop + info.lblH
     const connH   = info.anchorY - connTop
     if (connH > 3) {
-      conns.push({ id: info.id, style: { left: info.anchorX, top: connTop, height: connH } })
+      conns.push({ key: info.key, id: info.id, style: { left: info.anchorX, top: connTop, height: connH } })
     }
   })
 
@@ -312,7 +312,7 @@ export default function Timeline({
             const bg = barBg(bar, related)
             const dim = related && !related.has(bar.id)
             return (
-              <div key={bar.id} data-bar-id={bar.id}
+              <div key={bar.key} data-bar-id={bar.id}
                 className={bar.cls + (dim ? ' dimmed' : '')}
                 style={{ ...bar.geom, background: bg }}
                 onClick={e => { e.stopPropagation(); onBarClick?.(bar.id, bar.sel, e) }}
@@ -326,7 +326,7 @@ export default function Timeline({
           {rd.conns.map(conn => {
             const dim = related && !related.has(conn.id)
             return (
-              <div key={'C' + conn.id}
+              <div key={'C' + conn.key}
                 className={`bar-conn${dim ? ' dimmed' : ''}`}
                 style={conn.style} />
             )
@@ -335,7 +335,7 @@ export default function Timeline({
           {rd.labels.map(lbl => {
             const dim = related && !related.has(lbl.id)
             return (
-              <div key={'L' + lbl.id} data-bar-id={lbl.id}
+              <div key={'L' + lbl.key} data-bar-id={lbl.id}
                 className={`bar-label${lbl.art ? ' art' : ''}${dim ? ' dimmed' : ''}`}
                 style={lbl.style}
                 onClick={e => { e.stopPropagation(); onBarClick?.(lbl.id, lbl.sel, e) }}
