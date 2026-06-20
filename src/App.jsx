@@ -11,7 +11,7 @@ function clampTip(el, cx, cy) {
     if (lx + el.offsetWidth > window.innerWidth - 8) lx = cx - el.offsetWidth - 10
     if (ly + el.offsetHeight > window.innerHeight - 8) ly = cy - el.offsetHeight - 10
   }
-  if (ly < 4) ly = 4
+  if (ly < 56) ly = 56   // 不低于工具栏下方，避免卡片顶部被工具栏遮住
   return { x: lx, y: ly }
 }
 

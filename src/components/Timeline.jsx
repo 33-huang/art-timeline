@@ -232,11 +232,9 @@ function computeRelated(activeId, movements, artists) {
   if (t === 'm') {
     artists.forEach(a => { if (a.movements.includes(itemId)) set.add('a:' + a.id) })
   } else {
+    // hover 艺术家：只高亮该艺术家 + 其所属流派（不高亮同门艺术家，与 v2 一致）
     const art = artists.find(a => a.id === itemId)
-    if (art) art.movements.forEach(mid => {
-      set.add('m:' + mid)
-      artists.forEach(a2 => { if (a2.movements.includes(mid)) set.add('a:' + a2.id) })
-    })
+    if (art) art.movements.forEach(mid => set.add('m:' + mid))
   }
   return set
 }
