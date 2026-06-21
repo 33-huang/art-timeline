@@ -247,6 +247,13 @@
     "movements": [
       "mv26"
     ],
-    "url": "https://zh.wikipedia.org/zh-cn/%E7%BD%97%E4%BC%AF%E7%89%B9%C2%B7%E5%BE%B7%E5%8A%B3%E5%86%85"
+    "url": "https://zh.wikipedia.org/zh-cn/%E7%BD%97%E4%BC%AF%E7%89%B9%C2%B7%E5%BE%B7%E5%8A%B3%E5%86%85",
+    "sub": "",
+    "works": [
+      {
+        "title": "共时的圆盘",
+        "url": "https://www.wikiart.org/en/robert-delaunay/premier-disque?utm_source=chatgpt.com"
+      }
+    ]
   }
 ]
