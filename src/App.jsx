@@ -175,9 +175,10 @@ export default function App() {
     await saveData(filename, newList)
     if (type === 'movement') setMovements(newList)
     else setArtists(newList)
+    // 保存后直接关闭，不弹出新条目的卡片
     setAddingType(null)
-    const id = (type === 'movement' ? 'm:' : 'a:') + newId
-    setPinnedId(id); setPinnedSel({ type, data: newItem }); setPinPos({ x: 24, y: 56 })
+    setPinnedId(null); setPinnedSel(null); setPinPos(null)
+    setHoveredId(null); setHoveredSel(null)
   }
 
   async function handleDelete(type, id) {

@@ -9,12 +9,10 @@ function MovementView({ data, artists }) {
       <div style={s.title}>{data.zh}</div>
       <div style={s.meta}>
         {data.start}–{data.end}{data.region ? ` · ${data.region}` : ''}
+        {reps.length > 0 && <><br />代表艺术家：{reps.map(a => a.zh).join('、')}</>}
       </div>
-      {reps.length > 0 && (
-        <div style={s.metaTight}>代表艺术家：{reps.map(a => a.zh).join('、')}</div>
-      )}
       {data.description && (
-        <div style={{ ...s.description, marginTop: 8 }} dangerouslySetInnerHTML={{ __html: data.description }} />
+        <div style={s.description} dangerouslySetInnerHTML={{ __html: data.description }} />
       )}
       {data.url && (
         <div style={{ marginTop: 6 }}>
@@ -32,12 +30,17 @@ function ArtistView({ data, movements }) {
     <>
       <div style={s.title}>{data.zh}</div>
       {data.sub && <div style={s.sub}>{data.sub}</div>}
-      <div style={s.meta}>{data.birth}–{data.death}</div>
-      {mvNames.length > 0 && (
-        <div style={s.metaTight}>所属流派：{mvNames.join('、')}</div>
-      )}
+      <div style={s.meta}>
+        {data.birth}–{data.death}
+        {mvNames.length > 0 && <><br />所属流派：{mvNames.join('、')}</>}
+      </div>
       {data.description && (
-        <div style={{ ...s.description, marginTop: 8 }} dangerouslySetInnerHTML={{ __html: data.description }} />
+        <div style={s.description} dangerouslySetInnerHTML={{ __html: data.description }} />
+      )}
+      {data.url && (
+        <div style={{ marginTop: 6 }}>
+          <a href={data.url} target="_blank" rel="noreferrer" style={s.link}>↗ 维基百科</a>
+        </div>
       )}
       {data.works?.length > 0 && (
         <div style={s.section}>
@@ -46,16 +49,11 @@ function ArtistView({ data, movements }) {
             {data.works.map((w, i) => (
               <span key={i} style={s.workLink}>
                 {w.url
-                  ? <a href={w.url} target="_blank" rel="noreferrer" style={s.link}>{w.title} ↗</a>
+                  ? <a href={w.url} target="_blank" rel="noreferrer" style={s.workLinkA}>{w.title} ↗</a>
                   : w.title}
               </span>
             ))}
           </div>
-        </div>
-      )}
-      {data.url && (
-        <div style={{ marginTop: 6 }}>
-          <a href={data.url} target="_blank" rel="noreferrer" style={s.link}>↗ 维基百科</a>
         </div>
       )}
     </>
@@ -411,13 +409,13 @@ const s = {
   },
   title:       { fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 2, paddingRight: 24 },
   sub:         { fontSize: 10, color: 'var(--text-faint)', marginBottom: 2, fontStyle: 'italic' },
-  meta:        { fontSize: 11, color: 'var(--text-faint)', marginBottom: 3 },
-  metaTight:   { fontSize: 11, color: 'var(--text-faint)' },
+  meta:        { fontSize: 11, color: 'var(--text-faint)', lineHeight: 1.7, marginBottom: 6 },
   description: { fontSize: 11.5, lineHeight: 1.7, color: 'var(--text-muted)' },
   section:     { marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--axis-border)' },
   sectionTitle:{ fontSize: 10, fontWeight: 600, color: 'var(--text-faint)', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '.5px' },
   link:        { color: 'inherit', opacity: 0.55, fontSize: 10.5, textDecoration: 'none' },
   workLink:    { fontSize: 11.5, borderBottom: '1px solid currentColor', opacity: 0.75, whiteSpace: 'nowrap' },
+  workLinkA:   { color: 'inherit', textDecoration: 'none' },
   editTitle:   { fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 8, paddingRight: 24 },
   form:        { display: 'flex', flexDirection: 'column', gap: 6 },
   field:       { display: 'flex', alignItems: 'center', gap: 8 },
