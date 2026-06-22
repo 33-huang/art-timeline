@@ -130,8 +130,9 @@ export default function App() {
       setPinnedId(null); setPinnedSel(null); setPinPos(null)
       setHoveredId(null); setHoveredSel(null)
     } else {
-      // 固定
+      // 固定：top 上限往上收，给（可能展开的）编辑器留出竖向空间
       const pos = clampTip(cardRef.current, e.clientX, e.clientY)
+      pos.y = Math.min(pos.y, Math.max(56, window.innerHeight - 300))
       setPinnedId(id); setPinnedSel(sel); setPinPos(pos)
       setHoveredId(null); setHoveredSel(null)
     }

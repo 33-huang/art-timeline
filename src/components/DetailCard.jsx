@@ -408,7 +408,7 @@ export default function DetailCard({
   if (isHover) {
     cardStyle = { ...s.card, right: 'auto', pointerEvents: 'none' }
   } else if (isPinned && pinPos) {
-    cardStyle = { ...s.card, left: pinPos.x, top: pinPos.y, right: 'auto' }
+    cardStyle = { ...s.card, left: pinPos.x, top: pinPos.y, right: 'auto', maxHeight: `calc(100vh - ${pinPos.y}px - 16px)` }
   } else {
     cardStyle = { ...s.card, right: 24, top: 56 }
   }
