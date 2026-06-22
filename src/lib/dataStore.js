@@ -4,6 +4,10 @@ const OWNER       = '33-huang'
 const REPO        = 'art-timeline'
 const DATA_BRANCH = 'data'
 
+const NOTES_REPO   = 'art-timeline-notes'
+const NOTES_BRANCH = 'main'
+const NOTES_FILE   = 'notes.json'
+
 const shaCache = new Map()
 
 export function getSha(filename) {
@@ -75,4 +79,80 @@ export async function saveData(filename, data) {
   const json = await res.json()
   // 写成功后更新 sha 缓存——GitHub 每次 PUT 后 sha 都会变，连续编辑必须用最新的
   shaCache.set(filename, json.content.sha)
+}
+
+// ── 私密笔记（私有仓 art-timeline-notes）──────────────────
+export async function loadNotes() {
+  const token = localStorage.getItem(TOKEN_KEY)
+  if (!token) return {}
+
+  const url =
+    `https://api.github.com/repos/${OWNER}/${NOTES_REPO}/contents/${NOTES_FILE}` +
+    `?ref=${NOTES_BRANCH}`
+
+  const res = await fetch(url, {
+    headers: {
+      'Accept': 'application/vnd.github+json',
+      'Authorization': `Bearer ${token}`,
+    },
+  })
+
+  if (res.status === 404) {
+    shaCache.set(NOTES_FILE, null)
+    return {}
+  }
+  if (!res.ok) {
+    if (res.status === 401 || res.status === 403) throw new Error('token 无权限读取笔记仓库')
+    throw new Error(`加载笔记失败：HTTP ${res.status}`)
+  }
+
+  const json = await res.json()
+  shaCache.set(NOTES_FILE, json.sha)
+
+  const bytes = Uint8Array.from(
+    atob(json.content.replace(/\n/g, '')),
+    c => c.charCodeAt(0),
+  )
+  const text = new TextDecoder('utf-8').decode(bytes)
+  return JSON.parse(text)
+}
+
+export async function saveNotes(data) {
+  const token = localStorage.getItem(TOKEN_KEY)
+  if (!token) throw new Error('请先在设置（⚙）中填写 GitHub token')
+
+  const text = JSON.stringify(data, null, 2)
+  const bytes = new TextEncoder().encode(text)
+  let bin = ''
+  for (const b of bytes) bin += String.fromCharCode(b)
+  const content = btoa(bin)
+
+  const url = `https://api.github.com/repos/${OWNER}/${NOTES_REPO}/contents/${NOTES_FILE}`
+  const body = {
+    message: `更新笔记`,
+    content,
+    branch: NOTES_BRANCH,
+  }
+
+  const sha = shaCache.get(NOTES_FILE)
+  if (sha) body.sha = sha
+
+  const res = await fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Accept': 'application/vnd.github+json',
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+
+  if (!res.ok) {
+    if (res.status === 409) throw new Error('笔记已被他人修改，请刷新页面后重试')
+    if (res.status === 401 || res.status === 403) throw new Error('token 无权限写入笔记仓库')
+    throw new Error(`保存笔记失败：HTTP ${res.status}`)
+  }
+
+  const json = await res.json()
+  shaCache.set(NOTES_FILE, json.content.sha)
 }

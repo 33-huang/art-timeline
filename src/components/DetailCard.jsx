@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 const COLOR_PALETTE = ['#9B7DC8','#5B9FD4','#D4924A','#4EAA72','#D45878','#C8A832','#B89020','#7A6DC8','#C44868','#4A8FC4','#C46848','#C48030','#8A6DC8','#4878B8']
 
+// ── 公开卡：只读流派 ──────────────────────────────────
 function MovementView({ data, artists }) {
   const reps = artists.filter(a => a.movements.includes(data.id))
   return (
@@ -23,6 +24,7 @@ function MovementView({ data, artists }) {
   )
 }
 
+// ── 公开卡：只读艺术家 ────────────────────────────────
 function ArtistView({ data, movements }) {
   const mvMap = new Map(movements.map(m => [m.id, m]))
   const mvNames = data.movements.map(id => mvMap.get(id)?.zh).filter(Boolean)
@@ -60,6 +62,86 @@ function ArtistView({ data, movements }) {
   )
 }
 
+// ── 私密卡：笔记只读 ──────────────────────────────────
+function NoteView({ data, type, movements, noteHtml }) {
+  const summary = type === 'movement'
+    ? `${data.zh}　${data.start}–${data.end}`
+    : `${data.zh}　${data.birth}–${data.death}` +
+      (data.movements?.length
+        ? `　${data.movements.map(id => movements.find(m => m.id === id)?.zh).filter(Boolean).join('、')}`
+        : '')
+  return (
+    <>
+      <div style={s.noteHeader}>{summary}</div>
+      {noteHtml
+        ? <div style={s.noteBody} dangerouslySetInnerHTML={{ __html: noteHtml }} />
+        : <div style={s.notePlaceholder}>（还没有笔记，点 ✎ 添加）</div>}
+    </>
+  )
+}
+
+// ── 私密卡：笔记编辑器（contenteditable + 工具栏）──────
+function NoteEditor({ initialHtml, onSave, onCancel }) {
+  const editorRef = useRef(null)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    if (editorRef.current) editorRef.current.innerHTML = initialHtml || ''
+  }, [initialHtml])
+
+  const exec = useCallback((cmd, val) => {
+    document.execCommand(cmd, false, val ?? null)
+    editorRef.current?.focus()
+  }, [])
+
+  function handleBold() { exec('bold') }
+  function handleHeading() { exec('formatBlock', '<h3>') }
+  function handleLink() {
+    const url = prompt('输入链接 URL：')
+    if (url) exec('createLink', url)
+  }
+  function handleImage() {
+    const url = prompt('输入图片 URL：')
+    if (url) exec('insertHTML', `<img src="${url}" style="max-width:100%;border-radius:4px;margin:4px 0" />`)
+  }
+
+  async function handleSave() {
+    const html = editorRef.current?.innerHTML ?? ''
+    setSaving(true); setError(null)
+    try {
+      await onSave(html)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div style={s.noteEditorWrap}>
+      <div style={s.noteToolbar}>
+        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); handleBold() }} title="加粗"><b>B</b></button>
+        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); handleHeading() }} title="标题">H</button>
+        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); handleLink() }} title="链接">🔗</button>
+        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); handleImage() }} title="图片URL">🖼</button>
+      </div>
+      <div ref={editorRef} contentEditable suppressContentEditableWarning
+        style={s.noteEditable}
+        onKeyDown={e => { if (e.key === 'Tab') { e.preventDefault(); exec('insertText', '  ') } }} />
+      {error && <div style={s.errorMsg}>{error}</div>}
+      <div style={s.editBtnRow}>
+        <button onClick={onCancel} disabled={saving} style={s.cancelBtn}>取消</button>
+        <button onClick={handleSave} disabled={saving}
+          style={{ ...s.saveBtn, ...(saving ? { opacity: 0.5 } : {}) }}>
+          {saving ? '保存中…' : '保存笔记'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ── 公开卡编辑表单：流派 ──────────────────────────────
 function MovementEditForm({ formData, onChange }) {
   return (
     <div style={s.form}>
@@ -221,12 +303,13 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
 }
 
 // ── 主组件 ──────────────────────────────────────────────
-// mode: 'hover' | 'pinned' | 'adding' | null
 export default function DetailCard({
   mode, selected, movements, artists, onClose, hasToken, onSave,
   adding, onAdd, onDelete, pinPos, cardRef,
+  notes, showPublic, onSaveNote,
 }) {
   const [editing, setEditing] = useState(false)
+  const [editingNote, setEditingNote] = useState(false)
   const [formData, setFormData] = useState(null)
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState(null)
@@ -236,6 +319,7 @@ export default function DetailCard({
 
   useEffect(() => {
     setEditing(false)
+    setEditingNote(false)
     setSaveError(null)
     setFormData(null)
     setConfirming(false)
@@ -258,7 +342,11 @@ export default function DetailCard({
   const type = isAdding ? adding : selected?.type
   const data = selected?.data
 
-  // 无 mode 时渲染隐藏容器（保持 ref 活着供 App 定位用）
+  // 决定显示公开卡还是私密卡
+  // 访客(无 token) → 公开; token 持有者默认 → 私密; 按住 Shift → 公开
+  // adding 模式始终公开（新增填公开字段）; 编辑公开字段时保持公开
+  const usePrivate = hasToken && !showPublic && !isAdding && !editing
+
   if (!mode) {
     return <div ref={cardRef} style={{ ...s.card, display: 'none' }} />
   }
@@ -316,61 +404,103 @@ export default function DetailCard({
 
   const showForm = (isAdding || editing) && formData
 
-  // 卡片定位
   let cardStyle
   if (isHover) {
     cardStyle = { ...s.card, right: 'auto', pointerEvents: 'none' }
   } else if (isPinned && pinPos) {
     cardStyle = { ...s.card, left: pinPos.x, top: pinPos.y, right: 'auto' }
   } else {
-    // adding 模式：右上角
     cardStyle = { ...s.card, right: 24, top: 56 }
+  }
+
+  // 私密笔记卡渲染
+  function renderPrivateCard() {
+    const noteHtml = notes?.[data?.id] || ''
+
+    if (editingNote && isPinned) {
+      return (
+        <>
+          <NoteView data={data} type={type} movements={movements} noteHtml={null} />
+          <NoteEditor
+            initialHtml={noteHtml}
+            onSave={async (html) => {
+              await onSaveNote(data.id, html)
+              setEditingNote(false)
+            }}
+            onCancel={() => setEditingNote(false)}
+          />
+        </>
+      )
+    }
+
+    return (
+      <>
+        <NoteView data={data} type={type} movements={movements} noteHtml={noteHtml} />
+        {isPinned && (
+          <div style={s.editBtnRow}>
+            <button onClick={() => setEditingNote(true)} style={s.editEntryBtn}>✎ 编辑笔记</button>
+            <button onClick={enterEdit} style={s.editEntryBtn}>编辑公开</button>
+          </div>
+        )}
+        {isPinned && <div style={s.noteHint}>按住 Shift 看公开版</div>}
+      </>
+    )
+  }
+
+  // 公开卡渲染
+  function renderPublicCard() {
+    if (showForm) {
+      return (
+        <>
+          <div style={s.editTitle}>
+            {isAdding
+              ? (type === 'movement' ? '新增流派' : '新增艺术家')
+              : `编辑：${data.zh}`}
+          </div>
+          {type === 'movement'
+            ? <MovementEditForm formData={formData} onChange={setFormData} />
+            : <ArtistEditForm formData={formData} onChange={setFormData} allMovements={movements} />}
+          {saveError && <div style={s.errorMsg}>{saveError}</div>}
+          <div style={s.editBtnRow}>
+            <button onClick={handleCancel} disabled={saving} style={s.cancelBtn}>取消</button>
+            <button onClick={handleSave} disabled={saving}
+              style={{ ...s.saveBtn, ...(saving ? { opacity: 0.5 } : {}) }}>
+              {saving ? '保存中…' : (isAdding ? '添加' : '保存')}
+            </button>
+          </div>
+          {!isAdding && hasToken && (
+            <button onClick={() => setConfirming(true)} disabled={saving} style={s.deleteBtn}>
+              删除此条目
+            </button>
+          )}
+        </>
+      )
+    }
+
+    if (!data) return null
+
+    return (
+      <>
+        {type === 'movement'
+          ? <MovementView data={data} artists={artists} />
+          : <ArtistView data={data} movements={movements} />}
+        {isPinned && hasToken && (
+          <div style={s.editBtnRow}>
+            <button onClick={enterEdit} style={s.editEntryBtn}>编辑</button>
+          </div>
+        )}
+      </>
+    )
   }
 
   return (
     <>
-      {/* 背景遮罩：pinned/adding 模式点击关闭 */}
       {(isPinned || isAdding) && <div onClick={onClose} style={s.backdrop} />}
 
       <div ref={cardRef} style={cardStyle}>
         {!isHover && <button onClick={onClose} style={s.closeBtn} aria-label="关闭">×</button>}
 
-        {showForm ? (
-          <>
-            <div style={s.editTitle}>
-              {isAdding
-                ? (type === 'movement' ? '新增流派' : '新增艺术家')
-                : `编辑：${data.zh}`}
-            </div>
-            {type === 'movement'
-              ? <MovementEditForm formData={formData} onChange={setFormData} />
-              : <ArtistEditForm formData={formData} onChange={setFormData} allMovements={movements} />}
-            {saveError && <div style={s.errorMsg}>{saveError}</div>}
-            <div style={s.editBtnRow}>
-              <button onClick={handleCancel} disabled={saving} style={s.cancelBtn}>取消</button>
-              <button onClick={handleSave} disabled={saving}
-                style={{ ...s.saveBtn, ...(saving ? { opacity: 0.5 } : {}) }}>
-                {saving ? '保存中…' : (isAdding ? '添加' : '保存')}
-              </button>
-            </div>
-            {!isAdding && hasToken && (
-              <button onClick={() => setConfirming(true)} disabled={saving} style={s.deleteBtn}>
-                删除此条目
-              </button>
-            )}
-          </>
-        ) : data ? (
-          <>
-            {type === 'movement'
-              ? <MovementView data={data} artists={artists} />
-              : <ArtistView data={data} movements={movements} />}
-            {isPinned && hasToken && (
-              <div style={s.editBtnRow}>
-                <button onClick={enterEdit} style={s.editEntryBtn}>编辑</button>
-              </div>
-            )}
-          </>
-        ) : null}
+        {usePrivate && data ? renderPrivateCard() : renderPublicCard()}
       </div>
 
       {confirming && (
@@ -392,6 +522,7 @@ export default function DetailCard({
   )
 }
 
+// ── 样式 ────────────────────────────────────────────────
 const s = {
   backdrop: { position: 'fixed', inset: 0, zIndex: 10 },
   card: {
@@ -513,5 +644,43 @@ const s = {
     flex: 1, background: '#e55', color: '#fff', border: 'none',
     borderRadius: 8, fontSize: 12, padding: '6px 0', cursor: 'pointer',
     fontFamily: 'inherit', fontWeight: 500,
+  },
+
+  // 私密笔记样式
+  noteHeader: {
+    fontSize: 11, color: 'var(--text-faint)', marginBottom: 8,
+    paddingBottom: 6, borderBottom: '1px solid var(--axis-border)',
+    paddingRight: 24,
+  },
+  noteBody: {
+    fontSize: 12, lineHeight: 1.8, color: 'var(--text)',
+    wordBreak: 'break-word',
+  },
+  notePlaceholder: {
+    fontSize: 11.5, color: 'var(--text-faint)', fontStyle: 'italic',
+    padding: '12px 0',
+  },
+  noteHint: {
+    marginTop: 8, fontSize: 9.5, color: 'var(--text-faint)', textAlign: 'center',
+    opacity: 0.7,
+  },
+  noteEditorWrap: { display: 'flex', flexDirection: 'column', gap: 6 },
+  noteToolbar: {
+    display: 'flex', gap: 4, paddingBottom: 4,
+    borderBottom: '1px solid var(--axis-border)',
+  },
+  noteToolBtn: {
+    background: 'var(--bg)', border: '1px solid var(--axis-border)',
+    borderRadius: 4, padding: '2px 8px', fontSize: 11,
+    color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'inherit',
+    lineHeight: 1.4,
+  },
+  noteEditable: {
+    minHeight: 120, maxHeight: 300, overflowY: 'auto',
+    border: '1px solid var(--axis-border)', borderRadius: 6,
+    background: 'var(--bg)', color: 'var(--text)',
+    fontFamily: 'inherit', fontSize: 12, lineHeight: 1.8,
+    padding: '6px 8px', outline: 'none',
+    wordBreak: 'break-word',
   },
 }

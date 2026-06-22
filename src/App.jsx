@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
-import { loadData, saveData, TOKEN_KEY } from './lib/dataStore'
+import { loadData, saveData, loadNotes, saveNotes, TOKEN_KEY } from './lib/dataStore'
 import Timeline from './components/Timeline'
 import DetailCard from './components/DetailCard'
 import FilterBar from './components/FilterBar'
@@ -22,6 +22,8 @@ export default function App() {
   const [filter, setFilter] = useState('all')
   const [hasToken, setHasToken] = useState(() => !!localStorage.getItem(TOKEN_KEY))
   const [addingType, setAddingType] = useState(null)
+  const [notes, setNotes] = useState({})
+  const [showPublic, setShowPublic] = useState(false)
 
   // hover / pin 状态
   const [hoveredId, setHoveredId] = useState(null)
@@ -40,7 +42,15 @@ export default function App() {
       .catch(err => setError(err.message))
   }, [])
 
-  // ⌘ 抑制 + Esc 取消固定
+  useEffect(() => {
+    if (hasToken) {
+      loadNotes().then(setNotes).catch(() => setNotes({}))
+    } else {
+      setNotes({})
+    }
+  }, [hasToken])
+
+  // ⌘ 抑制 + Esc 取消固定 + Shift 切换公开/私密
   useEffect(() => {
     function onKeyDown(e) {
       if (e.key === 'Meta') {
@@ -50,6 +60,10 @@ export default function App() {
           hoverMouse.current = null
         }
       }
+      if (e.key === 'Shift' && !e.target.closest('[contenteditable]') &&
+          e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        setShowPublic(true)
+      }
       if (e.key === 'Escape') {
         if (pinnedId) { setPinnedId(null); setPinnedSel(null); setPinPos(null) }
         if (addingType) { setAddingType(null) }
@@ -57,6 +71,7 @@ export default function App() {
     }
     function onKeyUp(e) {
       if (e.key === 'Meta') hoverLocked.current = false
+      if (e.key === 'Shift') setShowPublic(false)  // 松 Shift 始终还原
     }
     document.addEventListener('keydown', onKeyDown)
     document.addEventListener('keyup', onKeyUp)
@@ -200,6 +215,13 @@ export default function App() {
     setPinnedId(null); setPinnedSel(null); setPinPos(null)
   }
 
+  async function handleSaveNote(id, html) {
+    const updated = { ...notes, [id]: html }
+    if (!html) delete updated[id]
+    await saveNotes(updated)
+    setNotes(updated)
+  }
+
   function handleCloseCard() {
     setPinnedId(null); setPinnedSel(null); setPinPos(null)
     setHoveredId(null); setHoveredSel(null)
@@ -267,6 +289,9 @@ export default function App() {
         onDelete={handleDelete}
         pinPos={pinPos}
         cardRef={cardRef}
+        notes={notes}
+        showPublic={showPublic}
+        onSaveNote={handleSaveNote}
       />
     </>
   )
