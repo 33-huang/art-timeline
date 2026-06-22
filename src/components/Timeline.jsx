@@ -15,6 +15,14 @@ const LABEL_PAD   = 3
 
 function yearToY(yr) { return TOP_PAD + (yr - MIN_YEAR) * PX_PER_YEAR }
 
+// 独立(无流派)艺术家的自动配色：按 id 稳定哈希取调色板色，代替灰色
+const ORPHAN_PALETTE = ['#9B7DC8','#5B9FD4','#D4924A','#4EAA72','#D45878','#C8A832','#B89020','#7A6DC8','#C44868','#4A8FC4','#C46848','#C48030','#8A6DC8','#4878B8']
+function autoColor(id) {
+  let h = 0
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) | 0
+  return ORPHAN_PALETTE[Math.abs(h) % ORPHAN_PALETTE.length]
+}
+
 function hexRgba(hex, a) {
   const r = parseInt(hex.slice(1, 3), 16)
   const g = parseInt(hex.slice(3, 5), 16)
@@ -45,7 +53,7 @@ function computeLayout(mvs, arts, filter, viewW) {
   orphans.forEach(a => {
     const start = a.posStart ?? a.birth
     groups.push({
-      m: { id: '_orp_' + a.id, zh: '', start, end: a.death, color: a.color || '#aaaaaa', isHidden: true, isEvent: false },
+      m: { id: '_orp_' + a.id, zh: '', start, end: a.death, color: a.color || autoColor(a.id), isHidden: true, isEvent: false },
       lanes: [[a]],
     })
   })
