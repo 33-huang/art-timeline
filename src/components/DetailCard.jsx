@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 const COLOR_PALETTE = ['#9B7DC8','#5B9FD4','#D4924A','#4EAA72','#D45878','#C8A832','#B89020','#7A6DC8','#C44868','#4A8FC4','#C46848','#C48030','#8A6DC8','#4878B8']
 
@@ -62,81 +62,81 @@ function ArtistView({ data, movements }) {
   )
 }
 
-// ── 私密卡：笔记只读 ──────────────────────────────────
-function NoteView({ data, type, movements, noteHtml }) {
+// ── 私密卡参照行 ──────────────────────────────────────
+function NoteSummary({ data, type, movements }) {
   const summary = type === 'movement'
     ? `${data.zh}　${data.start}–${data.end}`
     : `${data.zh}　${data.birth}–${data.death}` +
       (data.movements?.length
         ? `　${data.movements.map(id => movements.find(m => m.id === id)?.zh).filter(Boolean).join('、')}`
         : '')
+  return <div style={s.noteHeader}>{summary}</div>
+}
+
+function genModId() { return crypto.randomUUID?.() || `${Date.now()}-${Math.random()}` }
+
+// ── 私密卡：手风琴浏览 ────────────────────────────────
+function NoteAccordion({ modules, openSet, onToggle }) {
+  if (!modules?.length) {
+    return <div style={s.notePlaceholder}>（还没有笔记，点 ＋新建模块 添加）</div>
+  }
   return (
-    <>
-      <div style={s.noteHeader}>{summary}</div>
-      {noteHtml
-        ? <div style={s.noteBody} dangerouslySetInnerHTML={{ __html: noteHtml }} />
-        : <div style={s.notePlaceholder}>（还没有笔记，点 ✎ 添加）</div>}
-    </>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      {modules.map(mod => {
+        const open = openSet.has(mod.id)
+        return (
+          <div key={mod.id}>
+            <div style={s.accTitle} onClick={() => onToggle(mod.id)}>
+              <span style={s.accArrow}>{open ? '▾' : '▸'}</span>
+              {mod.title || '无标题'}
+            </div>
+            {open && (
+              <div style={s.accBody} dangerouslySetInnerHTML={{ __html: mod.content || '' }} />
+            )}
+          </div>
+        )
+      })}
+    </div>
   )
 }
 
-// ── 私密卡：笔记编辑器（contenteditable + 工具栏）──────
-function NoteEditor({ initialHtml, onSave, onCancel }) {
-  const editorRef = useRef(null)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState(null)
+// ── 单个模块的富文本编辑器 ────────────────────────────
+function ModuleEditor({ mod, onChange, onDelete, editorRef }) {
+  const localRef = useRef(null)
+  const initialized = useRef(false)
+
+  function setRef(el) {
+    localRef.current = el
+    if (editorRef) editorRef(el)
+  }
 
   useEffect(() => {
-    if (editorRef.current) editorRef.current.innerHTML = initialHtml || ''
-  }, [initialHtml])
-
-  const exec = useCallback((cmd, val) => {
-    document.execCommand(cmd, false, val ?? null)
-    editorRef.current?.focus()
-  }, [])
-
-  function handleBold() { exec('bold') }
-  function handleHeading() { exec('formatBlock', '<h3>') }
-  function handleLink() {
-    const url = prompt('输入链接 URL：')
-    if (url) exec('createLink', url)
-  }
-  function handleImage() {
-    const url = prompt('输入图片 URL：')
-    if (url) exec('insertHTML', `<img src="${url}" style="max-width:100%;border-radius:4px;margin:4px 0" />`)
-  }
-
-  async function handleSave() {
-    const html = editorRef.current?.innerHTML ?? ''
-    setSaving(true); setError(null)
-    try {
-      await onSave(html)
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setSaving(false)
+    if (localRef.current && !initialized.current) {
+      localRef.current.innerHTML = mod.content || ''
+      initialized.current = true
     }
+  }, [mod.content])
+
+  function exec(cmd, val) {
+    document.execCommand(cmd, false, val ?? null)
   }
 
   return (
-    <div style={s.noteEditorWrap}>
+    <div style={s.modBlock}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <input style={{ ...s.input, fontSize: 12, fontWeight: 500 }}
+          placeholder="模块标题" value={mod.title}
+          onChange={e => onChange({ ...mod, title: e.target.value })} />
+        <span style={s.workEntryDel} onClick={onDelete}>删除</span>
+      </div>
       <div style={s.noteToolbar}>
-        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); handleBold() }} title="加粗"><b>B</b></button>
-        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); handleHeading() }} title="标题">H</button>
-        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); handleLink() }} title="链接">🔗</button>
-        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); handleImage() }} title="图片URL">🖼</button>
+        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('bold') }} title="加粗"><b>B</b></button>
+        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('formatBlock', '<h3>') }} title="标题">H</button>
+        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); const u = prompt('输入链接 URL：'); if (u) exec('createLink', u) }} title="链接">🔗</button>
+        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); const u = prompt('输入图片 URL：'); if (u) exec('insertHTML', `<img src="${u}" style="max-width:100%;border-radius:4px;margin:4px 0" />`) }} title="图片URL">🖼</button>
       </div>
-      <div ref={editorRef} contentEditable suppressContentEditableWarning
-        style={s.noteEditable}
-        onKeyDown={e => { if (e.key === 'Tab') { e.preventDefault(); exec('insertText', '  ') } }} />
-      {error && <div style={s.errorMsg}>{error}</div>}
-      <div style={s.editBtnRow}>
-        <button onClick={onCancel} disabled={saving} style={s.cancelBtn}>取消</button>
-        <button onClick={handleSave} disabled={saving}
-          style={{ ...s.saveBtn, ...(saving ? { opacity: 0.5 } : {}) }}>
-          {saving ? '保存中…' : '保存笔记'}
-        </button>
-      </div>
+      <div ref={setRef} contentEditable suppressContentEditableWarning
+        style={s.noteEditable} />
     </div>
   )
 }
@@ -310,19 +310,25 @@ export default function DetailCard({
 }) {
   const [editing, setEditing] = useState(false)
   const [editingNote, setEditingNote] = useState(false)
+  const [noteDraft, setNoteDraft] = useState([])
+  const [openSet, setOpenSet] = useState(new Set())
   const [formData, setFormData] = useState(null)
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState(null)
   const [confirming, setConfirming] = useState(false)
+  const editorRefsMap = useRef(new Map())
 
   const selectedId = selected?.data?.id
 
   useEffect(() => {
     setEditing(false)
     setEditingNote(false)
+    setNoteDraft([])
+    setOpenSet(new Set())
     setSaveError(null)
     setFormData(null)
     setConfirming(false)
+    editorRefsMap.current.clear()
   }, [selectedId])
 
   useEffect(() => {
@@ -413,33 +419,89 @@ export default function DetailCard({
     cardStyle = { ...s.card, right: 24, top: 56 }
   }
 
-  // 私密笔记卡渲染
+  function toggleAccordion(modId) {
+    setOpenSet(prev => {
+      const next = new Set(prev)
+      if (next.has(modId)) next.delete(modId); else next.add(modId)
+      return next
+    })
+  }
+
+  function enterNoteEdit(addEmpty) {
+    const existing = (notes?.[data?.id] || []).map(m => ({ ...m }))
+    if (addEmpty) existing.push({ id: genModId(), title: '', content: '' })
+    setNoteDraft(existing)
+    setEditingNote(true)
+    setSaveError(null)
+    editorRefsMap.current.clear()
+  }
+
+  function updateDraftMod(idx, updated) {
+    setNoteDraft(prev => prev.map((m, i) => i === idx ? updated : m))
+  }
+
+  function deleteDraftMod(idx) {
+    const removed = noteDraft[idx]
+    if (removed) editorRefsMap.current.delete(removed.id)
+    setNoteDraft(prev => prev.filter((_, i) => i !== idx))
+  }
+
+  function addDraftMod() {
+    setNoteDraft(prev => [...prev, { id: genModId(), title: '', content: '' }])
+  }
+
+  async function handleSaveNotes() {
+    const modules = noteDraft.map(mod => ({
+      id: mod.id,
+      title: mod.title || '',
+      content: editorRefsMap.current.get(mod.id)?.innerHTML ?? mod.content ?? '',
+    }))
+    setSaving(true); setSaveError(null)
+    try {
+      await onSaveNote(data.id, modules)
+      setEditingNote(false)
+      editorRefsMap.current.clear()
+    } catch (err) { setSaveError(err.message) }
+    finally { setSaving(false) }
+  }
+
   function renderPrivateCard() {
-    const noteHtml = notes?.[data?.id] || ''
+    const modules = notes?.[data?.id] || []
 
     if (editingNote && isPinned) {
       return (
         <>
-          <NoteView data={data} type={type} movements={movements} noteHtml={null} />
-          <NoteEditor
-            initialHtml={noteHtml}
-            onSave={async (html) => {
-              await onSaveNote(data.id, html)
-              setEditingNote(false)
-            }}
-            onCancel={() => setEditingNote(false)}
-          />
+          <NoteSummary data={data} type={type} movements={movements} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {noteDraft.map((mod, idx) => (
+              <ModuleEditor key={mod.id} mod={mod}
+                onChange={updated => updateDraftMod(idx, updated)}
+                onDelete={() => deleteDraftMod(idx)}
+                editorRef={el => { if (el) editorRefsMap.current.set(mod.id, el); }}
+              />
+            ))}
+          </div>
+          <button onClick={addDraftMod} style={{ ...s.workAddBtn, marginTop: 6 }}>＋ 新建模块</button>
+          {saveError && <div style={s.errorMsg}>{saveError}</div>}
+          <div style={s.editBtnRow}>
+            <button onClick={() => { setEditingNote(false); editorRefsMap.current.clear() }} disabled={saving} style={s.cancelBtn}>取消</button>
+            <button onClick={handleSaveNotes} disabled={saving}
+              style={{ ...s.saveBtn, ...(saving ? { opacity: 0.5 } : {}) }}>
+              {saving ? '保存中…' : '保存笔记'}
+            </button>
+          </div>
         </>
       )
     }
 
     return (
       <>
-        <NoteView data={data} type={type} movements={movements} noteHtml={noteHtml} />
+        <NoteSummary data={data} type={type} movements={movements} />
+        <NoteAccordion modules={modules} openSet={openSet} onToggle={toggleAccordion} />
         {isPinned && (
           <div style={s.editBtnRow}>
-            <button onClick={() => setEditingNote(true)} style={s.editEntryBtn}>✎ 编辑笔记</button>
-            <button onClick={enterEdit} style={s.editEntryBtn}>编辑公开</button>
+            <button onClick={() => enterNoteEdit(true)} style={s.editEntryBtn}>＋ 新建模块</button>
+            <button onClick={() => enterNoteEdit(false)} style={s.editEntryBtn}>✎ 编辑</button>
           </div>
         )}
         {isPinned && <div style={s.noteHint}>按住 Shift 看公开版</div>}
@@ -652,10 +714,6 @@ const s = {
     paddingBottom: 6, borderBottom: '1px solid var(--axis-border)',
     paddingRight: 24,
   },
-  noteBody: {
-    fontSize: 12, lineHeight: 1.8, color: 'var(--text)',
-    wordBreak: 'break-word',
-  },
   notePlaceholder: {
     fontSize: 11.5, color: 'var(--text-faint)', fontStyle: 'italic',
     padding: '12px 0',
@@ -664,7 +722,22 @@ const s = {
     marginTop: 8, fontSize: 9.5, color: 'var(--text-faint)', textAlign: 'center',
     opacity: 0.7,
   },
-  noteEditorWrap: { display: 'flex', flexDirection: 'column', gap: 6 },
+  // 手风琴
+  accTitle: {
+    fontSize: 12, fontWeight: 500, color: 'var(--text)',
+    cursor: 'pointer', padding: '4px 0', userSelect: 'none',
+    display: 'flex', alignItems: 'center', gap: 5,
+  },
+  accArrow: { fontSize: 10, color: 'var(--text-faint)', width: 12, flexShrink: 0, textAlign: 'center' },
+  accBody: {
+    fontSize: 12, lineHeight: 1.8, color: 'var(--text)',
+    padding: '2px 0 6px 17px', wordBreak: 'break-word',
+  },
+  // 模块编辑
+  modBlock: {
+    display: 'flex', flexDirection: 'column', gap: 4,
+    padding: '6px 8px', border: '1px solid var(--axis-border)', borderRadius: 6,
+  },
   noteToolbar: {
     display: 'flex', gap: 4, paddingBottom: 4,
     borderBottom: '1px solid var(--axis-border)',
@@ -676,7 +749,7 @@ const s = {
     lineHeight: 1.4,
   },
   noteEditable: {
-    minHeight: 120, maxHeight: 300, overflowY: 'auto',
+    minHeight: 80, maxHeight: 200, overflowY: 'auto',
     border: '1px solid var(--axis-border)', borderRadius: 6,
     background: 'var(--bg)', color: 'var(--text)',
     fontFamily: 'inherit', fontSize: 12, lineHeight: 1.8,

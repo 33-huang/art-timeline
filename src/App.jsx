@@ -44,7 +44,16 @@ export default function App() {
 
   useEffect(() => {
     if (hasToken) {
-      loadNotes().then(setNotes).catch(() => setNotes({}))
+      loadNotes().then(raw => {
+        const norm = {}
+        for (const [id, val] of Object.entries(raw)) {
+          if (Array.isArray(val)) norm[id] = val
+          else if (typeof val === 'string' && val) {
+            norm[id] = [{ id: crypto.randomUUID?.() || `${Date.now()}-${Math.random()}`, title: '笔记', content: val }]
+          }
+        }
+        setNotes(norm)
+      }).catch(() => setNotes({}))
     } else {
       setNotes({})
     }
@@ -216,9 +225,9 @@ export default function App() {
     setPinnedId(null); setPinnedSel(null); setPinPos(null)
   }
 
-  async function handleSaveNote(id, html) {
-    const updated = { ...notes, [id]: html }
-    if (!html) delete updated[id]
+  async function handleSaveNote(id, modules) {
+    const updated = { ...notes, [id]: modules }
+    if (!modules || modules.length === 0) delete updated[id]
     await saveNotes(updated)
     setNotes(updated)
   }
