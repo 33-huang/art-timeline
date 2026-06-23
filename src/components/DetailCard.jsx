@@ -356,10 +356,10 @@ export default function DetailCard({
   const type = isAdding ? adding : selected?.type
   const data = selected?.data
 
-  // 决定显示公开卡还是私密卡
-  // 访客(无 token) → 公开; token 持有者默认 → 私密; 按住 Shift → 公开
-  // adding 模式始终公开（新增填公开字段）; 编辑公开字段时保持公开
-  const usePrivate = hasToken && !showPublic && !isAdding && !editing
+  const hasNote = (notes?.[data?.id]?.length || 0) > 0
+
+  // 有笔记 → 默认私密卡；没笔记 → 默认公开卡；正在编辑笔记 → 私密卡
+  const usePrivate = hasToken && !showPublic && !isAdding && !editing && (hasNote || editingNote)
 
   if (!mode) {
     return <div ref={cardRef} style={{ ...s.card, display: 'none' }} />
@@ -560,6 +560,7 @@ export default function DetailCard({
         {isPinned && hasToken && (
           <div style={s.editBtnRow}>
             <button onClick={enterEdit} style={s.editEntryBtn}>编辑</button>
+            {!hasNote && <button onClick={() => enterNoteEdit(true)} style={s.editEntryBtn}>＋ 添加笔记</button>}
           </div>
         )}
       </>
