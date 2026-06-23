@@ -273,6 +273,14 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
             onChange={mvs => onChange({ ...formData, movements: mvs })} />
         </div>
       </div>
+      {mvIds.length === 0 && (
+        <div style={s.field}>
+          <label style={s.fieldLabel}>位置</label>
+          <input style={s.input} type="number" value={formData.posStart ?? ''}
+            placeholder="年份，留空按出生年（仅无流派时用于左右定位）"
+            onChange={e => onChange({ ...formData, posStart: e.target.value === '' ? '' : Number(e.target.value) })} />
+        </div>
+      )}
       <div style={s.fieldBlock}>
         <label style={s.blockLabel}>简介</label>
         <textarea style={s.textarea} rows={4} value={formData.description}
@@ -372,6 +380,7 @@ export default function DetailCard({
         description: data.description ?? '',
         works: data.works ? JSON.parse(JSON.stringify(data.works)) : [],
         movements: data.movements ?? [], url: data.url ?? '',
+        posStart: data.posStart ?? '',
       })
     }
     setSaveError(null); setEditing(true)

@@ -170,6 +170,10 @@ export default function App() {
   async function handleSave(type, updatedItem) {
     const filename = type === 'movement' ? 'movements.json' : 'artists.json'
     const list = type === 'movement' ? movements : artists
+    if (type === 'artist') {
+      if (updatedItem.posStart === '' || updatedItem.posStart == null || isNaN(Number(updatedItem.posStart))) delete updatedItem.posStart
+      else updatedItem.posStart = Number(updatedItem.posStart)
+    }
     const updatedList = list.map(item => item.id === updatedItem.id ? updatedItem : item)
     await saveData(filename, updatedList)
     if (type === 'movement') setMovements(updatedList)
@@ -194,6 +198,8 @@ export default function App() {
       if (!newItem.sub) delete newItem.sub
       if (!newItem.url) delete newItem.url
       if (!newItem.works?.length) delete newItem.works
+      if (newItem.posStart === '' || newItem.posStart == null || isNaN(Number(newItem.posStart))) delete newItem.posStart
+      else newItem.posStart = Number(newItem.posStart)
     }
     const filename = type === 'movement' ? 'movements.json' : 'artists.json'
     const newList = [...list, newItem]
