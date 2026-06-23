@@ -118,7 +118,22 @@ function ModuleEditor({ mod, onChange, onDelete, editorRef }) {
   }, [mod.content])
 
   function exec(cmd, val) {
+    localRef.current?.focus()
     document.execCommand(cmd, false, val ?? null)
+  }
+
+  // 弹 prompt 前先记住编辑器内的光标/选区，输完后恢复再执行（否则 prompt 会丢选区导致插入失败）
+  function execWithPrompt(cmd, message, wrap) {
+    const el = localRef.current
+    const sel = window.getSelection()
+    const saved = (sel && sel.rangeCount && el && el.contains(sel.anchorNode))
+      ? sel.getRangeAt(0).cloneRange() : null
+    const u = prompt(message)
+    if (!u) return
+    el?.focus()
+    if (saved) { sel.removeAllRanges(); sel.addRange(saved) }
+    else if (el) { const r = document.createRange(); r.selectNodeContents(el); r.collapse(false); sel.removeAllRanges(); sel.addRange(r) }
+    document.execCommand(cmd, false, wrap ? wrap(u) : u)
   }
 
   return (
@@ -132,8 +147,8 @@ function ModuleEditor({ mod, onChange, onDelete, editorRef }) {
       <div style={s.noteToolbar}>
         <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('bold') }} title="加粗"><b>B</b></button>
         <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('formatBlock', '<h3>') }} title="标题">H</button>
-        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); const u = prompt('输入链接 URL：'); if (u) exec('createLink', u) }} title="链接">🔗</button>
-        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); const u = prompt('输入图片 URL：'); if (u) exec('insertHTML', `<img src="${u}" style="max-width:100%;border-radius:4px;margin:4px 0" />`) }} title="图片URL">🖼</button>
+        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); execWithPrompt('createLink', '输入链接 URL：') }} title="链接">🔗</button>
+        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); execWithPrompt('insertHTML', '输入图片 URL：', u => `<img src="${u}" style="max-width:100%;border-radius:4px;margin:4px 0" />`) }} title="图片URL">🖼</button>
       </div>
       <div ref={setRef} contentEditable suppressContentEditableWarning
         style={s.noteEditable} />
