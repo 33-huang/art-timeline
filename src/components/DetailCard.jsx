@@ -91,7 +91,7 @@ function NoteAccordion({ modules, openSet, onToggle }) {
               {mod.title || '无标题'}
             </div>
             {open && (
-              <div style={s.accBody} dangerouslySetInnerHTML={{ __html: mod.content || '' }} />
+              <div className="note-content" style={s.accBody} dangerouslySetInnerHTML={{ __html: mod.content || '' }} />
             )}
           </div>
         )

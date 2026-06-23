@@ -226,4 +226,8 @@ body {
 /* ── 笔记 contenteditable 内部样式 ──────────────────────── */
 [contenteditable] h3 { font-size: 13px; font-weight: 600; margin: 6px 0 2px; }
 [contenteditable] a   { color: var(--text-muted); text-decoration: underline; }
-[contenteditable] img { max-width: 100%; border-radius: 4px; margin: 4px 0; }
+[contenteditable] img { max-width: 100%; height: auto; border-radius: 4px; margin: 4px 0; }
+/* 笔记浏览（手风琴展开）里的图片也限制为容器宽度 */
+.note-content img { max-width: 100%; height: auto; border-radius: 4px; margin: 4px 0; display: block; }
+.note-content h3 { font-size: 13px; font-weight: 600; margin: 6px 0 2px; }
+.note-content a  { color: var(--text-muted); text-decoration: underline; }
