@@ -508,12 +508,15 @@ export default function DetailCard({
         <NoteSummary data={data} type={type} movements={movements} />
         <NoteAccordion modules={modules} openSet={openSet} onToggle={toggleAccordion} />
         {isPinned && (
-          <div style={s.editBtnRow}>
-            <button onClick={() => enterNoteEdit(true)} style={s.editEntryBtn}>＋ 新建模块</button>
-            <button onClick={() => enterNoteEdit(false)} style={s.editEntryBtn}>✎ 编辑</button>
-          </div>
+          <>
+            <div style={s.editBtnRow}>
+              <button onClick={() => enterNoteEdit(true)} style={s.editEntryBtn}>＋ 新建模块</button>
+              <button onClick={() => enterNoteEdit(false)} style={s.editEntryBtn}>✎ 编辑笔记</button>
+            </div>
+            <button onClick={enterEdit} style={{ ...s.editEntryBtn, width: '100%', marginTop: 4 }}>编辑公开内容</button>
+            <div style={s.noteHint}>按住 Shift 看公开版</div>
+          </>
         )}
-        {isPinned && <div style={s.noteHint}>按住 Shift 看公开版</div>}
       </>
     )
   }
