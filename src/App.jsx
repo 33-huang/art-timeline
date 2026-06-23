@@ -30,6 +30,7 @@ export default function App() {
   const [hoveredSel, setHoveredSel] = useState(null)
   const [pinnedId, setPinnedId] = useState(null)
   const [pinnedSel, setPinnedSel] = useState(null)
+  const [pinnedPublic, setPinnedPublic] = useState(false)
   const [pinPos, setPinPos] = useState(null)
   const hoverLocked = useRef(false)
   const hoverMouse = useRef(null)
@@ -74,7 +75,7 @@ export default function App() {
         setShowPublic(true)
       }
       if (e.key === 'Escape') {
-        if (pinnedId) { setPinnedId(null); setPinnedSel(null); setPinPos(null) }
+        if (pinnedId) { setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPublic(false) }
         if (addingType) { setAddingType(null) }
       }
     }
@@ -136,13 +137,13 @@ export default function App() {
     if (addingType) return
     if (pinnedId === id) {
       // 取消固定
-      setPinnedId(null); setPinnedSel(null); setPinPos(null)
+      setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPublic(false)
       setHoveredId(null); setHoveredSel(null)
     } else {
       // 固定：top 上限往上收，给（可能展开的）编辑器留出竖向空间
       const pos = clampTip(cardRef.current, e.clientX, e.clientY)
       pos.y = Math.min(pos.y, Math.max(56, window.innerHeight - 300))
-      setPinnedId(id); setPinnedSel(sel); setPinPos(pos)
+      setPinnedId(id); setPinnedSel(sel); setPinPos(pos); setPinnedPublic(!!e.shiftKey)
       setHoveredId(null); setHoveredSel(null)
     }
   }, [pinnedId, addingType])
@@ -151,14 +152,14 @@ export default function App() {
   const handleFilterChange = useCallback((f) => {
     setFilter(f)
     setHoveredId(null); setHoveredSel(null); hoverMouse.current = null
-    setPinnedId(null); setPinnedSel(null); setPinPos(null)
+    setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPublic(false)
     setAddingType(null)
   }, [])
 
   // 点空白：取消固定
   const onCanvasClick = useCallback(() => {
     if (pinnedId) {
-      setPinnedId(null); setPinnedSel(null); setPinPos(null)
+      setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPublic(false)
       setHoveredId(null); setHoveredSel(null)
     }
   }, [pinnedId])
@@ -208,7 +209,7 @@ export default function App() {
     else setArtists(newList)
     // 保存后直接关闭，不弹出新条目的卡片
     setAddingType(null)
-    setPinnedId(null); setPinnedSel(null); setPinPos(null)
+    setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPublic(false)
     setHoveredId(null); setHoveredSel(null)
   }
 
@@ -228,7 +229,7 @@ export default function App() {
         setArtists(updatedArtists)
       }
     } else { setArtists(newList) }
-    setPinnedId(null); setPinnedSel(null); setPinPos(null)
+    setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPublic(false)
   }
 
   async function handleSaveNote(id, modules) {
@@ -239,13 +240,13 @@ export default function App() {
   }
 
   function handleCloseCard() {
-    setPinnedId(null); setPinnedSel(null); setPinPos(null)
+    setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPublic(false)
     setHoveredId(null); setHoveredSel(null)
     setAddingType(null)
   }
 
   function startAdd(type) {
-    setPinnedId(null); setPinnedSel(null); setPinPos(null)
+    setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPublic(false)
     setHoveredId(null); setHoveredSel(null)
     setAddingType(type)
   }
@@ -306,7 +307,7 @@ export default function App() {
         pinPos={pinPos}
         cardRef={cardRef}
         notes={notes}
-        showPublic={showPublic}
+        showPublic={(pinnedId && pinnedPublic) || showPublic}
         onSaveNote={handleSaveNote}
       />
     </>

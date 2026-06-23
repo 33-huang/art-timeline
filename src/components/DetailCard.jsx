@@ -171,7 +171,7 @@ function MovementEditForm({ formData, onChange }) {
       </div>
       <div style={s.fieldBlock}>
         <label style={s.blockLabel}>简介</label>
-        <textarea style={s.textarea} rows={5} value={formData.description}
+        <textarea style={s.textarea} rows={10} value={formData.description}
           onChange={e => onChange({ ...formData, description: e.target.value })} />
       </div>
       <div style={s.field}>
@@ -283,7 +283,7 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
       )}
       <div style={s.fieldBlock}>
         <label style={s.blockLabel}>简介</label>
-        <textarea style={s.textarea} rows={4} value={formData.description}
+        <textarea style={s.textarea} rows={10} value={formData.description}
           onChange={e => onChange({ ...formData, description: e.target.value })} />
       </div>
       <div style={s.field}>
@@ -513,7 +513,6 @@ export default function DetailCard({
               <button onClick={() => enterNoteEdit(true)} style={s.editEntryBtn}>＋ 新建模块</button>
               <button onClick={() => enterNoteEdit(false)} style={s.editEntryBtn}>✎ 编辑笔记</button>
             </div>
-            <button onClick={enterEdit} style={{ ...s.editEntryBtn, width: '100%', marginTop: 4 }}>编辑公开内容</button>
             <div style={s.noteHint}>按住 Shift 看公开版</div>
           </>
         )}
@@ -615,7 +614,7 @@ const s = {
   title:       { fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 2, paddingRight: 24 },
   sub:         { fontSize: 10, color: 'var(--text-faint)', marginBottom: 2, fontStyle: 'italic' },
   meta:        { fontSize: 11, color: 'var(--text-faint)', lineHeight: 1.7, marginBottom: 6 },
-  description: { fontSize: 11.5, lineHeight: 1.7, color: 'var(--text-muted)' },
+  description: { fontSize: 11.5, lineHeight: 1.7, color: 'var(--text-muted)', whiteSpace: 'pre-wrap' },
   section:     { marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--axis-border)' },
   sectionTitle:{ fontSize: 10, fontWeight: 600, color: 'var(--text-faint)', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '.5px' },
   link:        { color: 'inherit', opacity: 0.55, fontSize: 10.5, textDecoration: 'none' },
@@ -638,7 +637,7 @@ const s = {
     width: '100%', border: '1px solid var(--axis-border)', borderRadius: 6,
     background: 'var(--bg)', color: 'var(--text)',
     fontFamily: 'inherit', fontSize: 11.5, lineHeight: 1.6,
-    padding: '4px 7px', outline: 'none', resize: 'none', boxSizing: 'border-box',
+    padding: '4px 7px', outline: 'none', resize: 'vertical', minHeight: 160, boxSizing: 'border-box',
   },
   worksSection: { display: 'flex', flexDirection: 'column', gap: 6 },
   worksHd:      { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
@@ -761,7 +760,7 @@ const s = {
     lineHeight: 1.4,
   },
   noteEditable: {
-    minHeight: 80, maxHeight: 200, overflowY: 'auto',
+    minHeight: 140, maxHeight: 200, overflowY: 'auto',
     border: '1px solid var(--axis-border)', borderRadius: 6,
     background: 'var(--bg)', color: 'var(--text)',
     fontFamily: 'inherit', fontSize: 12, lineHeight: 1.8,
