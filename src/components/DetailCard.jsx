@@ -2,95 +2,62 @@ import { useState, useEffect, useRef } from 'react'
 
 const COLOR_PALETTE = ['#9B7DC8','#5B9FD4','#D4924A','#4EAA72','#D45878','#C8A832','#B89020','#7A6DC8','#C44868','#4A8FC4','#C46848','#C48030','#8A6DC8','#4878B8']
 
-const INTRO_ID = '__intro__'
-
-// ── 公开卡：手风琴视图 ──────────────────────────────────
-function PublicView({ data, type, artists, movements, openSet, onToggle }) {
-  const isMovement = type === 'movement'
-  const introOpen = openSet.has(INTRO_ID)
-  const sections = data.sections || []
-
-  let metaJsx
-  if (isMovement) {
-    const reps = artists.filter(a => a.movements.includes(data.id))
-    metaJsx = (
-      <>
-        {data.start}–{data.end}{data.region ? ` · ${data.region}` : ''}
-        {reps.length > 0 && <><br />代表艺术家：{reps.map(a => a.zh).join('、')}</>}
-      </>
-    )
-  } else {
-    const mvMap = new Map(movements.map(m => [m.id, m]))
-    const mvNames = data.movements.map(id => mvMap.get(id)?.zh).filter(Boolean)
-    metaJsx = (
-      <>
-        {data.birth}–{data.death}
-        {mvNames.length > 0 && <><br />所属流派：{mvNames.join('、')}</>}
-      </>
-    )
-  }
-
+// ── 公开卡：只读流派 ──────────────────────────────────
+function MovementView({ data, artists }) {
+  const reps = artists.filter(a => a.movements.includes(data.id))
   return (
     <>
       <div style={s.title}>{data.zh}</div>
-      {!isMovement && data.sub && <div style={s.sub}>{data.sub}</div>}
-      <div style={s.meta}>{metaJsx}</div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        {/* 简介模块 — 默认展开 */}
-        <div>
-          <div style={s.accTitle} onClick={() => onToggle(INTRO_ID)}>
-            <span style={s.accArrow}>{introOpen ? '▾' : '▸'}</span>
-            {isMovement ? '流派简介' : '艺术家简介'}
-          </div>
-          {introOpen && (
-            <div style={s.accBody}>
-              {data.descSource && <div style={s.sourceNote}>资料来源：{data.descSource}</div>}
-              {data.description && (
-                <div className="note-content" style={s.description} dangerouslySetInnerHTML={{ __html: data.description }} />
-              )}
-              {!isMovement && data.works?.length > 0 && (
-                <div style={{ marginTop: 6 }}>
-                  <div style={s.sectionTitle}>代表作</div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0 10px' }}>
-                    {data.works.map((w, i) => (
-                      <span key={i} style={s.workLink}>
-                        {w.url
-                          ? <a href={w.url} target="_blank" rel="noreferrer" style={s.workLinkA}>{w.title} ↗</a>
-                          : w.title}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {data.url && (
-                <div style={{ marginTop: 6 }}>
-                  <a href={data.url} target="_blank" rel="noreferrer" style={s.link}>↗ 维基百科</a>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* 额外模块 — 默认收起 */}
-        {sections.map(sec => {
-          const open = openSet.has(sec.id)
-          return (
-            <div key={sec.id}>
-              <div style={s.accTitle} onClick={() => onToggle(sec.id)}>
-                <span style={s.accArrow}>{open ? '▾' : '▸'}</span>
-                {sec.title || '无标题'}
-              </div>
-              {open && (
-                <div className="note-content" style={s.accBody}>
-                  {sec.source && <div style={s.sourceNote}>资料来源：{sec.source}</div>}
-                  <div dangerouslySetInnerHTML={{ __html: sec.content || '' }} />
-                </div>
-              )}
-            </div>
-          )
-        })}
+      <div style={s.meta}>
+        {data.start}–{data.end}{data.region ? ` · ${data.region}` : ''}
+        {reps.length > 0 && <><br />代表艺术家：{reps.map(a => a.zh).join('、')}</>}
       </div>
+      {data.description && (
+        <div style={s.description} dangerouslySetInnerHTML={{ __html: data.description }} />
+      )}
+      {data.url && (
+        <div style={{ marginTop: 6 }}>
+          <a href={data.url} target="_blank" rel="noreferrer" style={s.link}>↗ 维基百科</a>
+        </div>
+      )}
+    </>
+  )
+}
+
+// ── 公开卡：只读艺术家 ────────────────────────────────
+function ArtistView({ data, movements }) {
+  const mvMap = new Map(movements.map(m => [m.id, m]))
+  const mvNames = data.movements.map(id => mvMap.get(id)?.zh).filter(Boolean)
+  return (
+    <>
+      <div style={s.title}>{data.zh}</div>
+      {data.sub && <div style={s.sub}>{data.sub}</div>}
+      <div style={s.meta}>
+        {data.birth}–{data.death}
+        {mvNames.length > 0 && <><br />所属流派：{mvNames.join('、')}</>}
+      </div>
+      {data.description && (
+        <div style={s.description} dangerouslySetInnerHTML={{ __html: data.description }} />
+      )}
+      {data.url && (
+        <div style={{ marginTop: 6 }}>
+          <a href={data.url} target="_blank" rel="noreferrer" style={s.link}>↗ 维基百科</a>
+        </div>
+      )}
+      {data.works?.length > 0 && (
+        <div style={s.section}>
+          <div style={s.sectionTitle}>代表作</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0 10px' }}>
+            {data.works.map((w, i) => (
+              <span key={i} style={s.workLink}>
+                {w.url
+                  ? <a href={w.url} target="_blank" rel="noreferrer" style={s.workLinkA}>{w.title} ↗</a>
+                  : w.title}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
     </>
   )
 }
@@ -134,7 +101,7 @@ function NoteAccordion({ modules, openSet, onToggle }) {
 }
 
 // ── 单个模块的富文本编辑器 ────────────────────────────
-function ModuleEditor({ mod, onChange, onDelete, editorRef, showSource }) {
+function ModuleEditor({ mod, onChange, onDelete, editorRef }) {
   const localRef = useRef(null)
   const initialized = useRef(false)
 
@@ -155,6 +122,7 @@ function ModuleEditor({ mod, onChange, onDelete, editorRef, showSource }) {
     document.execCommand(cmd, false, val ?? null)
   }
 
+  // 弹 prompt 前先记住编辑器内的光标/选区，输完后恢复再执行（否则 prompt 会丢选区导致插入失败）
   function execWithPrompt(cmd, message, wrap) {
     const el = localRef.current
     const sel = window.getSelection()
@@ -176,11 +144,6 @@ function ModuleEditor({ mod, onChange, onDelete, editorRef, showSource }) {
           onChange={e => onChange({ ...mod, title: e.target.value })} />
         <span style={s.workEntryDel} onClick={onDelete}>删除</span>
       </div>
-      {showSource && (
-        <input style={{ ...s.input, fontSize: 11 }}
-          placeholder="资料来源（可选）" value={mod.source || ''}
-          onChange={e => onChange({ ...mod, source: e.target.value })} />
-      )}
       <div style={s.noteToolbar}>
         <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('bold') }} title="加粗"><b>B</b></button>
         <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('formatBlock', '<h3>') }} title="标题">H</button>
@@ -225,11 +188,6 @@ function MovementEditForm({ formData, onChange }) {
         <label style={s.blockLabel}>简介</label>
         <textarea style={s.textarea} rows={10} value={formData.description}
           onChange={e => onChange({ ...formData, description: e.target.value })} />
-      </div>
-      <div style={s.field}>
-        <label style={s.fieldLabel}>来源</label>
-        <input style={s.input} value={formData.descSource}
-          onChange={e => onChange({ ...formData, descSource: e.target.value })} placeholder="简介资料来源（可选）" />
       </div>
       <div style={s.field}>
         <label style={s.fieldLabel}>链接</label>
@@ -344,11 +302,6 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
           onChange={e => onChange({ ...formData, description: e.target.value })} />
       </div>
       <div style={s.field}>
-        <label style={s.fieldLabel}>来源</label>
-        <input style={s.input} value={formData.descSource}
-          onChange={e => onChange({ ...formData, descSource: e.target.value })} placeholder="简介资料来源（可选）" />
-      </div>
-      <div style={s.field}>
         <label style={s.fieldLabel}>链接</label>
         <input style={s.input} value={formData.url}
           onChange={e => onChange({ ...formData, url: e.target.value })} placeholder="https://..." />
@@ -381,7 +334,7 @@ export default function DetailCard({
   const [editing, setEditing] = useState(false)
   const [editingNote, setEditingNote] = useState(false)
   const [noteDraft, setNoteDraft] = useState([])
-  const [openSet, setOpenSet] = useState(new Set([INTRO_ID]))
+  const [openSet, setOpenSet] = useState(new Set())
   const [formData, setFormData] = useState(null)
   const [saving, setSaving] = useState(false)
   const [saveError, setSaveError] = useState(null)
@@ -394,7 +347,7 @@ export default function DetailCard({
     setEditing(false)
     setEditingNote(false)
     setNoteDraft([])
-    setOpenSet(new Set([INTRO_ID]))
+    setOpenSet(new Set())
     setSaveError(null)
     setFormData(null)
     setConfirming(false)
@@ -404,10 +357,10 @@ export default function DetailCard({
   useEffect(() => {
     if (adding === 'movement') {
       const color = COLOR_PALETTE[movements.length % COLOR_PALETTE.length]
-      setFormData({ zh: '', sub: '', start: '', end: '', region: '', description: '', descSource: '', url: '', color, isEvent: false, sections: [] })
+      setFormData({ zh: '', sub: '', start: '', end: '', region: '', description: '', url: '', color, isEvent: false })
       setSaveError(null); setConfirming(false)
     } else if (adding === 'artist') {
-      setFormData({ zh: '', sub: '', birth: '', death: '', description: '', descSource: '', works: [], movements: [], url: '', sections: [] })
+      setFormData({ zh: '', sub: '', birth: '', death: '', description: '', works: [], movements: [], url: '' })
       setSaveError(null); setConfirming(false)
     }
   }, [adding, movements?.length])
@@ -420,6 +373,7 @@ export default function DetailCard({
 
   const hasNote = (notes?.[data?.id]?.length || 0) > 0
 
+  // 有笔记 → 默认私密卡；没笔记 → 默认公开卡；正在编辑笔记 → 私密卡
   const usePrivate = hasToken && !showPublic && !isAdding && !editing && (hasNote || editingNote)
 
   if (!mode) {
@@ -427,26 +381,21 @@ export default function DetailCard({
   }
 
   function enterEdit() {
-    editorRefsMap.current.clear()
     if (type === 'movement') {
       setFormData({
         zh: data.zh ?? '', sub: data.sub ?? '',
         start: data.start, end: data.end,
         region: data.region ?? '', description: data.description ?? '',
-        descSource: data.descSource ?? '',
         url: data.url ?? '', color: data.color ?? '#888888', isEvent: !!data.isEvent,
-        sections: data.sections ? JSON.parse(JSON.stringify(data.sections)) : [],
       })
     } else {
       setFormData({
         zh: data.zh ?? '', sub: data.sub ?? '',
         birth: data.birth, death: data.death,
         description: data.description ?? '',
-        descSource: data.descSource ?? '',
         works: data.works ? JSON.parse(JSON.stringify(data.works)) : [],
         movements: data.movements ?? [], url: data.url ?? '',
         posStart: data.posStart ?? '',
-        sections: data.sections ? JSON.parse(JSON.stringify(data.sections)) : [],
       })
     }
     setSaveError(null); setEditing(true)
@@ -463,28 +412,10 @@ export default function DetailCard({
       const bv = Number(formData.birth), dv = Number(formData.death)
       if (!bv || !dv || bv >= dv) { setSaveError('年份无效（需要 出生 < 逝世）'); return }
     }
-
-    const cleaned = { ...formData }
-
-    if (cleaned.sections?.length) {
-      cleaned.sections = cleaned.sections.map(sec => ({
-        id: sec.id,
-        title: sec.title || '',
-        source: sec.source || '',
-        content: editorRefsMap.current.get(sec.id)?.innerHTML ?? sec.content ?? '',
-      })).filter(sec => sec.title.trim() || sec.content.trim())
-      cleaned.sections.forEach(sec => { if (!sec.source.trim()) delete sec.source })
-      if (!cleaned.sections.length) cleaned.sections = undefined
-    } else {
-      cleaned.sections = undefined
-    }
-    cleaned.descSource = cleaned.descSource?.trim() ? cleaned.descSource.trim() : undefined
-
     setSaving(true); setSaveError(null)
     try {
-      if (isAdding) { await onAdd(type, cleaned) }
-      else { await onSave(type, { ...data, ...cleaned }); setEditing(false) }
-      editorRefsMap.current.clear()
+      if (isAdding) { await onAdd(type, formData) }
+      else { await onSave(type, { ...data, ...formData }); setEditing(false) }
     } catch (err) { setSaveError(err.message) }
     finally { setSaving(false) }
   }
@@ -497,7 +428,6 @@ export default function DetailCard({
   }
 
   function handleCancel() {
-    editorRefsMap.current.clear()
     if (isAdding) onClose()
     else { setEditing(false); setSaveError(null); setConfirming(false) }
   }
@@ -521,7 +451,6 @@ export default function DetailCard({
     })
   }
 
-  // ── 私密笔记编辑 ──────────────────────────────────────
   function enterNoteEdit(addEmpty) {
     const existing = (notes?.[data?.id] || []).map(m => ({ ...m }))
     if (addEmpty) existing.push({ id: genModId(), title: '', content: '' })
@@ -560,24 +489,6 @@ export default function DetailCard({
     finally { setSaving(false) }
   }
 
-  // ── 公开模块(sections)编辑 ────────────────────────────
-  function updateFormSection(idx, updated) {
-    const next = [...(formData.sections || [])]
-    next[idx] = updated
-    setFormData({ ...formData, sections: next })
-  }
-
-  function deleteFormSection(idx) {
-    const removed = (formData.sections || [])[idx]
-    if (removed) editorRefsMap.current.delete(removed.id)
-    setFormData({ ...formData, sections: (formData.sections || []).filter((_, i) => i !== idx) })
-  }
-
-  function addFormSection() {
-    setFormData({ ...formData, sections: [...(formData.sections || []), { id: genModId(), title: '', source: '', content: '' }] })
-  }
-
-  // ── 私密卡渲染 ────────────────────────────────────────
   function renderPrivateCard() {
     const modules = notes?.[data?.id] || []
 
@@ -624,7 +535,7 @@ export default function DetailCard({
     )
   }
 
-  // ── 公开卡渲染 ────────────────────────────────────────
+  // 公开卡渲染
   function renderPublicCard() {
     if (showForm) {
       return (
@@ -637,17 +548,6 @@ export default function DetailCard({
           {type === 'movement'
             ? <MovementEditForm formData={formData} onChange={setFormData} />
             : <ArtistEditForm formData={formData} onChange={setFormData} allMovements={movements} />}
-          <div style={{ ...s.worksSection, marginTop: 8 }}>
-            <div style={s.worksHd}><label style={s.blockLabel}>内容模块</label></div>
-            {(formData.sections || []).map((sec, idx) => (
-              <ModuleEditor key={sec.id} mod={sec} showSource
-                onChange={updated => updateFormSection(idx, updated)}
-                onDelete={() => deleteFormSection(idx)}
-                editorRef={el => { if (el) editorRefsMap.current.set(sec.id, el); }}
-              />
-            ))}
-            <button onClick={addFormSection} style={s.workAddBtn}>＋ 新建模块</button>
-          </div>
           {saveError && <div style={s.errorMsg}>{saveError}</div>}
           <div style={s.editBtnRow}>
             <button onClick={handleCancel} disabled={saving} style={s.cancelBtn}>取消</button>
@@ -669,8 +569,9 @@ export default function DetailCard({
 
     return (
       <>
-        <PublicView data={data} type={type} artists={artists} movements={movements}
-          openSet={openSet} onToggle={toggleAccordion} />
+        {type === 'movement'
+          ? <MovementView data={data} artists={artists} />
+          : <ArtistView data={data} movements={movements} />}
         {isPinned && hasToken && (
           <div style={s.editBtnRow}>
             <button onClick={enterEdit} style={s.editEntryBtn}>编辑</button>
@@ -858,11 +759,6 @@ const s = {
   accBody: {
     fontSize: 12, lineHeight: 1.8, color: 'var(--text)',
     padding: '2px 0 6px 17px', wordBreak: 'break-word',
-  },
-  // 资料来源行
-  sourceNote: {
-    fontSize: 10, color: 'var(--text-faint)', fontStyle: 'italic',
-    marginBottom: 4,
   },
   // 模块编辑
   modBlock: {
