@@ -150,7 +150,15 @@
     "description": "立体主义开始于1906年，由乔治·布拉克与帕布罗·毕加索所建立。\n\n法国的艺评人路易·沃塞勒于1908年批评布拉克的作品《房屋和树》为一堆立方体组成。在此之后，这“立体主义”被广泛地拿来使用。在布拉克的作品之中，房屋的构建、形状与树木的色彩都极大地反映出塞尚对其的影响，直到1907年毕加索的《亚维农的少女》之后“立体主义”才焕发出新的光彩。\n\n立体主义的艺术家追求碎裂、解析、重组的形式，形成分离的画面──以许多组合的碎片型态为艺术家们所要展现的目标。艺术家以许多的角度来描写对象物，将其置于同一个画面之中，以此来表达对象物最为完整的形象。\n\n立体主义在二十世纪的最初十年影响了全欧洲的艺术家，并激发了一连串的艺术改革运动，如未来主义、结构主义及表现主义等等。",
     "sub": "",
     "url": "https://zh.wikipedia.org/wiki/%E7%AB%8B%E4%BD%93%E4%B8%BB%E4%B9%89",
-    "isEvent": false
+    "isEvent": false,
+    "sections": [
+      {
+        "id": "79b226bb-26e8-4e7f-8906-8d7024e935fe",
+        "title": "立体主义分阶段",
+        "source": "AI总结",
+        "content": "<p class=\"font-claude-response-body break-words whitespace-normal\"><strong>整体时间跨度：约1907年 — 1914年（核心阶段）</strong>，有时延伸到1920年代初期作为余波。</p>\n<p class=\"font-claude-response-body break-words whitespace-normal\">具体分期：</p>\n<p class=\"font-claude-response-body break-words whitespace-normal\"><strong>1907年 — 萌芽/起点</strong><br>\n毕加索的《亚维农的少女》通常被视为立体主义的开端，画中已经出现了破碎的几何面块和非传统视角。</p>\n<p class=\"font-claude-response-body break-words whitespace-normal\"><strong>1908—1912年 — 分析立体主义（Analytic Cubism）</strong><br>\n毕加索和布拉克紧密合作的核心阶段。色彩趋于单调（棕、灰、土色调），物体被彻底拆解成几何碎片，从多个角度同时呈现，画面接近抽象但仍保留可辨认的线索（吉他、瓶子、人脸轮廓）。</p>\n<p class=\"font-claude-response-body break-words whitespace-normal\"><strong>1912—1914年 — 综合立体主义（Synthetic Cubism）</strong><br>\n画风转向更明快的色彩，开始引入拼贴（collage）手法——报纸碎片、墙纸、绳子等真实材料被直接贴上画布。这一阶段比分析立体主义更具装饰性和构成感。</p>\n<p class=\"font-claude-response-body break-words whitespace-normal\"><strong>1914年 — 第一次世界大战爆发</strong><br>\n战争打断了巴黎的艺术圈活动（布拉克和其他艺术家应征入伍），核心阶段基本在此画上句点。</p>\n<p class=\"font-claude-response-body break-words whitespace-normal\"><strong>1914年之后 — 余波与扩散</strong><br>\n立体主义并没有立刻消失，它的影响持续渗透到其他艺术家和流派中——比如莱热（Léger）、德劳内、未来主义、构成主义都吸收了立体主义的几何化语言，一直延续到1920年代初。</p>"
+      }
+    ]
   },
   {
     "id": "mv17",
