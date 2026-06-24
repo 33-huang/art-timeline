@@ -42,7 +42,7 @@ React + Vite 的**竖向**艺术史时间轴;**公开**艺术史数据 + **私�
 ---
 
 ## 4. 架构
-- **公开数据**:`movements.json` / `artists.json` 在 `data` 分支;app 用 GitHub Contents API **匿名读**(读不用 token)。**必须用 fetch,不能 import**(import 会把数据打包进代码)。
+- **公开数据**:`movements.json` / `artists.json` 在 `data` 分支;app 用 GitHub Contents API **匿名读**(读不用 token)。**必须用 fetch,不能 import**(import 会把数据打包进代码)。公开条目除结构化字段外,有两个可选字段:`descSource`(简介资料来源)、`sections`(额外内容模块数组 `[{id,title,source,content(HTML)}]`)。
 - **编辑公开数据**:用 localStorage 里的 fine-grained token,Contents API `PUT` 写回 `data` 分支(带上次读到的 `sha`,写后更新 sha 防 409)。
 - **私密笔记**:`notes.json` 在私密仓;`loadNotes` **仅在有 token 时**加载(访客读不到);结构 `{ itemId: [ {id,title,content(HTML)} , ... ] }`(每条目=可折叠模块数组)。
 - **token**:fine-grained,对 `art-timeline` + `art-timeline-notes` 两仓 **Contents 读写**;存 localStorage(key `gh_token`);**绝不进代码/URL/日志/报错**。
@@ -68,6 +68,7 @@ React + Vite 的**竖向**艺术史时间轴;**公开**艺术史数据 + **私�
 - **孤儿艺术家**(`movements` 为空)=独立先驱:单独成列、`autoColor` 按 id 哈希自动配色、`posStart`(年份)控制左右列位置(留空按 birth)
 - React **key 必须唯一**:跨多个流派的艺术家会渲染多份,key 用 `流派id:艺术家id`(曾因重复 key 导致切 filter 时条目删不掉)
 - 卡片显示规则:有 token 时按**有无笔记**决定默认私密/公开卡;`showPublic`(按住 Shift)瞄公开;单击**固定**,**Shift+固定锁公开**(`pinnedPublic`);⌘ 抑制 hover;没笔记的条目在公开卡有「＋添加笔记」入口
+- **公开卡也是手风琴**:模块1「流派简介/艺术家简介」(=description + 艺术家代表作 + 维基链接,默认展开,id `__intro__`)+ `sections` 额外模块(默认收起);每模块若有 source 则在内容前显示「资料来源：x」(空=默认维基,不显示)。访客可展开全部、但编辑/新建仅 token。私密笔记(notes,私密仓)与公开模块(sections,data 分支)是两套独立东西。
 
 ---
 
@@ -96,7 +97,7 @@ React + Vite 的**竖向**艺术史时间轴;**公开**艺术史数据 + **私�
 ---
 
 ## 10. 进度(截至本文件)
-迁移 Step 1–10 完成 → 竖向还原(11)→ 完整编辑 新增/删除(12)→ v2 浅色皮肤(13a)→ hover/固定/⌘ 交互(13b)→ 私密笔记 双卡+Shift(14)→ 笔记改可折叠模块(15)→ 编辑体验(16:大输入框/换行/Shift+固定锁公开)→ 按有无笔记定默认卡(17)→ 多处修复(白屏、重复 key、孤儿配色、卢梭去灰、笔记插图)。
+迁移 Step 1–10 完成 → 竖向还原(11)→ 完整编辑 新增/删除(12)→ v2 浅色皮肤(13a)→ hover/固定/⌘ 交互(13b)→ 私密笔记 双卡+Shift(14)→ 笔记改可折叠模块(15)→ 编辑体验(16:大输入框/换行/Shift+固定锁公开)→ 按有无笔记定默认卡(17)→ 公开卡改模块手风琴(18:简介+可新建模块+资料来源,新增 descSource/sections 字段)→ 多处修复(白屏、重复 key、孤儿配色、卢梭去灰、笔记插图)。
 功能已相当完整,当前处于**视觉/交互细节打磨**阶段。
 
 ---
