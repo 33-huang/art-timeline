@@ -329,7 +329,7 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
 export default function DetailCard({
   mode, selected, movements, artists, onClose, hasToken, onSave,
   adding, onAdd, onDelete, pinPos, cardRef,
-  notes, showPublic, onSaveNote,
+  notes, showPrivate, onShowPrivate, onSaveNote,
 }) {
   const [editing, setEditing] = useState(false)
   const [editingNote, setEditingNote] = useState(false)
@@ -373,8 +373,7 @@ export default function DetailCard({
 
   const hasNote = (notes?.[data?.id]?.length || 0) > 0
 
-  // 有笔记 → 默认私密卡；没笔记 → 默认公开卡；正在编辑笔记 → 私密卡
-  const usePrivate = hasToken && !showPublic && !isAdding && !editing && (hasNote || editingNote)
+  const usePrivate = hasToken && showPrivate && !isAdding && !editing
 
   if (!mode) {
     return <div ref={cardRef} style={{ ...s.card, display: 'none' }} />
@@ -435,7 +434,9 @@ export default function DetailCard({
   const showForm = (isAdding || editing) && formData
 
   let cardStyle
-  if (isHover) {
+  if (usePrivate && isPinned) {
+    cardStyle = { ...s.card, ...s.cardCentered }
+  } else if (isHover) {
     cardStyle = { ...s.card, right: 'auto', pointerEvents: 'none' }
   } else if (isPinned && pinPos) {
     cardStyle = { ...s.card, left: pinPos.x, top: pinPos.y, right: 'auto', maxHeight: `calc(100vh - ${pinPos.y}px - 16px)` }
@@ -528,7 +529,6 @@ export default function DetailCard({
               <button onClick={() => enterNoteEdit(true)} style={s.editEntryBtn}>＋ 新建模块</button>
               <button onClick={() => enterNoteEdit(false)} style={s.editEntryBtn}>✎ 编辑笔记</button>
             </div>
-            <div style={s.noteHint}>按住 Shift 看公开版</div>
           </>
         )}
       </>
@@ -575,7 +575,9 @@ export default function DetailCard({
         {isPinned && hasToken && (
           <div style={s.editBtnRow}>
             <button onClick={enterEdit} style={s.editEntryBtn}>编辑</button>
-            {!hasNote && <button onClick={() => enterNoteEdit(true)} style={s.editEntryBtn}>＋ 添加笔记</button>}
+            <button onClick={onShowPrivate} style={s.editEntryBtn}>
+              {hasNote ? `📝 笔记(${notes[data.id].length})` : '📝 添加笔记'}
+            </button>
           </div>
         )}
       </>
@@ -621,6 +623,11 @@ const s = {
     padding: '12px 14px', zIndex: 11,
     color: 'var(--text)', fontFamily: "'Noto Sans SC', system-ui, sans-serif",
     fontSize: 12, lineHeight: 1.8, boxShadow: '0 8px 32px var(--tip-shadow)',
+  },
+  cardCentered: {
+    left: '50%', top: '50%', right: 'auto',
+    transform: 'translate(-50%, -50%)',
+    width: 'min(92vw, 680px)', maxHeight: '85vh',
   },
   closeBtn: {
     position: 'absolute', top: 10, right: 12,
@@ -744,10 +751,6 @@ const s = {
   notePlaceholder: {
     fontSize: 11.5, color: 'var(--text-faint)', fontStyle: 'italic',
     padding: '12px 0',
-  },
-  noteHint: {
-    marginTop: 8, fontSize: 9.5, color: 'var(--text-faint)', textAlign: 'center',
-    opacity: 0.7,
   },
   // 手风琴
   accTitle: {

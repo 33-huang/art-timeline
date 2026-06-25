@@ -67,7 +67,7 @@ React + Vite 的**竖向**艺术史时间轴;**公开**艺术史数据 + **私�
 - id:流派 `mvNN`、艺术家 `arNN`;新增=取现有最大数字+1 两位补零
 - **孤儿艺术家**(`movements` 为空)=独立先驱:单独成列、`autoColor` 按 id 哈希自动配色、`posStart`(年份)控制左右列位置(留空按 birth)
 - React **key 必须唯一**:跨多个流派的艺术家会渲染多份,key 用 `流派id:艺术家id`(曾因重复 key 导致切 filter 时条目删不掉)
-- 卡片显示规则:有 token 时按**有无笔记**决定默认私密/公开卡;`showPublic`(按住 Shift)瞄公开;单击**固定**,**Shift+固定锁公开**(`pinnedPublic`);⌘ 抑制 hover;没笔记的条目在公开卡有「＋添加笔记」入口
+- 卡片显示规则:**默认公开卡**;按住 **Shift → 私密卡(peek)**;单击固定(普通单击=公开、Shift+单击=私密,`pinnedPrivate`);**私密卡 + 固定 = 屏幕居中大窗口(`cardCentered`)**,其余(公开卡、hover peek)小窗贴条目;⌘ 抑制 hover;公开卡(持 token、固定时)有「📝 笔记/添加笔记」按钮(`onShowPrivate`)直接开私密大窗口。`usePrivate = hasToken && showPrivate && !isAdding && !editing`(`showPrivate = pinnedId ? pinnedPrivate : Shift按住`)
 
 ---
 

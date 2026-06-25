@@ -23,14 +23,14 @@ export default function App() {
   const [hasToken, setHasToken] = useState(() => !!localStorage.getItem(TOKEN_KEY))
   const [addingType, setAddingType] = useState(null)
   const [notes, setNotes] = useState({})
-  const [showPublic, setShowPublic] = useState(false)
+  const [showPrivate, setShowPrivate] = useState(false)
 
   // hover / pin 状态
   const [hoveredId, setHoveredId] = useState(null)
   const [hoveredSel, setHoveredSel] = useState(null)
   const [pinnedId, setPinnedId] = useState(null)
   const [pinnedSel, setPinnedSel] = useState(null)
-  const [pinnedPublic, setPinnedPublic] = useState(false)
+  const [pinnedPrivate, setPinnedPrivate] = useState(false)
   const [pinPos, setPinPos] = useState(null)
   const hoverLocked = useRef(false)
   const hoverMouse = useRef(null)
@@ -60,7 +60,7 @@ export default function App() {
     }
   }, [hasToken])
 
-  // ⌘ 抑制 + Esc 取消固定 + Shift 切换公开/私密
+  // ⌘ 抑制 + Esc 取消固定 + Shift 看私密
   useEffect(() => {
     function onKeyDown(e) {
       if (e.key === 'Meta') {
@@ -72,16 +72,16 @@ export default function App() {
       }
       if (e.key === 'Shift' && !e.target.closest('[contenteditable]') &&
           e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-        setShowPublic(true)
+        setShowPrivate(true)
       }
       if (e.key === 'Escape') {
-        if (pinnedId) { setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPublic(false) }
+        if (pinnedId) { setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPrivate(false) }
         if (addingType) { setAddingType(null) }
       }
     }
     function onKeyUp(e) {
       if (e.key === 'Meta') hoverLocked.current = false
-      if (e.key === 'Shift') setShowPublic(false)  // 松 Shift 始终还原
+      if (e.key === 'Shift') setShowPrivate(false)
     }
     document.addEventListener('keydown', onKeyDown)
     document.addEventListener('keyup', onKeyUp)
@@ -137,13 +137,13 @@ export default function App() {
     if (addingType) return
     if (pinnedId === id) {
       // 取消固定
-      setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPublic(false)
+      setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPrivate(false)
       setHoveredId(null); setHoveredSel(null)
     } else {
       // 固定：top 上限往上收，给（可能展开的）编辑器留出竖向空间
       const pos = clampTip(cardRef.current, e.clientX, e.clientY)
       pos.y = Math.min(pos.y, Math.max(56, window.innerHeight - 300))
-      setPinnedId(id); setPinnedSel(sel); setPinPos(pos); setPinnedPublic(!!e.shiftKey)
+      setPinnedId(id); setPinnedSel(sel); setPinPos(pos); setPinnedPrivate(!!e.shiftKey)
       setHoveredId(null); setHoveredSel(null)
     }
   }, [pinnedId, addingType])
@@ -152,14 +152,14 @@ export default function App() {
   const handleFilterChange = useCallback((f) => {
     setFilter(f)
     setHoveredId(null); setHoveredSel(null); hoverMouse.current = null
-    setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPublic(false)
+    setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPrivate(false)
     setAddingType(null)
   }, [])
 
   // 点空白：取消固定
   const onCanvasClick = useCallback(() => {
     if (pinnedId) {
-      setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPublic(false)
+      setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPrivate(false)
       setHoveredId(null); setHoveredSel(null)
     }
   }, [pinnedId])
@@ -209,7 +209,7 @@ export default function App() {
     else setArtists(newList)
     // 保存后直接关闭，不弹出新条目的卡片
     setAddingType(null)
-    setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPublic(false)
+    setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPrivate(false)
     setHoveredId(null); setHoveredSel(null)
   }
 
@@ -229,7 +229,7 @@ export default function App() {
         setArtists(updatedArtists)
       }
     } else { setArtists(newList) }
-    setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPublic(false)
+    setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPrivate(false)
   }
 
   async function handleSaveNote(id, modules) {
@@ -240,13 +240,13 @@ export default function App() {
   }
 
   function handleCloseCard() {
-    setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPublic(false)
+    setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPrivate(false)
     setHoveredId(null); setHoveredSel(null)
     setAddingType(null)
   }
 
   function startAdd(type) {
-    setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPublic(false)
+    setPinnedId(null); setPinnedSel(null); setPinPos(null); setPinnedPrivate(false)
     setHoveredId(null); setHoveredSel(null)
     setAddingType(type)
   }
@@ -307,7 +307,8 @@ export default function App() {
         pinPos={pinPos}
         cardRef={cardRef}
         notes={notes}
-        showPublic={(pinnedId && pinnedPublic) || showPublic}
+        showPrivate={(pinnedId && pinnedPrivate) || showPrivate}
+        onShowPrivate={() => setPinnedPrivate(true)}
         onSaveNote={handleSaveNote}
       />
     </>
