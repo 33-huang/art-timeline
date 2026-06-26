@@ -171,6 +171,10 @@ export default function App() {
   async function handleSave(type, updatedItem) {
     const filename = type === 'movement' ? 'movements.json' : 'artists.json'
     const list = type === 'movement' ? movements : artists
+    if (type === 'movement') {
+      if (updatedItem.posStart === '' || updatedItem.posStart == null || isNaN(Number(updatedItem.posStart))) delete updatedItem.posStart
+      else updatedItem.posStart = Number(updatedItem.posStart)
+    }
     if (type === 'artist') {
       if (updatedItem.posStart === '' || updatedItem.posStart == null || isNaN(Number(updatedItem.posStart))) delete updatedItem.posStart
       else updatedItem.posStart = Number(updatedItem.posStart)
@@ -196,6 +200,8 @@ export default function App() {
       if (!newItem.region) delete newItem.region
       if (!newItem.isEvent) delete newItem.isEvent
       if (!newItem.sub) delete newItem.sub
+      if (newItem.posStart === '' || newItem.posStart == null || isNaN(Number(newItem.posStart))) delete newItem.posStart
+      else newItem.posStart = Number(newItem.posStart)
     } else {
       if (!newItem.sub) delete newItem.sub
       if (!newItem.url) delete newItem.url

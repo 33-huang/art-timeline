@@ -35,7 +35,7 @@ function computeLayout(mvs, arts, filter, viewW) {
   const showArt = filter !== 'movements'
   const mvIds = new Set(mvs.map(m => m.id))
 
-  const groups = [...mvs].sort((a, b) => a.start - b.start).map(m => {
+  const groups = [...mvs].sort((a, b) => (a.posStart ?? a.start) - (b.posStart ?? b.start)).map(m => {
     const thisArts = arts.filter(a => a.movements.includes(m.id))
     const lanes = []
     ;[...thisArts].sort((a, b) => a.birth - b.birth).forEach(a => {
@@ -57,7 +57,7 @@ function computeLayout(mvs, arts, filter, viewW) {
       lanes: [[a]],
     })
   })
-  groups.sort((a, b) => a.m.start - b.m.start)
+  groups.sort((a, b) => (a.m.posStart ?? a.m.start) - (b.m.posStart ?? b.m.start))
 
   let totalSlots = 0
   groups.forEach(g => {

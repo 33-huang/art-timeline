@@ -232,6 +232,12 @@ function MovementEditForm({ formData, onChange }) {
         <input style={s.input} value={formData.url}
           onChange={e => onChange({ ...formData, url: e.target.value })} placeholder="https://..." />
       </div>
+      <div style={s.field}>
+        <label style={s.fieldLabel}>位置</label>
+        <input style={s.input} type="number" value={formData.posStart ?? ''}
+          placeholder="年份，留空按起始年排列"
+          onChange={e => onChange({ ...formData, posStart: e.target.value === '' ? '' : Number(e.target.value) })} />
+      </div>
       <div style={{ ...s.field, marginTop: 2 }}>
         <label style={s.fieldLabel}>颜色</label>
         <ColorPicker value={formData.color} onChange={c => onChange({ ...formData, color: c })} />
@@ -442,6 +448,7 @@ export default function DetailCard({
         start: data.start, end: data.end,
         region: data.region ?? '', description: data.description ?? '',
         url: data.url ?? '', color: data.color ?? '#888888', isEvent: !!data.isEvent,
+        posStart: data.posStart ?? '',
       })
     } else {
       setFormData({
