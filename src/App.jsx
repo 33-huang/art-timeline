@@ -174,6 +174,7 @@ export default function App() {
     if (type === 'artist') {
       if (updatedItem.posStart === '' || updatedItem.posStart == null || isNaN(Number(updatedItem.posStart))) delete updatedItem.posStart
       else updatedItem.posStart = Number(updatedItem.posStart)
+      if (!updatedItem.color) delete updatedItem.color
     }
     const updatedList = list.map(item => item.id === updatedItem.id ? updatedItem : item)
     await saveData(filename, updatedList)
@@ -201,6 +202,7 @@ export default function App() {
       if (!newItem.works?.length) delete newItem.works
       if (newItem.posStart === '' || newItem.posStart == null || isNaN(Number(newItem.posStart))) delete newItem.posStart
       else newItem.posStart = Number(newItem.posStart)
+      if (!newItem.color) delete newItem.color
     }
     const filename = type === 'movement' ? 'movements.json' : 'artists.json'
     const newList = [...list, newItem]

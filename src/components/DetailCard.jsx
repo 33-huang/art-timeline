@@ -156,6 +156,29 @@ function ModuleEditor({ mod, onChange, onDelete, editorRef }) {
   )
 }
 
+// ── 色板选择器 ──────────────────────────────────────────
+function ColorPicker({ value, onChange, showAuto }) {
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, alignItems: 'center' }}>
+      {showAuto && (
+        <div onClick={() => onChange('')}
+          style={{ ...s.colorSwatch, background: 'var(--bg)', border: '2px solid var(--axis-border)',
+            fontSize: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'var(--text-faint)', ...(!value ? { borderColor: 'var(--text)', fontWeight: 700 } : {}) }}>
+          自动
+        </div>
+      )}
+      {COLOR_PALETTE.map(c => (
+        <div key={c} onClick={() => onChange(c)}
+          style={{ ...s.colorSwatch, background: c,
+            ...(value === c ? { borderColor: 'var(--text)', boxShadow: '0 0 0 1px var(--text)' } : {}) }}>
+          {value === c && <span style={{ color: '#fff', fontSize: 10, textShadow: '0 0 2px rgba(0,0,0,.6)' }}>✓</span>}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 // ── 公开卡编辑表单：流派 ──────────────────────────────
 function MovementEditForm({ formData, onChange }) {
   return (
@@ -193,6 +216,10 @@ function MovementEditForm({ formData, onChange }) {
         <label style={s.fieldLabel}>链接</label>
         <input style={s.input} value={formData.url}
           onChange={e => onChange({ ...formData, url: e.target.value })} placeholder="https://..." />
+      </div>
+      <div style={s.fieldBlock}>
+        <label style={s.blockLabel}>颜色</label>
+        <ColorPicker value={formData.color} onChange={c => onChange({ ...formData, color: c })} />
       </div>
       <div style={{ ...s.field, marginTop: 2 }}>
         <label style={{ ...s.fieldLabel, cursor: 'pointer' }}>
@@ -296,12 +323,19 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
         </div>
       </div>
       {mvIds.length === 0 && (
-        <div style={s.field}>
-          <label style={s.fieldLabel}>位置</label>
-          <input style={s.input} type="number" value={formData.posStart ?? ''}
-            placeholder="年份，留空按出生年（仅无流派时用于左右定位）"
-            onChange={e => onChange({ ...formData, posStart: e.target.value === '' ? '' : Number(e.target.value) })} />
-        </div>
+        <>
+          <div style={s.field}>
+            <label style={s.fieldLabel}>位置</label>
+            <input style={s.input} type="number" value={formData.posStart ?? ''}
+              placeholder="年份，留空按出生年（仅无流派时用于左右定位）"
+              onChange={e => onChange({ ...formData, posStart: e.target.value === '' ? '' : Number(e.target.value) })} />
+          </div>
+          <div style={s.fieldBlock}>
+            <label style={s.blockLabel}>颜色</label>
+            <ColorPicker value={formData.color || ''} showAuto
+              onChange={c => onChange({ ...formData, color: c })} />
+          </div>
+        </>
       )}
       <div style={s.fieldBlock}>
         <label style={s.blockLabel}>简介</label>
@@ -369,7 +403,7 @@ export default function DetailCard({
       setFormData({ zh: '', sub: '', start: '', end: '', region: '', description: '', url: '', color, isEvent: false })
       setSaveError(null); setConfirming(false)
     } else if (adding === 'artist') {
-      setFormData({ zh: '', sub: '', birth: '', death: '', description: '', works: [], movements: [], url: '' })
+      setFormData({ zh: '', sub: '', birth: '', death: '', description: '', works: [], movements: [], url: '', color: '' })
       setSaveError(null); setConfirming(false)
     }
   }, [adding, movements?.length])
@@ -403,7 +437,7 @@ export default function DetailCard({
         description: data.description ?? '',
         works: data.works ? JSON.parse(JSON.stringify(data.works)) : [],
         movements: data.movements ?? [], url: data.url ?? '',
-        posStart: data.posStart ?? '',
+        posStart: data.posStart ?? '', color: data.color ?? '',
       })
     }
     setSaveError(null); setEditing(true)
@@ -687,6 +721,11 @@ const s = {
     padding: '2px 0', outline: 'none',
   },
   workEntryDel: { color: '#e55', cursor: 'pointer', fontSize: 10.5, flexShrink: 0, fontFamily: 'inherit' },
+  colorSwatch: {
+    width: 22, height: 22, borderRadius: 4, cursor: 'pointer',
+    border: '2px solid transparent', display: 'flex',
+    alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+  },
   workMoveBtn: {
     background: 'none', border: '1px solid var(--axis-border)', borderRadius: 4,
     color: 'var(--text-faint)', fontSize: 10, padding: '0 4px', cursor: 'pointer',
