@@ -222,6 +222,12 @@ function MovementEditForm({ formData, onChange }) {
         <input style={s.input} value={formData.region}
           onChange={e => onChange({ ...formData, region: e.target.value })} />
       </div>
+      <div style={s.field}>
+        <label style={s.fieldLabel}>位置</label>
+        <input style={s.input} type="number" value={formData.posStart ?? ''}
+          placeholder="年份，留空按起始年排列"
+          onChange={e => onChange({ ...formData, posStart: e.target.value === '' ? '' : Number(e.target.value) })} />
+      </div>
       <div style={s.fieldBlock}>
         <label style={s.blockLabel}>简介</label>
         <textarea style={s.textarea} rows={10} value={formData.description}
@@ -231,12 +237,6 @@ function MovementEditForm({ formData, onChange }) {
         <label style={s.fieldLabel}>链接</label>
         <input style={s.input} value={formData.url}
           onChange={e => onChange({ ...formData, url: e.target.value })} placeholder="https://..." />
-      </div>
-      <div style={s.field}>
-        <label style={s.fieldLabel}>位置</label>
-        <input style={s.input} type="number" value={formData.posStart ?? ''}
-          placeholder="年份，留空按起始年排列"
-          onChange={e => onChange({ ...formData, posStart: e.target.value === '' ? '' : Number(e.target.value) })} />
       </div>
       <div style={{ ...s.field, marginTop: 2 }}>
         <label style={s.fieldLabel}>颜色</label>
@@ -342,19 +342,12 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
         </div>
       </div>
       {mvIds.length === 0 && (
-        <>
-          <div style={s.field}>
-            <label style={s.fieldLabel}>位置</label>
-            <input style={s.input} type="number" value={formData.posStart ?? ''}
-              placeholder="年份，留空按出生年（仅无流派时用于左右定位）"
-              onChange={e => onChange({ ...formData, posStart: e.target.value === '' ? '' : Number(e.target.value) })} />
-          </div>
-          <div style={s.fieldBlock}>
-            <label style={s.blockLabel}>颜色</label>
-            <ColorPicker value={formData.color || ''} showAuto
-              onChange={c => onChange({ ...formData, color: c })} />
-          </div>
-        </>
+        <div style={s.field}>
+          <label style={s.fieldLabel}>位置</label>
+          <input style={s.input} type="number" value={formData.posStart ?? ''}
+            placeholder="年份，留空按出生年（仅无流派时用于左右定位）"
+            onChange={e => onChange({ ...formData, posStart: e.target.value === '' ? '' : Number(e.target.value) })} />
+        </div>
       )}
       <div style={s.fieldBlock}>
         <label style={s.blockLabel}>简介</label>
@@ -366,6 +359,13 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
         <input style={s.input} value={formData.url}
           onChange={e => onChange({ ...formData, url: e.target.value })} placeholder="https://..." />
       </div>
+      {mvIds.length === 0 && (
+        <div style={s.field}>
+          <label style={s.fieldLabel}>颜色</label>
+          <ColorPicker value={formData.color || ''} showAuto
+            onChange={c => onChange({ ...formData, color: c })} />
+        </div>
+      )}
       <div style={s.worksSection}>
         <div style={s.worksHd}><label style={s.blockLabel}>代表作</label></div>
         {works.map((w, i) => (
