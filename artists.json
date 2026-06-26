@@ -360,12 +360,17 @@
       {
         "title": "角落的反浮雕",
         "url": "https://rusmuseumvrm.ru/data/collections/sculpture/20/tatlin_ve_uglovoy_kontrrelef_1914/index.php?lang=en"
+      },
+      {
+        "title": "塔特林塔",
+        "url": "https://en.wikipedia.org/wiki/Tatlin%27s_Tower"
       }
     ],
     "movements": [
       "mv20"
     ],
-    "url": "https://zh.wikipedia.org/wiki/%E5%BC%97%E6%8B%89%E5%9F%BA%E7%B1%B3%E7%88%BE%C2%B7%E5%A1%94%E7%89%B9%E6%9E%97"
+    "url": "https://zh.wikipedia.org/wiki/%E5%BC%97%E6%8B%89%E5%9F%BA%E7%B1%B3%E7%88%BE%C2%B7%E5%A1%94%E7%89%B9%E6%9E%97",
+    "sub": ""
   },
   {
     "id": "ar26",
