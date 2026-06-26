@@ -332,11 +332,16 @@
       {
         "title": "至上主义",
         "url": "https://www.ibiblio.org/eldritch/el/mp/m50.jpg"
+      },
+      {
+        "title": "《奶牛与小提琴》",
+        "url": "https://russianartgallery.org/famous/malevich_cow.htm"
       }
     ],
     "movements": [
       "mv27"
     ],
-    "url": "https://zh.wikipedia.org/wiki/%E5%8D%A1%E6%BF%9F%E7%B1%B3%E7%88%BE%C2%B7%E9%A6%AC%E5%88%97%E7%B6%AD%E5%A5%87"
+    "url": "https://zh.wikipedia.org/wiki/%E5%8D%A1%E6%BF%9F%E7%B1%B3%E7%88%BE%C2%B7%E9%A6%AC%E5%88%97%E7%B6%AD%E5%A5%87",
+    "sub": ""
   }
 ]
