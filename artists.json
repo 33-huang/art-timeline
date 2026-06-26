@@ -326,16 +326,16 @@
     "description": "俄罗斯前卫艺术及乌克兰前卫艺术的主要代表人物，至上主义流派的创始人，与康定斯基、蒙德里安并列为早期抽象艺术的三大代表人物，其开创性贡献深刻地影响了20世纪现代艺术的发展",
     "works": [
       {
+        "title": "《奶牛与小提琴》",
+        "url": "https://russianartgallery.org/famous/malevich_cow.htm"
+      },
+      {
         "title": "黑色正方形",
         "url": "https://www.ibiblio.org/eldritch/el/mp/m01.jpg"
       },
       {
         "title": "至上主义",
         "url": "https://www.ibiblio.org/eldritch/el/mp/m50.jpg"
-      },
-      {
-        "title": "《奶牛与小提琴》",
-        "url": "https://russianartgallery.org/famous/malevich_cow.htm"
       }
     ],
     "movements": [
