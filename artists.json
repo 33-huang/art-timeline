@@ -433,5 +433,22 @@
       "mv28"
     ],
     "url": "https://en.wikipedia.org/wiki/Jacob_Epstein"
+  },
+  {
+    "id": "ar29",
+    "zh": "亚历山大·罗钦可",
+    "birth": 1891,
+    "death": 1956,
+    "description": "苏联美术家、雕刻家和摄影家，结构主义和苏联设计学派的创建人之一。",
+    "works": [
+      {
+        "title": "纯红、纯黄和纯蓝",
+        "url": "https://editst.com/2021/150-years-of-modern-art/383247DFC79C447D8D1399C4F9CE91A1.png.webp"
+      }
+    ],
+    "movements": [
+      "mv20"
+    ],
+    "url": "https://zh.wikipedia.org/zh-cn/%E4%BA%9E%E6%AD%B7%E5%B1%B1%E5%A4%A7%C2%B7%E7%BE%85%E6%AC%BD%E5%8F%AF"
   }
 ]
