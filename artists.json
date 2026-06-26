@@ -229,14 +229,15 @@
     "description": "捷克艺术家，1894年去巴黎，以教书、做插画为业，并长居巴黎。是巴黎立体-未来主义运动中的一员。1900年代他有大量创作，糅合了象征主义和装饰主义。后参加第一次世界大战，并负伤。库普卡醉心于神秘主义，其作品充满了几何图形。1920年代后逐渐淡出了人们的视野，直到50年后才重新引起评论界注意。",
     "works": [
       {
-        "title": "《第一步》​（",
+        "title": "《第一步》​",
         "url": "https://www.moma.org/collection/works/79969 "
       }
     ],
     "movements": [
       "mv26"
     ],
-    "url": "https://zh.wikipedia.org/wiki/%E5%BC%97%E6%9C%97%E9%BD%90%E6%AD%87%E5%85%8B%C2%B7%E5%BA%93%E6%99%AE%E5%8D%A1"
+    "url": "https://zh.wikipedia.org/wiki/%E5%BC%97%E6%9C%97%E9%BD%90%E6%AD%87%E5%85%8B%C2%B7%E5%BA%93%E6%99%AE%E5%8D%A1",
+    "sub": ""
   },
   {
     "id": "ar21",
