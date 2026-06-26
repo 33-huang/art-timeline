@@ -537,6 +537,7 @@ export default function DetailCard({
             <div style={s.editBtnRow}>
               <button onClick={() => enterNoteEdit(true)} style={s.editEntryBtn}>＋ 新建模块</button>
               <button onClick={() => enterNoteEdit(false)} style={s.editEntryBtn}>✎ 编辑笔记</button>
+              <button onClick={enterEdit} style={s.editEntryBtn}>✎ 编辑公开</button>
             </div>
           </>
         )}
