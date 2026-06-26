@@ -410,5 +410,22 @@
     ],
     "movements": [],
     "url": "https://en.wikipedia.org/wiki/Jacob_Epstein"
+  },
+  {
+    "id": "ar28",
+    "zh": "雅各布·爱泼斯坦",
+    "birth": 1880,
+    "death": 1959,
+    "description": "现代雕塑的先驱之一。他反对当时流行的华丽、甜美、装饰性的艺术风格，而是创作出大胆、粗犷、体量宏大的青铜和石雕作品。他的雕塑以充满力量、保留凿刻痕迹的现实主义风格而著称。",
+    "works": [
+      {
+        "title": "凿岩机",
+        "url": "https://en.wikipedia.org/wiki/Rock_Drill_(Jacob_Epstein)"
+      }
+    ],
+    "movements": [
+      "mv28"
+    ],
+    "url": "https://en.wikipedia.org/wiki/Jacob_Epstein"
   }
 ]
