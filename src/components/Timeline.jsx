@@ -16,7 +16,7 @@ const LABEL_PAD   = 3
 function yearToY(yr) { return TOP_PAD + (yr - MIN_YEAR) * PX_PER_YEAR }
 
 // 独立(无流派)艺术家的自动配色：按 id 稳定哈希取调色板色，代替灰色
-const ORPHAN_PALETTE = ['#9B7DC8','#5B9FD4','#D4924A','#4EAA72','#D45878','#C8A832','#B89020','#7A6DC8','#C44868','#4A8FC4','#C46848','#C48030','#8A6DC8','#4878B8']
+const ORPHAN_PALETTE = ['#D45858','#D4924A','#C8A832','#4EAA72','#48B8A0','#5B9FD4','#9B7DC8']
 function autoColor(id) {
   let h = 0
   for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) | 0

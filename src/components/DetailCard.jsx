@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-const COLOR_PALETTE = ['#9B7DC8','#5B9FD4','#D4924A','#4EAA72','#D45878','#C8A832','#B89020','#7A6DC8','#C44868','#4A8FC4','#C46848','#C48030','#8A6DC8','#4878B8']
+const COLOR_PALETTE = ['#D45858','#D4924A','#C8A832','#4EAA72','#48B8A0','#5B9FD4','#9B7DC8']
 
 // ── 公开卡：只读流派 ──────────────────────────────────
 function MovementView({ data, artists }) {
@@ -156,25 +156,40 @@ function ModuleEditor({ mod, onChange, onDelete, editorRef }) {
   )
 }
 
-// ── 色板选择器 ──────────────────────────────────────────
+// ── 颜色下拉选择器 ──────────────────────────────────────
+const COLOR_NAMES = ['红','橙','黄','绿','青','蓝','紫']
 function ColorPicker({ value, onChange, showAuto }) {
+  const [open, setOpen] = useState(false)
+  const displayColor = value || (showAuto ? 'var(--axis-border)' : COLOR_PALETTE[0])
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, alignItems: 'center' }}>
-      {showAuto && (
-        <div onClick={() => onChange('')}
-          style={{ ...s.colorSwatch, background: 'var(--bg)', border: '2px solid var(--axis-border)',
-            fontSize: 8, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: 'var(--text-faint)', ...(!value ? { borderColor: 'var(--text)', fontWeight: 700 } : {}) }}>
-          自动
-        </div>
+    <div style={{ position: 'relative', display: 'inline-block' }}>
+      <div onClick={() => setOpen(o => !o)} style={{
+        ...s.colorSwatch, background: displayColor, cursor: 'pointer',
+        ...(value ? {} : { border: '2px dashed var(--axis-border)' }),
+      }}>
+        {!value && showAuto && <span style={{ fontSize: 7, color: 'var(--text-faint)' }}>自动</span>}
+      </div>
+      {open && (
+        <>
+          <div onClick={() => setOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 50 }} />
+          <div style={s.colorDropdown}>
+            {showAuto && (
+              <div onClick={() => { onChange(''); setOpen(false) }} style={s.colorOption}>
+                <span style={{ ...s.colorDot, background: 'var(--axis-border)', border: '1px dashed var(--text-faint)' }} />
+                <span>自动</span>
+                {!value && <span style={s.colorCheck}>✓</span>}
+              </div>
+            )}
+            {COLOR_PALETTE.map((c, i) => (
+              <div key={c} onClick={() => { onChange(c); setOpen(false) }} style={s.colorOption}>
+                <span style={{ ...s.colorDot, background: c }} />
+                <span>{COLOR_NAMES[i]}</span>
+                {value === c && <span style={s.colorCheck}>✓</span>}
+              </div>
+            ))}
+          </div>
+        </>
       )}
-      {COLOR_PALETTE.map(c => (
-        <div key={c} onClick={() => onChange(c)}
-          style={{ ...s.colorSwatch, background: c,
-            ...(value === c ? { borderColor: 'var(--text)', boxShadow: '0 0 0 1px var(--text)' } : {}) }}>
-          {value === c && <span style={{ color: '#fff', fontSize: 10, textShadow: '0 0 2px rgba(0,0,0,.6)' }}>✓</span>}
-        </div>
-      ))}
     </div>
   )
 }
@@ -725,6 +740,23 @@ const s = {
     width: 22, height: 22, borderRadius: 4, cursor: 'pointer',
     border: '2px solid transparent', display: 'flex',
     alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+  },
+  colorDropdown: {
+    position: 'absolute', left: 0, top: 28, zIndex: 51,
+    background: 'var(--tip-bg)', border: '1px solid var(--axis-border)',
+    borderRadius: 6, boxShadow: '0 4px 12px var(--tip-shadow)',
+    padding: 4, minWidth: 90,
+  },
+  colorOption: {
+    display: 'flex', alignItems: 'center', gap: 6,
+    padding: '4px 8px', borderRadius: 4, cursor: 'pointer',
+    fontSize: 11, color: 'var(--text)', whiteSpace: 'nowrap',
+  },
+  colorDot: {
+    width: 14, height: 14, borderRadius: 3, flexShrink: 0,
+  },
+  colorCheck: {
+    marginLeft: 'auto', fontSize: 10, color: 'var(--text-faint)',
   },
   workMoveBtn: {
     background: 'none', border: '1px solid var(--axis-border)', borderRadius: 4,
