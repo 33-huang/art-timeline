@@ -260,6 +260,13 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
   }
   function addWork() { onChange({ ...formData, works: [...works, { title: '', url: '' }] }) }
   function removeWork(i) { onChange({ ...formData, works: works.filter((_, idx) => idx !== i) }) }
+  function moveWork(i, dir) {
+    const j = i + dir
+    if (j < 0 || j >= works.length) return
+    const next = [...works]
+    ;[next[i], next[j]] = [next[j], next[i]]
+    onChange({ ...formData, works: next })
+  }
   return (
     <div style={s.form}>
       <div style={s.field}>
@@ -313,6 +320,8 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
             <div style={s.workEntryHeader}>
               <input style={s.workTitleInp} placeholder="作品名" value={w.title}
                 onChange={e => updateWork(i, 'title', e.target.value)} />
+              <button style={s.workMoveBtn} disabled={i === 0} onClick={() => moveWork(i, -1)}>↑</button>
+              <button style={s.workMoveBtn} disabled={i === works.length - 1} onClick={() => moveWork(i, 1)}>↓</button>
               <span style={s.workEntryDel} onClick={() => removeWork(i)}>删除</span>
             </div>
             <input style={s.workUrlInp} placeholder="https://..." value={w.url}
@@ -677,6 +686,11 @@ const s = {
     padding: '2px 0', outline: 'none',
   },
   workEntryDel: { color: '#e55', cursor: 'pointer', fontSize: 10.5, flexShrink: 0, fontFamily: 'inherit' },
+  workMoveBtn: {
+    background: 'none', border: '1px solid var(--axis-border)', borderRadius: 4,
+    color: 'var(--text-faint)', fontSize: 10, padding: '0 4px', cursor: 'pointer',
+    fontFamily: 'inherit', lineHeight: 1.4, flexShrink: 0,
+  },
   workAddBtn: {
     alignSelf: 'flex-start', marginTop: 4,
     background: 'none', border: '1px solid var(--axis-border)', color: 'var(--text-muted)',
