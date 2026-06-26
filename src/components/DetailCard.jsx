@@ -232,12 +232,10 @@ function MovementEditForm({ formData, onChange }) {
         <input style={s.input} value={formData.url}
           onChange={e => onChange({ ...formData, url: e.target.value })} placeholder="https://..." />
       </div>
-      <div style={s.fieldBlock}>
-        <label style={s.blockLabel}>颜色</label>
-        <ColorPicker value={formData.color} onChange={c => onChange({ ...formData, color: c })} />
-      </div>
       <div style={{ ...s.field, marginTop: 2 }}>
-        <label style={{ ...s.fieldLabel, cursor: 'pointer' }}>
+        <label style={s.fieldLabel}>颜色</label>
+        <ColorPicker value={formData.color} onChange={c => onChange({ ...formData, color: c })} />
+        <label style={{ ...s.fieldLabel, cursor: 'pointer', marginLeft: 12, width: 'auto' }}>
           <input type="checkbox" checked={formData.isEvent} style={{ marginRight: 4 }}
             onChange={e => onChange({ ...formData, isEvent: e.target.checked })} />
           大事件
