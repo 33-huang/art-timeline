@@ -76,7 +76,7 @@ function NoteSummary({ data, type, movements }) {
 function genModId() { return crypto.randomUUID?.() || `${Date.now()}-${Math.random()}` }
 
 // ── 私密卡：手风琴浏览 ────────────────────────────────
-function NoteAccordion({ modules, openSet, onToggle }) {
+function NoteAccordion({ modules, openSet, onToggle, onEdit, canEdit }) {
   if (!modules?.length) {
     return <div style={s.notePlaceholder}>（还没有笔记，点 ＋新建模块 添加）</div>
   }
@@ -88,7 +88,10 @@ function NoteAccordion({ modules, openSet, onToggle }) {
           <div key={mod.id}>
             <div style={s.accTitle} onClick={() => onToggle(mod.id)}>
               <span style={s.accArrow}>{open ? '▾' : '▸'}</span>
-              {mod.title || '无标题'}
+              <span style={{ flex: 1 }}>{mod.title || '无标题'}</span>
+              {canEdit && (
+                <span style={s.accEditIcon} onClick={e => { e.stopPropagation(); onEdit(mod) }} title="编辑">✎</span>
+              )}
             </div>
             {open && (
               <div className="note-content" style={s.accBody} dangerouslySetInnerHTML={{ __html: mod.content || '' }} />
@@ -146,9 +149,18 @@ function ModuleEditor({ mod, onChange, onDelete, editorRef }) {
       </div>
       <div style={s.noteToolbar}>
         <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('bold') }} title="加粗"><b>B</b></button>
-        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('formatBlock', '<h3>') }} title="标题">H</button>
         <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); execWithPrompt('createLink', '输入链接 URL：') }} title="链接">🔗</button>
         <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); execWithPrompt('insertHTML', '输入图片 URL：', u => `<img src="${u}" style="max-width:100%;border-radius:4px;margin:4px 0" />`) }} title="图片URL">🖼</button>
+        <button style={s.noteToolBtn} onMouseDown={e => {
+          e.preventDefault()
+          const el = localRef.current
+          const sel = window.getSelection()
+          if (!sel || !sel.rangeCount || !el || !el.contains(sel.anchorNode)) return
+          const text = sel.toString()
+          if (!text) return
+          el.focus()
+          document.execCommand('insertText', false, text)
+        }} title="清除格式"><span style={{ textDecoration: 'line-through' }}>T</span></button>
       </div>
       <div ref={setRef} contentEditable suppressContentEditableWarning
         style={s.noteEditable} />
@@ -394,8 +406,8 @@ export default function DetailCard({
   notes, showPrivate, onShowPrivate, onSaveNote,
 }) {
   const [editing, setEditing] = useState(false)
-  const [editingNote, setEditingNote] = useState(false)
-  const [noteDraft, setNoteDraft] = useState([])
+  const [editingModId, setEditingModId] = useState(null)
+  const [modDraft, setModDraft] = useState(null)
   const [openSet, setOpenSet] = useState(new Set())
   const [formData, setFormData] = useState(null)
   const [saving, setSaving] = useState(false)
@@ -407,8 +419,8 @@ export default function DetailCard({
 
   useEffect(() => {
     setEditing(false)
-    setEditingNote(false)
-    setNoteDraft([])
+    setEditingModId(null)
+    setModDraft(null)
     setOpenSet(new Set())
     setSaveError(null)
     setFormData(null)
@@ -515,39 +527,56 @@ export default function DetailCard({
     })
   }
 
-  function enterNoteEdit(addEmpty) {
-    const existing = (notes?.[data?.id] || []).map(m => ({ ...m }))
-    if (addEmpty) existing.push({ id: genModId(), title: '', content: '' })
-    setNoteDraft(existing)
-    setEditingNote(true)
+  function enterModEdit(mod) {
+    setEditingModId(mod.id)
+    setModDraft({ ...mod })
     setSaveError(null)
     editorRefsMap.current.clear()
   }
 
-  function updateDraftMod(idx, updated) {
-    setNoteDraft(prev => prev.map((m, i) => i === idx ? updated : m))
+  function enterNewMod() {
+    const newMod = { id: genModId(), title: '', content: '' }
+    setEditingModId(newMod.id)
+    setModDraft(newMod)
+    setSaveError(null)
+    editorRefsMap.current.clear()
   }
 
-  function deleteDraftMod(idx) {
-    const removed = noteDraft[idx]
-    if (removed) editorRefsMap.current.delete(removed.id)
-    setNoteDraft(prev => prev.filter((_, i) => i !== idx))
-  }
-
-  function addDraftMod() {
-    setNoteDraft(prev => [...prev, { id: genModId(), title: '', content: '' }])
+  function cancelModEdit() {
+    setEditingModId(null)
+    setModDraft(null)
+    setSaveError(null)
+    editorRefsMap.current.clear()
   }
 
   async function handleSaveNotes() {
-    const modules = noteDraft.map(mod => ({
-      id: mod.id,
-      title: mod.title || '',
-      content: editorRefsMap.current.get(mod.id)?.innerHTML ?? mod.content ?? '',
-    }))
+    const editorEl = editorRefsMap.current.get(editingModId)
+    const updated = {
+      id: modDraft.id,
+      title: modDraft.title || '',
+      content: editorEl?.innerHTML ?? modDraft.content ?? '',
+    }
+    const existing = notes?.[data?.id] || []
+    const isNew = !existing.some(m => m.id === editingModId)
+    const modules = isNew ? [...existing, updated] : existing.map(m => m.id === editingModId ? updated : m)
     setSaving(true); setSaveError(null)
     try {
       await onSaveNote(data.id, modules)
-      setEditingNote(false)
+      setEditingModId(null)
+      setModDraft(null)
+      editorRefsMap.current.clear()
+    } catch (err) { setSaveError(err.message) }
+    finally { setSaving(false) }
+  }
+
+  async function deleteModule(modId) {
+    const existing = notes?.[data?.id] || []
+    const modules = existing.filter(m => m.id !== modId)
+    setSaving(true); setSaveError(null)
+    try {
+      await onSaveNote(data.id, modules)
+      setEditingModId(null)
+      setModDraft(null)
       editorRefsMap.current.clear()
     } catch (err) { setSaveError(err.message) }
     finally { setSaving(false) }
@@ -555,45 +584,76 @@ export default function DetailCard({
 
   function renderPrivateCard() {
     const modules = notes?.[data?.id] || []
-
-    if (editingNote && isPinned) {
-      return (
-        <>
-          <NoteSummary data={data} type={type} movements={movements} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {noteDraft.map((mod, idx) => (
-              <ModuleEditor key={mod.id} mod={mod}
-                onChange={updated => updateDraftMod(idx, updated)}
-                onDelete={() => deleteDraftMod(idx)}
-                editorRef={el => { if (el) editorRefsMap.current.set(mod.id, el); }}
-              />
-            ))}
-          </div>
-          <button onClick={addDraftMod} style={{ ...s.workAddBtn, marginTop: 6 }}>＋ 新建模块</button>
-          {saveError && <div style={s.errorMsg}>{saveError}</div>}
-          <div style={s.editBtnRow}>
-            <button onClick={() => { setEditingNote(false); editorRefsMap.current.clear() }} disabled={saving} style={s.cancelBtn}>取消</button>
-            <button onClick={handleSaveNotes} disabled={saving}
-              style={{ ...s.saveBtn, ...(saving ? { opacity: 0.5 } : {}) }}>
-              {saving ? '保存中…' : '保存笔记'}
-            </button>
-          </div>
-        </>
-      )
-    }
+    const isNewMod = editingModId && !modules.some(m => m.id === editingModId)
 
     return (
       <>
         <NoteSummary data={data} type={type} movements={movements} />
-        <NoteAccordion modules={modules} openSet={openSet} onToggle={toggleAccordion} />
-        {isPinned && (
+        {editingModId && modDraft && !isNewMod ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            {modules.map(mod => {
+              if (mod.id === editingModId) {
+                return (
+                  <div key={mod.id} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    <ModuleEditor mod={modDraft}
+                      onChange={setModDraft}
+                      onDelete={() => deleteModule(mod.id)}
+                      editorRef={el => { if (el) editorRefsMap.current.set(modDraft.id, el); }}
+                    />
+                    {saveError && <div style={s.errorMsg}>{saveError}</div>}
+                    <div style={s.editBtnRow}>
+                      <button onClick={cancelModEdit} disabled={saving} style={s.cancelBtn}>取消</button>
+                      <button onClick={handleSaveNotes} disabled={saving}
+                        style={{ ...s.saveBtn, ...(saving ? { opacity: 0.5 } : {}) }}>
+                        {saving ? '保存中…' : '保存'}
+                      </button>
+                    </div>
+                  </div>
+                )
+              }
+              const open = openSet.has(mod.id)
+              return (
+                <div key={mod.id}>
+                  <div style={s.accTitle} onClick={() => toggleAccordion(mod.id)}>
+                    <span style={s.accArrow}>{open ? '▾' : '▸'}</span>
+                    <span style={{ flex: 1 }}>{mod.title || '无标题'}</span>
+                  </div>
+                  {open && (
+                    <div className="note-content" style={s.accBody} dangerouslySetInnerHTML={{ __html: mod.content || '' }} />
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        ) : editingModId && modDraft && isNewMod ? (
           <>
-            <div style={s.editBtnRow}>
-              <button onClick={() => enterNoteEdit(true)} style={s.editEntryBtn}>＋ 新建模块</button>
-              <button onClick={() => enterNoteEdit(false)} style={s.editEntryBtn}>✎ 编辑笔记</button>
-              <button onClick={enterEdit} style={s.editEntryBtn}>✎ 编辑公开</button>
+            <NoteAccordion modules={modules} openSet={openSet} onToggle={toggleAccordion}
+              canEdit={false} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 4 }}>
+              <ModuleEditor mod={modDraft}
+                onChange={setModDraft}
+                onDelete={cancelModEdit}
+                editorRef={el => { if (el) editorRefsMap.current.set(modDraft.id, el); }}
+              />
+              {saveError && <div style={s.errorMsg}>{saveError}</div>}
+              <div style={s.editBtnRow}>
+                <button onClick={cancelModEdit} disabled={saving} style={s.cancelBtn}>取消</button>
+                <button onClick={handleSaveNotes} disabled={saving}
+                  style={{ ...s.saveBtn, ...(saving ? { opacity: 0.5 } : {}) }}>
+                  {saving ? '保存中…' : '保存'}
+                </button>
+              </div>
             </div>
           </>
+        ) : (
+          <NoteAccordion modules={modules} openSet={openSet} onToggle={toggleAccordion}
+            onEdit={enterModEdit} canEdit={hasToken && isPinned} />
+        )}
+        {isPinned && !editingModId && (
+          <div style={s.editBtnRow}>
+            <button onClick={enterNewMod} style={s.editEntryBtn}>＋ 新建模块</button>
+            <button onClick={enterEdit} style={s.editEntryBtn}>✎ 编辑公开</button>
+          </div>
         )}
       </>
     )
@@ -850,6 +910,7 @@ const s = {
     display: 'flex', alignItems: 'center', gap: 5,
   },
   accArrow: { fontSize: 10, color: 'var(--text-faint)', width: 12, flexShrink: 0, textAlign: 'center' },
+  accEditIcon: { fontSize: 12, color: 'var(--text-faint)', cursor: 'pointer', flexShrink: 0, padding: '0 2px' },
   accBody: {
     fontSize: 12, lineHeight: 1.8, color: 'var(--text)',
     padding: '2px 0 6px 17px', wordBreak: 'break-word',
