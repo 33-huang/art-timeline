@@ -151,16 +151,7 @@ function ModuleEditor({ mod, onChange, onDelete, editorRef }) {
         <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('bold') }} title="加粗"><b>B</b></button>
         <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); execWithPrompt('createLink', '输入链接 URL：') }} title="链接">🔗</button>
         <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); execWithPrompt('insertHTML', '输入图片 URL：', u => `<img src="${u}" style="max-width:100%;border-radius:4px;margin:4px 0" />`) }} title="图片URL">🖼</button>
-        <button style={s.noteToolBtn} onMouseDown={e => {
-          e.preventDefault()
-          const el = localRef.current
-          const sel = window.getSelection()
-          if (!sel || !sel.rangeCount || !el || !el.contains(sel.anchorNode)) return
-          const text = sel.toString()
-          if (!text) return
-          el.focus()
-          document.execCommand('insertText', false, text)
-        }} title="清除格式"><span style={{ textDecoration: 'line-through' }}>T</span></button>
+        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('removeFormat') }} title="清除格式"><span style={{ textDecoration: 'line-through' }}>T</span></button>
       </div>
       <div ref={setRef} contentEditable suppressContentEditableWarning
         style={s.noteEditable} />
