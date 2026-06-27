@@ -503,5 +503,26 @@
     ],
     "url": "https://zh.wikipedia.org/wiki/%E7%9A%AE%E7%89%B9%C2%B7%E8%92%99%E5%BE%B7%E9%87%8C%E5%AE%89",
     "sub": ""
+  },
+  {
+    "id": "ar32",
+    "zh": "赫里特·里特费尔德",
+    "birth": 1888,
+    "death": 1964,
+    "description": "荷兰家具设计师及建筑师。为荷兰风格派运动中最有名的设计师之一。他最有名的家具设计作品是红蓝椅；他所设计的个人住宅里特费尔德的施罗德住宅也被联合国教育、科学及文化组织会列入世界文化遗产。",
+    "works": [
+      {
+        "title": "红蓝椅",
+        "url": "https://www.moma.org/collection/works/4044"
+      },
+      {
+        "title": "施罗德住宅 ",
+        "url": "https://en.wikipedia.org/wiki/Rietveld_Schr%C3%B6der_House"
+      }
+    ],
+    "movements": [
+      "mv29"
+    ],
+    "url": "https://zh.wikipedia.org/wiki/%E8%B5%AB%E9%87%8C%E7%89%B9%C2%B7%E9%87%8C%E7%89%B9%E8%B4%B9%E5%B0%94%E5%BE%B7"
   }
 ]
