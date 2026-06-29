@@ -63,19 +63,29 @@ function ArtistView({ data, movements }) {
 }
 
 // ── 私密卡参照行 ──────────────────────────────────────
-function NoteSummary({ data, type, movements }) {
+function NoteSummary({ data, type, movements, actions }) {
   const summary = type === 'movement'
     ? `${data.zh}　${data.start}–${data.end}`
     : `${data.zh}　${data.birth}–${data.death}` +
       (data.movements?.length
         ? `　${data.movements.map(id => movements.find(m => m.id === id)?.zh).filter(Boolean).join('、')}`
         : '')
-  return <div style={s.noteHeader}>{summary}</div>
+  return (
+    <div style={s.noteHeader}>
+      <span>{summary}</span>
+      {actions && <span style={s.noteHeaderActions}>{actions}</span>}
+    </div>
+  )
 }
 
 function genModId() { return crypto.randomUUID?.() || `${Date.now()}-${Math.random()}` }
 
 // ── 私密卡：手风琴浏览 ────────────────────────────────
+function noteClickHandler(e) {
+  const a = e.target.closest('a')
+  if (a) { e.preventDefault(); window.open(a.href, '_blank', 'noopener') }
+}
+
 function NoteAccordion({ modules, openSet, onToggle, onEdit, canEdit }) {
   if (!modules?.length) {
     return <div style={s.notePlaceholder}>（还没有笔记，点 ＋新建模块 添加）</div>
@@ -94,7 +104,15 @@ function NoteAccordion({ modules, openSet, onToggle, onEdit, canEdit }) {
               )}
             </div>
             {open && (
-              <div className="note-content" style={s.accBody} dangerouslySetInnerHTML={{ __html: mod.content || '' }} />
+              <>
+                <div className="note-content" style={s.accBody} onClick={noteClickHandler}
+                  dangerouslySetInnerHTML={{ __html: mod.content || '' }} />
+                {canEdit && (
+                  <div style={{ textAlign: 'right', padding: '0 0 4px 17px' }}>
+                    <span style={s.accEditIcon} onClick={() => onEdit(mod)} title="编辑此模块">✎</span>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )
@@ -576,10 +594,16 @@ export default function DetailCard({
   function renderPrivateCard() {
     const modules = notes?.[data?.id] || []
     const isNewMod = editingModId && !modules.some(m => m.id === editingModId)
+    const headerActions = isPinned && !editingModId && (
+      <>
+        <span style={s.noteHeaderBtn} onClick={enterNewMod} title="新建模块">＋</span>
+        <span style={s.noteHeaderBtn} onClick={enterEdit} title="编辑公开">✎</span>
+      </>
+    )
 
     return (
       <>
-        <NoteSummary data={data} type={type} movements={movements} />
+        <NoteSummary data={data} type={type} movements={movements} actions={headerActions} />
         {editingModId && modDraft && !isNewMod ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {modules.map(mod => {
@@ -610,7 +634,8 @@ export default function DetailCard({
                     <span style={{ flex: 1 }}>{mod.title || '无标题'}</span>
                   </div>
                   {open && (
-                    <div className="note-content" style={s.accBody} dangerouslySetInnerHTML={{ __html: mod.content || '' }} />
+                    <div className="note-content" style={s.accBody} onClick={noteClickHandler}
+                      dangerouslySetInnerHTML={{ __html: mod.content || '' }} />
                   )}
                 </div>
               )
@@ -639,12 +664,6 @@ export default function DetailCard({
         ) : (
           <NoteAccordion modules={modules} openSet={openSet} onToggle={toggleAccordion}
             onEdit={enterModEdit} canEdit={hasToken && isPinned} />
-        )}
-        {isPinned && !editingModId && (
-          <div style={s.editBtnRow}>
-            <button onClick={enterNewMod} style={s.editEntryBtn}>＋ 新建模块</button>
-            <button onClick={enterEdit} style={s.editEntryBtn}>✎ 编辑公开</button>
-          </div>
         )}
       </>
     )
@@ -888,7 +907,12 @@ const s = {
   noteHeader: {
     fontSize: 11, color: 'var(--text-faint)', marginBottom: 8,
     paddingBottom: 6, borderBottom: '1px solid var(--axis-border)',
-    paddingRight: 24,
+    paddingRight: 24, display: 'flex', alignItems: 'center', gap: 6,
+  },
+  noteHeaderActions: { display: 'flex', gap: 4, marginLeft: 'auto' },
+  noteHeaderBtn: {
+    fontSize: 12, color: 'var(--text-faint)', cursor: 'pointer',
+    padding: '0 4px', lineHeight: 1,
   },
   notePlaceholder: {
     fontSize: 11.5, color: 'var(--text-faint)', fontStyle: 'italic',
