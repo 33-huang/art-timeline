@@ -547,5 +547,16 @@
     "movements": [
       "mv30"
     ]
+  },
+  {
+    "id": "ar34",
+    "zh": "凡·杜斯伯格",
+    "birth": 1883,
+    "death": 1931,
+    "description": "荷兰艺术家，擅长绘画、写作、诗歌以及建筑。以建立和领导荷兰风格派艺术闻名于世",
+    "movements": [
+      "mv29"
+    ],
+    "url": "https://zh.wikipedia.org/wiki/%E7%89%B9%E5%A5%A5%C2%B7%E8%8C%83%E6%9D%9C%E6%96%AF%E5%A0%A1"
   }
 ]
