@@ -215,6 +215,42 @@ function ColorPicker({ value, onChange, showAuto }) {
   )
 }
 
+// ── 富文本简介编辑器 ─────────────────────────────────
+function RichTextArea({ value, onChange }) {
+  const ref = useRef(null)
+  const initialized = useRef(false)
+
+  useEffect(() => {
+    if (ref.current && !initialized.current) {
+      ref.current.innerHTML = value || ''
+      initialized.current = true
+    }
+  }, [value])
+
+  useEffect(() => () => { initialized.current = false }, [])
+
+  function exec(cmd) {
+    ref.current?.focus()
+    document.execCommand(cmd, false, null)
+  }
+
+  function flush() {
+    if (ref.current) onChange(ref.current.innerHTML)
+  }
+
+  return (
+    <div>
+      <div style={s.noteToolbar}>
+        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('bold') }} title="加粗"><b>B</b></button>
+        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('removeFormat') }} title="清除格式"><span style={{ textDecoration: 'line-through' }}>T</span></button>
+      </div>
+      <div ref={ref} contentEditable suppressContentEditableWarning
+        onInput={flush} onBlur={flush}
+        style={s.descEditable} />
+    </div>
+  )
+}
+
 // ── 公开卡编辑表单：流派 ──────────────────────────────
 function MovementEditForm({ formData, onChange }) {
   return (
@@ -251,8 +287,8 @@ function MovementEditForm({ formData, onChange }) {
       </div>
       <div style={s.fieldBlock}>
         <label style={s.blockLabel}>简介</label>
-        <textarea style={s.textarea} rows={10} value={formData.description}
-          onChange={e => onChange({ ...formData, description: e.target.value })} />
+        <RichTextArea value={formData.description}
+          onChange={v => onChange({ ...formData, description: v })} />
       </div>
       <div style={s.field}>
         <label style={s.fieldLabel}>链接</label>
@@ -372,8 +408,8 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
       )}
       <div style={s.fieldBlock}>
         <label style={s.blockLabel}>简介</label>
-        <textarea style={s.textarea} rows={10} value={formData.description}
-          onChange={e => onChange({ ...formData, description: e.target.value })} />
+        <RichTextArea value={formData.description}
+          onChange={v => onChange({ ...formData, description: v })} />
       </div>
       <div style={s.field}>
         <label style={s.fieldLabel}>链接</label>
@@ -796,6 +832,13 @@ const s = {
     background: 'var(--bg)', color: 'var(--text)',
     fontFamily: 'inherit', fontSize: 11.5, lineHeight: 1.6,
     padding: '4px 7px', outline: 'none', resize: 'vertical', minHeight: 160, boxSizing: 'border-box',
+  },
+  descEditable: {
+    minHeight: 160, maxHeight: 300, overflowY: 'auto',
+    border: '1px solid var(--axis-border)', borderRadius: 6,
+    background: 'var(--bg)', color: 'var(--text)',
+    fontFamily: 'inherit', fontSize: 11.5, lineHeight: 1.6,
+    padding: '4px 7px', outline: 'none', whiteSpace: 'pre-wrap', wordBreak: 'break-word',
   },
   worksSection: { display: 'flex', flexDirection: 'column', gap: 6 },
   worksHd:      { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
