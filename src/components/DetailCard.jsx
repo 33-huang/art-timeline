@@ -109,7 +109,7 @@ function NoteAccordion({ modules, openSet, onToggle, onEdit, canEdit }) {
                   dangerouslySetInnerHTML={{ __html: mod.content || '' }} />
                 {canEdit && (
                   <div style={{ textAlign: 'right', padding: '0 0 4px 17px' }}>
-                    <span style={s.accEditIcon} onClick={() => onEdit(mod)} title="编辑此模块">✎</span>
+                    <span style={s.accEditIcon} onClick={() => onEdit(mod)}>编辑当前笔记</span>
                   </div>
                 )}
               </>
@@ -596,8 +596,8 @@ export default function DetailCard({
     const isNewMod = editingModId && !modules.some(m => m.id === editingModId)
     const headerActions = isPinned && !editingModId && (
       <>
-        <span style={s.noteHeaderBtn} onClick={enterNewMod} title="新建模块">＋</span>
-        <span style={s.noteHeaderBtn} onClick={enterEdit} title="编辑公开">✎</span>
+        <span style={s.noteHeaderBtn} onClick={enterNewMod}>＋ 新建模块</span>
+        <span style={s.noteHeaderBtn} onClick={enterEdit}>↗ 编辑公开</span>
       </>
     )
 
