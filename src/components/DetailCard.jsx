@@ -594,10 +594,11 @@ export default function DetailCard({
   function renderPrivateCard() {
     const modules = notes?.[data?.id] || []
     const isNewMod = editingModId && !modules.some(m => m.id === editingModId)
-    const headerActions = isPinned && !editingModId && (
+    const headerActions = isPinned && (
       <>
-        <span style={s.noteHeaderBtn} onClick={enterNewMod}>＋ 新建模块</span>
-        <span style={s.noteHeaderBtn} onClick={enterEdit}>↗ 编辑公开</span>
+        {!editingModId && <span style={s.noteHeaderBtn} onClick={enterNewMod}>＋ 新建模块</span>}
+        {!editingModId && <span style={s.noteHeaderBtn} onClick={enterEdit}>↗ 编辑公开</span>}
+        <span style={s.noteHeaderClose} onClick={onClose}>×</span>
       </>
     )
 
@@ -723,7 +724,7 @@ export default function DetailCard({
       {(isPinned || isAdding) && <div onClick={onClose} style={s.backdrop} />}
 
       <div ref={cardRef} style={cardStyle}>
-        {!isHover && <button onClick={onClose} style={s.closeBtn} aria-label="关闭">×</button>}
+        {!isHover && !(usePrivate && data && isPinned) && <button onClick={onClose} style={s.closeBtn} aria-label="关闭">×</button>}
 
         {usePrivate && data ? renderPrivateCard() : renderPublicCard()}
       </div>
@@ -909,10 +910,15 @@ const s = {
     paddingBottom: 6, borderBottom: '1px solid var(--axis-border)',
     paddingRight: 24, display: 'flex', alignItems: 'center', gap: 6,
   },
-  noteHeaderActions: { display: 'flex', gap: 4, marginLeft: 'auto' },
+  noteHeaderActions: { display: 'flex', gap: 6, marginLeft: 'auto', alignItems: 'center' },
   noteHeaderBtn: {
-    fontSize: 12, color: 'var(--text-faint)', cursor: 'pointer',
-    padding: '0 4px', lineHeight: 1,
+    fontSize: 10, color: 'var(--text-muted)', cursor: 'pointer',
+    padding: '2px 8px', lineHeight: 1.4, borderRadius: 4,
+    background: 'var(--axis-border)', whiteSpace: 'nowrap',
+  },
+  noteHeaderClose: {
+    fontSize: 16, color: 'var(--text-faint)', cursor: 'pointer',
+    lineHeight: 1, padding: '0 2px', background: 'none', border: 'none',
   },
   notePlaceholder: {
     fontSize: 11.5, color: 'var(--text-faint)', fontStyle: 'italic',
@@ -925,7 +931,10 @@ const s = {
     display: 'flex', alignItems: 'center', gap: 5,
   },
   accArrow: { fontSize: 10, color: 'var(--text-faint)', width: 12, flexShrink: 0, textAlign: 'center' },
-  accEditIcon: { fontSize: 12, color: 'var(--text-faint)', cursor: 'pointer', flexShrink: 0, padding: '0 2px' },
+  accEditIcon: {
+    fontSize: 10, color: 'var(--text-faint)', cursor: 'pointer', flexShrink: 0,
+    padding: '1px 8px', border: '1px solid var(--axis-border)', borderRadius: 4, lineHeight: 1.4,
+  },
   accBody: {
     fontSize: 12, lineHeight: 1.8, color: 'var(--text)',
     padding: '2px 0 6px 17px', wordBreak: 'break-word',
