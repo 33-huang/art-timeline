@@ -252,7 +252,74 @@ function RichTextArea({ value, onChange }) {
 }
 
 // ── 公开卡编辑表单：流派 ──────────────────────────────
-function MovementEditForm({ formData, onChange }) {
+// ── 「排在其后」定位 ────────────────────────────────────
+// 只有流派和"无流派的独立艺术家"有独立列、受 posStart 影响
+function isOrphanArtist(a, mvIdSet) {
+  return !a.movements || !a.movements.some(id => mvIdSet.has(id))
+}
+// anchor 的列位置键值（与 computeLayout 排序键一致）；有流派的艺术家用其所属流派的列
+function anchorColumnKey(anchorId, movements, artists, mvIdSet) {
+  const mv = movements.find(m => m.id === anchorId)
+  if (mv) return mv.posStart ?? mv.start
+  const ar = artists.find(a => a.id === anchorId)
+  if (!ar) return null
+  if (isOrphanArtist(ar, mvIdSet)) return ar.posStart ?? ar.birth
+  const m = movements.find(m => ar.movements.includes(m.id))
+  return m ? (m.posStart ?? m.start) : (ar.posStart ?? ar.birth)
+}
+// 方案A：算出把当前条目排到 anchor 之后所需的 posStart 数字（取 anchor 键值与下一列键值的中点）
+function computePosAfter(anchorId, movements, artists, selfId) {
+  const mvIdSet = new Set(movements.map(m => m.id))
+  const anchorKey = anchorColumnKey(anchorId, movements, artists, mvIdSet)
+  if (anchorKey == null) return ''
+  const keys = []
+  for (const m of movements) if (m.id !== selfId) keys.push(m.posStart ?? m.start)
+  for (const a of artists) if (a.id !== selfId && isOrphanArtist(a, mvIdSet)) keys.push(a.posStart ?? a.birth)
+  const greater = keys.filter(k => k > anchorKey)
+  const nextKey = greater.length ? Math.min(...greater) : null
+  return nextKey == null ? anchorKey + 1 : (anchorKey + nextKey) / 2
+}
+
+// 单选搜索下拉：输一个字弹关联选项，选中即"排在其后"；留空按年份
+function PosAfterSelector({ value, options, onPick, onClear }) {
+  const [search, setSearch] = useState('')
+  const [open, setOpen] = useState(false)
+  const selected = options.find(o => o.id === value)
+  const filtered = options.filter(o => !search.trim() || o.zh.includes(search.trim()))
+  return (
+    <div style={s.mvWrap}>
+      {selected && (
+        <div style={s.mvTags}>
+          <span style={s.mvTag}>
+            排在「{selected.zh}」之后
+            <span style={s.mvTagRm} onMouseDown={e => { e.preventDefault(); onClear() }}>×</span>
+          </span>
+        </div>
+      )}
+      <input style={s.mvSearch}
+        placeholder={selected ? '改为排在其他条目之后…' : '输入名字排在其后；留空按年份'}
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setTimeout(() => setOpen(false), 150)} />
+      {open && (
+        <div style={s.mvDropdown}>
+          {filtered.length > 0 ? filtered.map(o => (
+            <div key={o.id}
+              onMouseDown={e => { e.preventDefault(); onPick(o.id); setSearch(''); setOpen(false) }}
+              style={{ ...s.mvOption, ...(o.id === value ? { color: 'var(--text)', fontWeight: 500 } : {}) }}>
+              {o.zh}{o.id === value ? ' ✓' : ''}
+            </div>
+          )) : (
+            <div style={{ padding: '4px 7px', fontSize: 11, color: 'var(--text-faint)' }}>无匹配</div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function MovementEditForm({ formData, onChange, allMovements, allArtists, selfId }) {
   return (
     <div style={s.form}>
       <div style={s.field}>
@@ -281,9 +348,13 @@ function MovementEditForm({ formData, onChange }) {
       </div>
       <div style={s.field}>
         <label style={s.fieldLabel}>位置</label>
-        <input style={s.input} type="number" value={formData.posStart ?? ''}
-          placeholder="年份，留空按起始年排列"
-          onChange={e => onChange({ ...formData, posStart: e.target.value === '' ? '' : Number(e.target.value) })} />
+        <div style={{ flex: 1 }}>
+          <PosAfterSelector
+            value={formData.posAfter || ''}
+            options={allMovements.filter(m => !m.isEvent && m.id !== selfId)}
+            onPick={id => onChange({ ...formData, posAfter: id, posStart: computePosAfter(id, allMovements, allArtists, selfId) })}
+            onClear={() => onChange({ ...formData, posAfter: '', posStart: '' })} />
+        </div>
       </div>
       <div style={s.fieldBlock}>
         <label style={s.blockLabel}>简介</label>
@@ -354,7 +425,7 @@ function MvSelector({ selected, allMovements, onChange }) {
   )
 }
 
-function ArtistEditForm({ formData, onChange, allMovements }) {
+function ArtistEditForm({ formData, onChange, allMovements, allArtists, selfId }) {
   const works = formData.works ?? []
   const mvIds = formData.movements ?? []
   function updateWork(i, field, value) {
@@ -401,9 +472,13 @@ function ArtistEditForm({ formData, onChange, allMovements }) {
       {mvIds.length === 0 && (
         <div style={s.field}>
           <label style={s.fieldLabel}>位置</label>
-          <input style={s.input} type="number" value={formData.posStart ?? ''}
-            placeholder="年份，留空按出生年（仅无流派时用于左右定位）"
-            onChange={e => onChange({ ...formData, posStart: e.target.value === '' ? '' : Number(e.target.value) })} />
+          <div style={{ flex: 1 }}>
+            <PosAfterSelector
+              value={formData.posAfter || ''}
+              options={allArtists.filter(a => a.id !== selfId)}
+              onPick={id => onChange({ ...formData, posAfter: id, posStart: computePosAfter(id, allMovements, allArtists, selfId) })}
+              onClear={() => onChange({ ...formData, posAfter: '', posStart: '' })} />
+          </div>
         </div>
       )}
       <div style={s.fieldBlock}>
@@ -505,7 +580,7 @@ export default function DetailCard({
         start: data.start, end: data.end,
         region: data.region ?? '', description: data.description ?? '',
         url: data.url ?? '', color: data.color ?? '#888888', isEvent: !!data.isEvent,
-        posStart: data.posStart ?? '',
+        posStart: data.posStart ?? '', posAfter: data.posAfter ?? '',
       })
     } else {
       setFormData({
@@ -514,7 +589,7 @@ export default function DetailCard({
         description: data.description ?? '',
         works: data.works ? JSON.parse(JSON.stringify(data.works)) : [],
         movements: data.movements ?? [], url: data.url ?? '',
-        posStart: data.posStart ?? '', color: data.color ?? '',
+        posStart: data.posStart ?? '', posAfter: data.posAfter ?? '', color: data.color ?? '',
       })
     }
     setSaveError(null); setEditing(true)
@@ -717,8 +792,8 @@ export default function DetailCard({
               : `编辑：${data.zh}`}
           </div>
           {type === 'movement'
-            ? <MovementEditForm formData={formData} onChange={setFormData} />
-            : <ArtistEditForm formData={formData} onChange={setFormData} allMovements={movements} />}
+            ? <MovementEditForm formData={formData} onChange={setFormData} allMovements={movements} allArtists={artists} selfId={data?.id} />
+            : <ArtistEditForm formData={formData} onChange={setFormData} allMovements={movements} allArtists={artists} selfId={data?.id} />}
           {saveError && <div style={s.errorMsg}>{saveError}</div>}
           <div style={s.editBtnRow}>
             <button onClick={handleCancel} disabled={saving} style={s.cancelBtn}>取消</button>

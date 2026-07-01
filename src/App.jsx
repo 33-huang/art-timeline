@@ -180,6 +180,7 @@ export default function App() {
       else updatedItem.posStart = Number(updatedItem.posStart)
       if (!updatedItem.color) delete updatedItem.color
     }
+    if (!updatedItem.posAfter) delete updatedItem.posAfter   // 空的"排在其后"记忆不入库
     const updatedList = list.map(item => item.id === updatedItem.id ? updatedItem : item)
     await saveData(filename, updatedList)
     if (type === 'movement') setMovements(updatedList)
@@ -210,6 +211,7 @@ export default function App() {
       else newItem.posStart = Number(newItem.posStart)
       if (!newItem.color) delete newItem.color
     }
+    if (!newItem.posAfter) delete newItem.posAfter   // 空的"排在其后"记忆不入库
     const filename = type === 'movement' ? 'movements.json' : 'artists.json'
     const newList = [...list, newItem]
     await saveData(filename, newList)
@@ -281,6 +283,12 @@ export default function App() {
 
   return (
     <>
+      <div style={{
+        position: 'fixed', left: 8, bottom: 8, zIndex: 9999,
+        background: 'linear-gradient(135deg,#10b981,#0891b2)', color: '#fff',
+        fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 6,
+        letterSpacing: 0.5, pointerEvents: 'none', boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
+      }}>v4 测试</div>
       <div className="toolbar">
         <FilterBar filter={filter} onFilterChange={handleFilterChange} />
         <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>

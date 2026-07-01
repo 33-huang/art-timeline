@@ -2,10 +2,10 @@ export const TOKEN_KEY = 'gh_token'   // 全 app 共享常量，保持一致
 
 const OWNER       = '33-huang'
 const REPO        = 'art-timeline'
-const DATA_BRANCH = 'data'
+const DATA_BRANCH = 'data-test'   // v4 测试站用数据副本；转正时改回 'data'
 
 const NOTES_REPO   = 'art-timeline-notes'
-const NOTES_BRANCH = 'main'
+const NOTES_BRANCH = 'test'       // v4 测试站用笔记副本；转正时改回 'main'
 const NOTES_FILE   = 'notes.json'
 
 const shaCache = new Map()
