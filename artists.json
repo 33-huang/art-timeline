@@ -422,8 +422,11 @@
         "url": "https://en.wikipedia.org/wiki/Rock_Drill_(Jacob_Epstein)"
       }
     ],
-    "movements": [],
-    "url": "https://en.wikipedia.org/wiki/Jacob_Epstein"
+    "movements": [
+      "mv18"
+    ],
+    "url": "https://en.wikipedia.org/wiki/Jacob_Epstein",
+    "sub": ""
   },
   {
     "id": "ar28",
