@@ -169,7 +169,7 @@ function ModuleEditor({ mod, onChange, onDelete, editorRef }) {
         <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('bold') }} title="加粗"><b>B</b></button>
         <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); execWithPrompt('createLink', '输入链接 URL：') }} title="链接">🔗</button>
         <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); execWithPrompt('insertHTML', '输入图片 URL：', u => `<img src="${u}" style="max-width:100%;border-radius:4px;margin:4px 0" />`) }} title="图片URL">🖼</button>
-        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('removeFormat') }} title="清除格式"><span style={{ textDecoration: 'line-through' }}>T</span></button>
+        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('removeFormat'); exec('unlink') }} title="清除格式"><span style={{ textDecoration: 'line-through' }}>T</span></button>
       </div>
       <div ref={setRef} contentEditable suppressContentEditableWarning
         style={s.noteEditable} />
@@ -242,7 +242,7 @@ function RichTextArea({ value, onChange }) {
     <div>
       <div style={s.noteToolbar}>
         <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('bold') }} title="加粗"><b>B</b></button>
-        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('removeFormat') }} title="清除格式"><span style={{ textDecoration: 'line-through' }}>T</span></button>
+        <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('removeFormat'); exec('unlink') }} title="清除格式"><span style={{ textDecoration: 'line-through' }}>T</span></button>
       </div>
       <div ref={ref} contentEditable suppressContentEditableWarning
         onInput={flush} onBlur={flush}
@@ -337,7 +337,8 @@ function MovementEditForm({ formData, onChange, allMovements, allArtists, selfId
         <div style={{ flex: 1, display: 'flex', gap: 6 }}>
           <input style={{ ...s.input, flex: 1 }} type="number" value={formData.start} placeholder="开始"
             onChange={e => onChange({ ...formData, start: e.target.value === '' ? '' : Number(e.target.value) })} />
-          <input style={{ ...s.input, flex: 1 }} type="number" value={formData.end} placeholder="结束"
+          <input style={{ ...s.input, flex: 1 }} type="number" value={formData.end}
+            placeholder={formData.isEvent ? '结束(留空=单年)' : '结束'}
             onChange={e => onChange({ ...formData, end: e.target.value === '' ? '' : Number(e.target.value) })} />
         </div>
       </div>
@@ -599,17 +600,25 @@ export default function DetailCard({
     if (!formData) return
     const isMovement = type === 'movement'
     if (!formData.zh?.trim()) { setSaveError('名称不能为空'); return }
+    let payload = formData
     if (isMovement) {
-      const sv = Number(formData.start), ev = Number(formData.end)
-      if (!sv || !ev || sv >= ev) { setSaveError('年份无效（需要 开始 < 结束）'); return }
+      const sv = Number(formData.start)
+      if (!sv) { setSaveError('请填写开始年份'); return }
+      const endEmpty = formData.end === '' || formData.end == null
+      if (formData.isEvent && endEmpty) {
+        payload = { ...formData, end: sv }   // 单年大事件：结束留空则=开始
+      } else {
+        const ev = Number(formData.end)
+        if (!ev || sv >= ev) { setSaveError('年份无效（需要 开始 < 结束）'); return }
+      }
     } else {
       const bv = Number(formData.birth), dv = Number(formData.death)
       if (!bv || !dv || bv >= dv) { setSaveError('年份无效（需要 出生 < 逝世）'); return }
     }
     setSaving(true); setSaveError(null)
     try {
-      if (isAdding) { await onAdd(type, formData) }
-      else { await onSave(type, { ...data, ...formData }); setEditing(false) }
+      if (isAdding) { await onAdd(type, payload) }
+      else { await onSave(type, { ...data, ...payload }); setEditing(false) }
     } catch (err) { setSaveError(err.message) }
     finally { setSaving(false) }
   }
