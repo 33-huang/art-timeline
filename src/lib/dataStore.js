@@ -109,8 +109,20 @@ export async function loadNotes() {
   const json = await res.json()
   shaCache.set(NOTES_FILE, json.sha)
 
+  // GitHub Contents API 对 >1MB 的文件不返回内联 content（content 为空、encoding='none'），
+  // 改用 Git Blobs API 按 sha 取（笔记含图片时很容易超过 1MB）
+  let b64 = json.content
+  if (!b64 && json.encoding === 'none') {
+    const blobRes = await fetch(
+      `https://api.github.com/repos/${OWNER}/${NOTES_REPO}/git/blobs/${json.sha}`,
+      { headers: { 'Accept': 'application/vnd.github+json', 'Authorization': `Bearer ${token}` } },
+    )
+    if (!blobRes.ok) throw new Error(`加载笔记失败：blob HTTP ${blobRes.status}`)
+    b64 = (await blobRes.json()).content
+  }
+
   const bytes = Uint8Array.from(
-    atob(json.content.replace(/\n/g, '')),
+    atob(b64.replace(/\n/g, '')),
     c => c.charCodeAt(0),
   )
   const text = new TextDecoder('utf-8').decode(bytes)
