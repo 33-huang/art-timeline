@@ -299,5 +299,15 @@
     "isEvent": false,
     "posStart": 1880.75,
     "posAfter": "mv13"
+  },
+  {
+    "id": "mv31",
+    "zh": "德国工艺联盟成立",
+    "start": 1907,
+    "end": 1907,
+    "description": "<p style=\"margin: 0.5em 0px 1em; background-color: rgb(255, 255, 255);\"><span style=\"background-image: none; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; border-radius: 2px;\">德国</span>的一个<span style=\"background-image: none; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; border-radius: 2px;\">艺术家</span>、<span style=\"background-image: none; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; border-radius: 2px;\">建筑师</span>、<span style=\"background-image: none; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; border-radius: 2px;\">设计师</span>与<span style=\"background-image: none; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; border-radius: 2px;\">实业家</span>的联盟。其在<span style=\"background-image: none; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; border-radius: 2px;\">现代建筑</span>的发展中影响巨大，并导致<span style=\"background-image: none; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; border-radius: 2px;\">包豪斯</span>的出现。该联盟于1907年成立于<span style=\"background-image: none; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; border-radius: 2px;\">慕尼黑</span>。</p><div><br></div>",
+    "url": "",
+    "color": "#D4924A",
+    "isEvent": true
   }
 ]
