@@ -7,7 +7,7 @@ export function MovementView({ data, artists }) {
     <>
       <div style={s.title}>{data.zh}</div>
       <div style={s.meta}>
-        {data.start}–{data.end}{data.region ? ` · ${data.region}` : ''}
+        {data.start === data.end ? data.start : `${data.start}–${data.end}`}{data.region ? ` · ${data.region}` : ''}
         {reps.length > 0 && <><br />代表艺术家：{reps.map(a => a.zh).join('、')}</>}
       </div>
       {data.description && (

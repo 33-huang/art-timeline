@@ -15,6 +15,9 @@ const LABEL_PAD   = 3
 
 function yearToY(yr) { return TOP_PAD + (yr - MIN_YEAR) * PX_PER_YEAR }
 
+// 大事件统一用中性灰（忽略其自定义颜色）
+const EVENT_GRAY = '#8a8a8a'
+
 // 独立(无流派)艺术家的自动配色：按 id 稳定哈希取调色板色，代替灰色
 const ORPHAN_PALETTE = ['#D45858','#D4924A','#C8A832','#4EAA72','#48B8A0','#5B9FD4','#9B7DC8']
 function autoColor(id) {
@@ -162,7 +165,7 @@ function buildRenderData(lo) {
         bars.push({
           key: 'm:' + m.id, id: 'm:' + m.id, cls: 'mv-bar',
           geom: { left: evX, top: y1, width: evW, height: barH },
-          color: m.color, isEvent: true, isArt: false,
+          color: EVENT_GRAY, isEvent: true, isArt: false,
           sel: { type: 'movement', data: m },
         })
       } else {
@@ -175,12 +178,14 @@ function buildRenderData(lo) {
       }
 
       const hasSub = !!m.sub
+      const mColor = m.isEvent ? EVENT_GRAY : m.color                       // 大事件名字用灰色
+      const mYr = m.start === m.end ? `${m.start}` : `${m.start}—${m.end}`  // 单年事件只显示一个年份
       const { w: lblW, h: lblH } = estimateLblSize(m.zh, 10, hasSub, m.start, m.end)
       labelInfos.push({
         key: 'm:' + m.id, id: 'm:' + m.id, anchorX: barCx, anchorY: y1, lblW, lblH,
         idealTop: y1 - LABEL_GAP - lblH,
-        html: `<span class="lbl-name" style="color:${m.color}">${m.zh}</span>${hasSub ? `<span class="lbl-sub">${m.sub}</span>` : ''}<span class="lbl-yr">${m.start}—${m.end}</span>`,
-        sel: { type: 'movement', data: m }, art: false, color: m.color,
+        html: `<span class="lbl-name" style="color:${mColor}">${m.zh}</span>${hasSub ? `<span class="lbl-sub">${m.sub}</span>` : ''}<span class="lbl-yr">${mYr}</span>`,
+        sel: { type: 'movement', data: m }, art: false, color: mColor,
       })
     }
 
