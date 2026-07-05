@@ -180,6 +180,7 @@ export default function App() {
       else updatedItem.posStart = Number(updatedItem.posStart)
       if (!updatedItem.color) delete updatedItem.color
     }
+    if (!updatedItem.posAfter) delete updatedItem.posAfter   // 空的"排在其后"记忆不入库
     const updatedList = list.map(item => item.id === updatedItem.id ? updatedItem : item)
     await saveData(filename, updatedList)
     if (type === 'movement') setMovements(updatedList)
@@ -210,6 +211,7 @@ export default function App() {
       else newItem.posStart = Number(newItem.posStart)
       if (!newItem.color) delete newItem.color
     }
+    if (!newItem.posAfter) delete newItem.posAfter   // 空的"排在其后"记忆不入库
     const filename = type === 'movement' ? 'movements.json' : 'artists.json'
     const newList = [...list, newItem]
     await saveData(filename, newList)

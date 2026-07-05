@@ -47,9 +47,10 @@ export default function TokenSettings({ hasToken, onTokenChange }) {
             </div>
 
             <div style={styles.hint}>
-              用于编辑内容并写回仓库（读取不需要 token）。<br />
-              请使用仅对 <code style={styles.code}>art-timeline</code> 仓库有
-              Contents 读写权限的 fine-grained token。
+              用于编辑内容、读写私密笔记（读公开数据不需要 token）。<br />
+              请使用对 <code style={styles.code}>art-timeline</code> 和
+              <code style={styles.code}>art-timeline-notes</code>（私密笔记）
+              两个仓库都有 Contents 读写权限的 fine-grained token。
             </div>
 
             <input

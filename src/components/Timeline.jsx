@@ -5,7 +5,7 @@ const MAX_YEAR    = 1990
 const PX_PER_YEAR = 4.5
 const TOP_PAD     = 20
 const BOTTOM_PAD  = 40
-const MIN_COL_GAP = 4
+const MIN_COL_GAP = 12
 const MIN_MV_W    = 14
 const MIN_ART_W   = 9
 const ART_INDENT  = 3
@@ -14,6 +14,9 @@ const LABEL_GAP   = 28
 const LABEL_PAD   = 3
 
 function yearToY(yr) { return TOP_PAD + (yr - MIN_YEAR) * PX_PER_YEAR }
+
+// 大事件统一用中性灰（忽略其自定义颜色）
+const EVENT_GRAY = '#8a8a8a'
 
 // 独立(无流派)艺术家的自动配色：按 id 稳定哈希取调色板色，代替灰色
 const ORPHAN_PALETTE = ['#D45858','#D4924A','#C8A832','#4EAA72','#48B8A0','#5B9FD4','#9B7DC8']
@@ -28,6 +31,48 @@ function hexRgba(hex, a) {
   const g = parseInt(hex.slice(3, 5), 16)
   const b = parseInt(hex.slice(5, 7), 16)
   return `rgba(${r},${g},${b},${a})`
+}
+
+// 按 posAfter「跟随」关系排列各列：设了「排在 A 后」就永远紧跟 A（A 移动 B 也跟着）。
+// 无 posAfter 的按 posStart??start/birth 排；锚点找不到或成环则退回按基准键。
+function orderGroups(groups, arts) {
+  const isOrphan = g => g.m.id.startsWith('_orp_')
+  const baseKey  = g => (g.m.posStart ?? g.m.start)
+  const entId    = g => isOrphan(g) ? g.lanes[0][0].id : g.m.id
+  const paOf     = g => isOrphan(g) ? g.lanes[0][0].posAfter : g.m.posAfter
+  const byEnt = new Map(groups.map(g => [entId(g), g]))
+
+  function resolveAnchor(anchorId) {
+    if (byEnt.has(anchorId)) return byEnt.get(anchorId)   // 锚点是流派或独立艺术家（有独立列）
+    const ar = arts.find(a => a.id === anchorId)          // 锚点是有流派的艺术家 → 落到其所属流派列
+    if (ar && ar.movements) for (const mid of ar.movements) if (byEnt.has(mid)) return byEnt.get(mid)
+    return null
+  }
+
+  const anchorOf = new Map()
+  for (const g of groups) { const pa = paOf(g); anchorOf.set(g, pa ? resolveAnchor(pa) : null) }
+  // 断环：顺着 anchor 链走回自己 → 当作无 anchor
+  for (const g of groups) {
+    let cur = anchorOf.get(g); const seen = new Set([g])
+    while (cur) { if (seen.has(cur)) { anchorOf.set(g, null); break } seen.add(cur); cur = anchorOf.get(cur) }
+  }
+
+  const children = new Map(groups.map(g => [g, []]))
+  const roots = []
+  for (const g of groups) {
+    const a = anchorOf.get(g)
+    if (a && a !== g) children.get(a).push(g); else roots.push(g)
+  }
+  const bySort = (a, b) => baseKey(a) - baseKey(b) || a.m.start - b.m.start
+  const out = [], emitted = new Set()
+  function emit(g) {
+    if (emitted.has(g)) return
+    emitted.add(g); out.push(g)
+    for (const c of children.get(g).slice().sort(bySort)) emit(c)
+  }
+  roots.sort(bySort).forEach(emit)
+  groups.slice().sort(bySort).forEach(g => { if (!emitted.has(g)) emit(g) })   // 兜底：漏网的补到最后
+  return out
 }
 
 function computeLayout(mvs, arts, filter, viewW) {
@@ -57,7 +102,10 @@ function computeLayout(mvs, arts, filter, viewW) {
       lanes: [[a]],
     })
   })
-  groups.sort((a, b) => (a.m.posStart ?? a.m.start) - (b.m.posStart ?? b.m.start) || a.m.start - b.m.start)
+  // 按 posAfter 跟随关系重排（B 排在 A 后就一直跟着 A）；无 posAfter 的按 posStart/年份
+  const ordered = orderGroups(groups, arts)
+  groups.length = 0
+  groups.push(...ordered)
 
   let totalSlots = 0
   groups.forEach(g => {
@@ -162,7 +210,7 @@ function buildRenderData(lo) {
         bars.push({
           key: 'm:' + m.id, id: 'm:' + m.id, cls: 'mv-bar',
           geom: { left: evX, top: y1, width: evW, height: barH },
-          color: m.color, isEvent: true, isArt: false,
+          color: EVENT_GRAY, isEvent: true, isArt: false,
           sel: { type: 'movement', data: m },
         })
       } else {
@@ -175,12 +223,14 @@ function buildRenderData(lo) {
       }
 
       const hasSub = !!m.sub
+      const mColor = m.isEvent ? EVENT_GRAY : m.color                       // 大事件名字用灰色
+      const mYr = m.start === m.end ? `${m.start}` : `${m.start}—${m.end}`  // 单年事件只显示一个年份
       const { w: lblW, h: lblH } = estimateLblSize(m.zh, 10, hasSub, m.start, m.end)
       labelInfos.push({
         key: 'm:' + m.id, id: 'm:' + m.id, anchorX: barCx, anchorY: y1, lblW, lblH,
         idealTop: y1 - LABEL_GAP - lblH,
-        html: `<span class="lbl-name" style="color:${m.color}">${m.zh}</span>${hasSub ? `<span class="lbl-sub">${m.sub}</span>` : ''}<span class="lbl-yr">${m.start}—${m.end}</span>`,
-        sel: { type: 'movement', data: m }, art: false, color: m.color,
+        html: `<span class="lbl-name" style="color:${mColor}">${m.zh}</span>${hasSub ? `<span class="lbl-sub">${m.sub}</span>` : ''}<span class="lbl-yr">${mYr}</span>`,
+        sel: { type: 'movement', data: m }, art: false, color: mColor,
       })
     }
 

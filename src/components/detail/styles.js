@@ -1,0 +1,224 @@
+export const COLOR_PALETTE = ['#D45858','#D4924A','#C8A832','#4EAA72','#48B8A0','#5B9FD4','#9B7DC8']
+export const COLOR_NAMES = ['红','橙','黄','绿','青','蓝','紫']
+
+export const s = {
+  backdrop: { position: 'fixed', inset: 0, zIndex: 10 },
+  card: {
+    position: 'fixed',
+    width: 320, maxHeight: 'calc(100vh - 48px)', overflowY: 'auto',
+    background: 'var(--tip-bg)', border: '1px solid var(--tip-border)', borderRadius: 10,
+    padding: '12px 14px', zIndex: 11,
+    color: 'var(--text)', fontFamily: "'Noto Sans SC', system-ui, sans-serif",
+    fontSize: 12, lineHeight: 1.8, boxShadow: '0 8px 32px var(--tip-shadow)',
+  },
+  cardCentered: {
+    left: '50%', top: '50%', right: 'auto',
+    transform: 'translate(-50%, -50%)',
+    width: 'min(92vw, 680px)', maxHeight: '85vh',
+  },
+  closeBtn: {
+    position: 'absolute', top: 10, right: 12,
+    background: 'none', border: 'none', color: 'var(--text-faint)',
+    fontSize: 16, cursor: 'pointer', lineHeight: 1, padding: '0 4px',
+  },
+  title:       { fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 2, paddingRight: 24 },
+  sub:         { fontSize: 10, color: 'var(--text-faint)', marginBottom: 2, fontStyle: 'italic' },
+  meta:        { fontSize: 11, color: 'var(--text-faint)', lineHeight: 1.7, marginBottom: 6 },
+  description: { fontSize: 11.5, lineHeight: 1.7, color: 'var(--text-muted)', whiteSpace: 'pre-wrap' },
+  section:     { marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--axis-border)' },
+  sectionTitle:{ fontSize: 10, fontWeight: 600, color: 'var(--text-faint)', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '.5px' },
+  link:        { color: 'inherit', opacity: 0.55, fontSize: 10.5, textDecoration: 'none' },
+  workLink:    { fontSize: 11.5, borderBottom: '1px solid currentColor', opacity: 0.75, whiteSpace: 'nowrap' },
+  workLinkA:   { color: 'inherit', textDecoration: 'none' },
+  editTitle:   { fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 8, paddingRight: 24 },
+  form:        { display: 'flex', flexDirection: 'column', gap: 6 },
+  field:       { display: 'flex', alignItems: 'center', gap: 8 },
+  fieldLabel:  { fontSize: 10, color: 'var(--text-faint)', whiteSpace: 'nowrap', flexShrink: 0, width: 46, textAlign: 'left' },
+  fieldBlock:  { display: 'flex', flexDirection: 'column', gap: 3 },
+  blockLabel:  { fontSize: 10, color: 'var(--text-faint)' },
+  input: {
+    flex: 1, minWidth: 0, width: '100%',
+    border: '1px solid var(--axis-border)', borderRadius: 6,
+    background: 'var(--bg)', color: 'var(--text)',
+    fontFamily: 'inherit', fontSize: 11.5,
+    padding: '4px 7px', outline: 'none', boxSizing: 'border-box',
+  },
+  textarea: {
+    width: '100%', border: '1px solid var(--axis-border)', borderRadius: 6,
+    background: 'var(--bg)', color: 'var(--text)',
+    fontFamily: 'inherit', fontSize: 11.5, lineHeight: 1.6,
+    padding: '4px 7px', outline: 'none', resize: 'vertical', minHeight: 160, boxSizing: 'border-box',
+  },
+  descEditable: {
+    minHeight: 160, maxHeight: 300, overflowY: 'auto',
+    border: '1px solid var(--axis-border)', borderRadius: 6,
+    background: 'var(--bg)', color: 'var(--text)',
+    fontFamily: 'inherit', fontSize: 11.5, lineHeight: 1.6,
+    padding: '4px 7px', outline: 'none', whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+  },
+  worksSection: { display: 'flex', flexDirection: 'column', gap: 6 },
+  worksHd:      { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
+  workEntry:    { display: 'flex', flexDirection: 'column', gap: 4, padding: '6px 8px', border: '1px solid var(--axis-border)', borderRadius: 6 },
+  workEntryHeader: { display: 'flex', alignItems: 'center', gap: 6 },
+  workTitleInp: {
+    flex: 1, border: 'none', borderBottom: '1px solid var(--axis-border)',
+    background: 'transparent', color: 'var(--text)', fontFamily: 'inherit', fontSize: 11.5,
+    padding: '2px 0', outline: 'none',
+  },
+  workUrlInp: {
+    width: '100%', border: 'none', borderBottom: '1px solid var(--axis-border)',
+    background: 'transparent', color: 'var(--text)', fontFamily: 'inherit', fontSize: 11,
+    padding: '2px 0', outline: 'none',
+  },
+  workEntryDel: { color: '#e55', cursor: 'pointer', fontSize: 10.5, flexShrink: 0, fontFamily: 'inherit' },
+  colorSwatch: {
+    width: 22, height: 22, borderRadius: 4, cursor: 'pointer',
+    border: '2px solid transparent', display: 'flex',
+    alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+  },
+  colorDropdown: {
+    position: 'absolute', left: 0, top: 28, zIndex: 51,
+    background: 'var(--tip-bg)', border: '1px solid var(--axis-border)',
+    borderRadius: 6, boxShadow: '0 4px 12px var(--tip-shadow)',
+    padding: 4, minWidth: 90,
+  },
+  colorOption: {
+    display: 'flex', alignItems: 'center', gap: 6,
+    padding: '4px 8px', borderRadius: 4, cursor: 'pointer',
+    fontSize: 11, color: 'var(--text)', whiteSpace: 'nowrap',
+  },
+  colorDot: {
+    width: 14, height: 14, borderRadius: 3, flexShrink: 0,
+  },
+  colorCheck: {
+    marginLeft: 'auto', fontSize: 10, color: 'var(--text-faint)',
+  },
+  workMoveBtn: {
+    background: 'none', border: '1px solid var(--axis-border)', borderRadius: 4,
+    color: 'var(--text-faint)', fontSize: 10, padding: '0 4px', cursor: 'pointer',
+    fontFamily: 'inherit', lineHeight: 1.4, flexShrink: 0,
+  },
+  workAddBtn: {
+    alignSelf: 'flex-start', marginTop: 4,
+    background: 'none', border: '1px solid var(--axis-border)', color: 'var(--text-muted)',
+    borderRadius: 6, fontSize: 10, padding: '2px 8px', cursor: 'pointer', fontFamily: 'inherit',
+  },
+  editBtnRow:  { display: 'flex', gap: 6, marginTop: 6 },
+  saveBtn: {
+    flex: 1, background: 'var(--text)', color: 'var(--bg)', border: 'none',
+    borderRadius: 6, fontSize: 11, padding: '5px 0', cursor: 'pointer',
+    fontFamily: 'inherit', fontWeight: 500,
+  },
+  cancelBtn: {
+    flex: 1, background: 'none', border: '1px solid var(--axis-border)', color: 'var(--text-muted)',
+    borderRadius: 6, fontSize: 11, padding: '5px 0', cursor: 'pointer', fontFamily: 'inherit',
+  },
+  editEntryBtn: {
+    flex: 1, background: 'none', border: '1px solid var(--axis-border)', color: 'var(--text-faint)',
+    borderRadius: 6, fontSize: 10, padding: '2px 7px', cursor: 'pointer', fontFamily: 'inherit',
+  },
+  deleteBtn: {
+    marginTop: 6, width: '100%', padding: '5px 0',
+    background: 'none', border: '1px solid var(--axis-border)', color: '#e55',
+    borderRadius: 6, fontSize: 10.5, cursor: 'pointer', fontFamily: 'inherit',
+  },
+  errorMsg: { color: '#e55', fontSize: 11, marginTop: 6, lineHeight: 1.5 },
+  mvWrap:     { display: 'flex', flexDirection: 'column', gap: 4 },
+  mvTags:     { display: 'flex', flexWrap: 'wrap', gap: 4 },
+  mvTag: {
+    display: 'inline-flex', alignItems: 'center', gap: 3,
+    background: 'var(--text)', color: 'var(--bg)',
+    borderRadius: 10, padding: '2px 8px 2px 9px', fontSize: 10.5, cursor: 'default',
+  },
+  mvTagRm:    { cursor: 'pointer', opacity: 0.7, fontSize: 11, lineHeight: 1 },
+  mvSearch: {
+    width: '100%', border: '1px solid var(--axis-border)', borderRadius: 6,
+    background: 'var(--bg)', color: 'var(--text)', fontFamily: 'inherit', fontSize: 11.5,
+    padding: '4px 7px', outline: 'none', boxSizing: 'border-box',
+  },
+  mvDropdown: {
+    display: 'flex', flexDirection: 'column', gap: 2,
+    border: '1px solid var(--axis-border)', borderRadius: 6,
+    padding: 4, maxHeight: 120, overflowY: 'auto', background: 'var(--tip-bg)',
+  },
+  mvOption: {
+    padding: '3px 7px', borderRadius: 4, fontSize: 11, color: 'var(--text-muted)',
+    cursor: 'pointer',
+  },
+  confirmOverlay: {
+    position: 'fixed', inset: 0, background: 'rgba(0,0,0,.35)',
+    zIndex: 100,
+  },
+  confirmBox: {
+    position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
+    zIndex: 101, background: 'var(--tip-bg)', border: '1px solid var(--tip-border)',
+    borderRadius: 14, padding: '20px 20px 16px', minWidth: 220, maxWidth: 300,
+    boxShadow: '0 12px 40px var(--tip-shadow)',
+  },
+  confirmMsg:  { fontSize: 13, lineHeight: 1.6, color: 'var(--text)', marginBottom: 14 },
+  confirmBtns: { display: 'flex', gap: 8 },
+  confirmDangerBtn: {
+    flex: 1, background: '#e55', color: '#fff', border: 'none',
+    borderRadius: 8, fontSize: 12, padding: '6px 0', cursor: 'pointer',
+    fontFamily: 'inherit', fontWeight: 500,
+  },
+
+  // 私密笔记样式
+  noteHeader: {
+    fontSize: 11, color: 'var(--text-faint)', marginBottom: 8,
+    paddingBottom: 6, borderBottom: '1px solid var(--axis-border)',
+    paddingRight: 24, display: 'flex', alignItems: 'center', gap: 6,
+  },
+  noteHeaderActions: { display: 'flex', gap: 6, marginLeft: 'auto', alignItems: 'center' },
+  noteHeaderBtn: {
+    fontSize: 10, color: 'var(--text-muted)', cursor: 'pointer',
+    padding: '2px 8px', lineHeight: 1.4, borderRadius: 4,
+    background: 'var(--axis-border)', whiteSpace: 'nowrap',
+  },
+  noteHeaderClose: {
+    fontSize: 16, color: 'var(--text-faint)', cursor: 'pointer',
+    lineHeight: 1, padding: '0 2px', background: 'none', border: 'none',
+  },
+  notePlaceholder: {
+    fontSize: 11.5, color: 'var(--text-faint)', fontStyle: 'italic',
+    padding: '12px 0',
+  },
+  // 手风琴
+  accTitle: {
+    fontSize: 12, fontWeight: 500, color: 'var(--text)',
+    cursor: 'pointer', padding: '4px 0', userSelect: 'none',
+    display: 'flex', alignItems: 'center', gap: 5,
+  },
+  accArrow: { fontSize: 10, color: 'var(--text-faint)', width: 12, flexShrink: 0, textAlign: 'center' },
+  accEditIcon: {
+    fontSize: 10, color: 'var(--text-faint)', cursor: 'pointer', flexShrink: 0,
+    padding: '1px 8px', border: '1px solid var(--axis-border)', borderRadius: 4, lineHeight: 1.4,
+  },
+  accBody: {
+    fontSize: 12, lineHeight: 1.8, color: 'var(--text)',
+    padding: '2px 0 6px 17px', wordBreak: 'break-word',
+  },
+  // 模块编辑
+  modBlock: {
+    display: 'flex', flexDirection: 'column', gap: 4,
+    padding: '6px 8px', border: '1px solid var(--axis-border)', borderRadius: 6,
+  },
+  noteToolbar: {
+    display: 'flex', gap: 4, paddingBottom: 4,
+    borderBottom: '1px solid var(--axis-border)',
+  },
+  noteToolBtn: {
+    background: 'var(--bg)', border: '1px solid var(--axis-border)',
+    borderRadius: 4, padding: '2px 8px', fontSize: 11,
+    color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'inherit',
+    lineHeight: 1.4,
+  },
+  noteEditable: {
+    minHeight: 140, maxHeight: 200, overflowY: 'auto',
+    border: '1px solid var(--axis-border)', borderRadius: 6,
+    background: 'var(--bg)', color: 'var(--text)',
+    fontFamily: 'inherit', fontSize: 12, lineHeight: 1.8,
+    padding: '6px 8px', outline: 'none',
+    wordBreak: 'break-word',
+  },
+}
