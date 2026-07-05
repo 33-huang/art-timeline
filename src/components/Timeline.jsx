@@ -33,6 +33,48 @@ function hexRgba(hex, a) {
   return `rgba(${r},${g},${b},${a})`
 }
 
+// 按 posAfter「跟随」关系排列各列：设了「排在 A 后」就永远紧跟 A（A 移动 B 也跟着）。
+// 无 posAfter 的按 posStart??start/birth 排；锚点找不到或成环则退回按基准键。
+function orderGroups(groups, arts) {
+  const isOrphan = g => g.m.id.startsWith('_orp_')
+  const baseKey  = g => (g.m.posStart ?? g.m.start)
+  const entId    = g => isOrphan(g) ? g.lanes[0][0].id : g.m.id
+  const paOf     = g => isOrphan(g) ? g.lanes[0][0].posAfter : g.m.posAfter
+  const byEnt = new Map(groups.map(g => [entId(g), g]))
+
+  function resolveAnchor(anchorId) {
+    if (byEnt.has(anchorId)) return byEnt.get(anchorId)   // 锚点是流派或独立艺术家（有独立列）
+    const ar = arts.find(a => a.id === anchorId)          // 锚点是有流派的艺术家 → 落到其所属流派列
+    if (ar && ar.movements) for (const mid of ar.movements) if (byEnt.has(mid)) return byEnt.get(mid)
+    return null
+  }
+
+  const anchorOf = new Map()
+  for (const g of groups) { const pa = paOf(g); anchorOf.set(g, pa ? resolveAnchor(pa) : null) }
+  // 断环：顺着 anchor 链走回自己 → 当作无 anchor
+  for (const g of groups) {
+    let cur = anchorOf.get(g); const seen = new Set([g])
+    while (cur) { if (seen.has(cur)) { anchorOf.set(g, null); break } seen.add(cur); cur = anchorOf.get(cur) }
+  }
+
+  const children = new Map(groups.map(g => [g, []]))
+  const roots = []
+  for (const g of groups) {
+    const a = anchorOf.get(g)
+    if (a && a !== g) children.get(a).push(g); else roots.push(g)
+  }
+  const bySort = (a, b) => baseKey(a) - baseKey(b) || a.m.start - b.m.start
+  const out = [], emitted = new Set()
+  function emit(g) {
+    if (emitted.has(g)) return
+    emitted.add(g); out.push(g)
+    for (const c of children.get(g).slice().sort(bySort)) emit(c)
+  }
+  roots.sort(bySort).forEach(emit)
+  groups.slice().sort(bySort).forEach(g => { if (!emitted.has(g)) emit(g) })   // 兜底：漏网的补到最后
+  return out
+}
+
 function computeLayout(mvs, arts, filter, viewW) {
   const showMv  = filter !== 'artists'
   const showArt = filter !== 'movements'
@@ -60,7 +102,10 @@ function computeLayout(mvs, arts, filter, viewW) {
       lanes: [[a]],
     })
   })
-  groups.sort((a, b) => (a.m.posStart ?? a.m.start) - (b.m.posStart ?? b.m.start) || a.m.start - b.m.start)
+  // 按 posAfter 跟随关系重排（B 排在 A 后就一直跟着 A）；无 posAfter 的按 posStart/年份
+  const ordered = orderGroups(groups, arts)
+  groups.length = 0
+  groups.push(...ordered)
 
   let totalSlots = 0
   groups.forEach(g => {
