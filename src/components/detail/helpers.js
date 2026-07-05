@@ -33,3 +33,44 @@ export function computePosAfter(anchorId, movements, artists, selfId) {
   const nextKey = greater.length ? Math.min(...greater) : null
   return nextKey == null ? anchorKey + 1 : (anchorKey + nextKey) / 2
 }
+
+// ── 粘贴清洗（白名单，任何来源都只留有用内容，剥掉隐藏垃圾）──────────
+// 背景：从 Figma/Word/Google Docs/网页复制会夹带隐藏元数据（如 Figma 的
+// data-buffer/data-metadata 里塞着几百KB base64），看不见却撑爆文件。
+const ALLOWED_TAGS = new Set(['A', 'B', 'STRONG', 'I', 'EM', 'U', 'BR', 'P', 'DIV', 'UL', 'OL', 'LI', 'IMG'])
+
+export function cleanPastedHtml(html) {
+  const root = document.createElement('div')
+  root.innerHTML = html
+  // 1. 删掉明显的垃圾容器（含 Figma 的隐藏 buffer/metadata span）
+  root.querySelectorAll('script,style,meta,link,title,[data-buffer],[data-metadata]').forEach(el => el.remove())
+  // 2. 删掉注释节点（Office 的条件注释、StartFragment 等）
+  const cw = document.createTreeWalker(root, NodeFilter.SHOW_COMMENT)
+  const comments = []
+  while (cw.nextNode()) comments.push(cw.currentNode)
+  comments.forEach(c => c.remove())
+  // 3. 遍历所有元素：非白名单标签拆开只留内容；白名单标签只留必要属性
+  for (const el of [...root.querySelectorAll('*')]) {
+    if (!ALLOWED_TAGS.has(el.tagName)) {
+      el.replaceWith(...el.childNodes)   // unwrap：保留文字/子节点，丢掉标签本身
+      continue
+    }
+    const keep = el.tagName === 'A' ? ['href'] : el.tagName === 'IMG' ? ['src'] : []
+    for (const attr of [...el.attributes]) {
+      if (!keep.includes(attr.name)) el.removeAttribute(attr.name)   // 剥掉 style/class/data-*/id 等
+    }
+    // 图片只留 http(s) 链接，丢弃 data: 内联大图（这才是体积元凶）
+    if (el.tagName === 'IMG' && !/^https?:/i.test(el.getAttribute('src') || '')) el.remove()
+    if (el.tagName === 'A') { el.setAttribute('target', '_blank'); el.setAttribute('rel', 'noreferrer') }
+  }
+  return root.innerHTML
+}
+
+// contenteditable 的 onPaste 处理：阻止默认，插入清洗后的 HTML（无 HTML 时插纯文本）
+export function handleEditorPaste(e) {
+  const html = e.clipboardData?.getData('text/html')
+  const text = e.clipboardData?.getData('text/plain')
+  e.preventDefault()
+  if (html) document.execCommand('insertHTML', false, cleanPastedHtml(html))
+  else if (text) document.execCommand('insertText', false, text)
+}

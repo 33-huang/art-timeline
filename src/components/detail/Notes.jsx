@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react'
 import { s } from './styles'
-import { noteClickHandler } from './helpers'
+import { noteClickHandler, handleEditorPaste } from './helpers'
 
 // ── 私密卡参照行 ──────────────────────────────────────
 export function NoteSummary({ data, type, movements, actions }) {
@@ -105,6 +105,7 @@ export function ModuleEditor({ mod, onChange, onDelete, editorRef }) {
         <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('removeFormat'); exec('unlink') }} title="清除格式"><span style={{ textDecoration: 'line-through' }}>T</span></button>
       </div>
       <div ref={setRef} contentEditable suppressContentEditableWarning
+        onPaste={handleEditorPaste}
         style={s.noteEditable} />
     </div>
   )

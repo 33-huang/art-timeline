@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { s, COLOR_PALETTE, COLOR_NAMES } from './styles'
-import { computePosAfter } from './helpers'
+import { computePosAfter, handleEditorPaste } from './helpers'
 
 // ── 颜色下拉选择器 ──────────────────────────────────────
 export function ColorPicker({ value, onChange, showAuto }) {
@@ -69,7 +69,7 @@ export function RichTextArea({ value, onChange }) {
         <button style={s.noteToolBtn} onMouseDown={e => { e.preventDefault(); exec('removeFormat'); exec('unlink') }} title="清除格式"><span style={{ textDecoration: 'line-through' }}>T</span></button>
       </div>
       <div ref={ref} contentEditable suppressContentEditableWarning
-        onInput={flush} onBlur={flush}
+        onInput={flush} onBlur={flush} onPaste={handleEditorPaste}
         style={s.descEditable} />
     </div>
   )
