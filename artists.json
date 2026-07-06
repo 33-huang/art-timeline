@@ -599,7 +599,9 @@
     "birth": 1856,
     "death": 1934,
     "description": "<span style=\"background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; border-radius: 2px;\">美国</span>建筑师，被誉为“摩天大楼之父”和“现代主义之父”。<span style=\"line-height: 1; unicode-bidi: isolate;\">他是</span><span style=\"line-height: 1; unicode-bidi: isolate; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; border-radius: 2px;\">芝加哥建筑学派</span><span style=\"line-height: 1; unicode-bidi: isolate;\">的代表人物之一，许多人认为是他创造了现代的</span><span style=\"line-height: 1; unicode-bidi: isolate; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial; border-radius: 2px;\">摩天大楼</span><span style=\"line-height: 1; unicode-bidi: isolate;\">。</span>",
-    "movements": [],
+    "movements": [
+      "mv34"
+    ],
     "url": "https://zh.wikipedia.org/wiki/%E8%B7%AF%E6%98%93%E6%96%AF%C2%B7%E6%B2%99%E5%88%A9%E6%96%87",
     "works": [],
     "posStart": 1913.5625,
