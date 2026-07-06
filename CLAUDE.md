@@ -9,7 +9,8 @@ React + Vite 的**竖向**艺术史时间轴。公开艺术史数据 + 私密个
 ## 数据架构(最关键,先记住)
 **数据不在本项目代码里**,运行时从独立 GitHub 仓库读写:
 - 公开数据(流派/艺术家):仓库 `33-huang/art-timeline` 的 **`data` 分支** → `movements.json` / `artists.json`。**匿名 `fetch` 读**(不用 token),编辑时用 token `PUT` 回 `data` 分支。
-- 私密笔记:私有仓 `33-huang/art-timeline-notes` 的 `main` → `notes.json`。结构 `{ itemId: [ {id,title,content(HTML)}, ... ] }`。仅在有 token 时加载。
+- 私密笔记:私有仓 `33-huang/art-timeline-notes` 的 `main` → `notes.json`。结构 `{ itemId: [ {id,title,content(HTML)}, ... ] }`。仅在有 token 时加载;>1MB 时 `loadNotes` 改用 Git Blobs API 按 sha 读。
+- ⚠️ 编辑用的 fine-grained token 必须**同时对 `art-timeline` + `art-timeline-notes` 两个仓**有 Contents 读写(笔记在后者;只给一个仓 → 私密笔记读不出但不报错)。
 - ⚠️ `public/data/*.json` 只是**过时的本地初始副本**,线上不用。看真实数据要拉 `?ref=data`。
 - ⚠️ 数据**必须 `fetch`,不能 `import`**(import 会把数据打进代码包)。
 - 推论:**改代码不会碰到用户数据**(只要不改数据格式)。无需"迁移/导入数据"。
@@ -17,8 +18,13 @@ React + Vite 的**竖向**艺术史时间轴。公开艺术史数据 + 私密个
 ## 文件地图(改动先按这里定位,别全项目乱翻)
 - `src/lib/dataStore.js` — `loadData/saveData`(公开,data 分支)、`loadNotes/saveNotes`(私密仓)、token 读取、UTF-8 base64、sha 缓存
 - `src/App.jsx` — 全部状态;hover/固定(pin)/Shift/⌘/Esc;数据&笔记加载;保存/新增/删除编排;卡片定位
-- `src/components/Timeline.jsx` — 竖向布局/年→Y、三遍渲染(bars→避碰→labels+conns)、hover 联动变色、孤儿艺术家自动配色
-- `src/components/DetailCard.jsx` — **1008 行巨型文件**,内含公开卡(MovementView/ArtistView)+ 编辑表单(MovementEditForm/ArtistEditForm/MvSelector/ColorPicker/RichTextArea)+ 私密卡(NoteSummary/NoteAccordion/ModuleEditor)+ 底部大样式对象 `s`
+- `src/components/Timeline.jsx` — 竖向布局/年→Y、`orderGroups()`(按 posAfter「排在其后=跟随」动态排序列)、三遍渲染(bars→避碰→labels+conns)、hover 联动变色、孤儿艺术家自动配色、大事件灰色 `EVENT_GRAY`+单年只显示一个年份
+- `src/components/DetailCard.jsx` — **主组件(~354行)**:卡片外壳 + 编辑/笔记的状态与编排(handleSave/handleSaveNotes/renderPublicCard/renderPrivateCard)。子组件已拆到 `src/components/detail/`:
+  - `detail/styles.js`(样式对象 `s` + 调色板常量)
+  - `detail/helpers.js`(computePosAfter、粘贴清洗 cleanPastedHtml/handleEditorPaste、genModId 等纯函数)
+  - `detail/Forms.jsx`(ColorPicker/RichTextArea/PosAfterSelector/MvSelector/MovementEditForm/ArtistEditForm)
+  - `detail/Notes.jsx`(NoteSummary/NoteAccordion/ModuleEditor)
+  - `detail/PublicViews.jsx`(MovementView/ArtistView)
 - `src/components/FilterBar.jsx`、`TokenSettings.jsx`
 - `src/index.css` — v2 浅色皮肤、CSS 变量、笔记 `.note-content`/`[contenteditable]` 样式
 
