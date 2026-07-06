@@ -21,12 +21,15 @@
   },
   {
     "id": "mv04",
-    "zh": "古典主义",
-    "start": 1650,
-    "end": 1800,
+    "zh": "法国古典主义",
+    "start": 1643,
+    "end": 1715,
     "color": "#9B7DC8",
     "region": "意大利",
-    "description": "崇尚理性与秩序，普桑确立法国学院派核心标准，强调线条清晰与构图均衡，以古希腊罗马为典范。"
+    "description": "是一种为颂扬国王路易十四及其统治而产生的建筑和装饰艺术风格。其特征是庄严、和谐、规整。在路易十四统治时期（1643-1715 年），路易十四风格成为官方风格，由新成立的皇家绘画与雕塑学院&nbsp;和皇家建筑学院&nbsp;强加给艺术家。它对其他欧洲君主的建筑产生了重要影响，包括从普鲁士的腓特烈大帝到俄罗斯的彼得大帝。主要建筑包括<a href=\"https://zh.wikipedia.org/wiki/%E5%87%A1%E7%88%BE%E8%B3%BD%E5%AE%AE\" target=\"_blank\" rel=\"noreferrer\">凡尔赛宫</a>",
+    "sub": "路易十四风格",
+    "url": "https://zh.wikipedia.org/wiki/%E8%B7%AF%E6%98%93%E5%8D%81%E5%9B%9B%E9%A2%A8%E6%A0%BC",
+    "isEvent": false
   },
   {
     "id": "mv05",
