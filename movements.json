@@ -334,5 +334,15 @@
     "url": "https://zh.wikipedia.org/wiki/%E5%8C%85%E8%B1%AA%E6%96%AF",
     "color": "#4EAA72",
     "isEvent": true
+  },
+  {
+    "id": "mv34",
+    "zh": "芝加哥建筑学派（第一）",
+    "start": 1880,
+    "end": 1910,
+    "region": "美",
+    "description": "<p><span style=\"color: var(--text); font-family: inherit;\">芝加哥的建筑举世闻名，其中一种风格称为</span><span style=\"color: var(--text); font-family: inherit;\">芝加哥建筑学派</span><span style=\"color: var(--text); font-family: inherit;\">，依照时间又可再细分为第一学派和第二学派，其早期作品很多也称作</span><span style=\"color: var(--text); font-family: inherit;\">商业风格</span><span style=\"color: var(--text); font-family: inherit;\">。</span></p><p>芝加哥学派的显著特点是使用钢结构建筑，并采用砖石包层（通常是陶瓦），允许大面积的平板玻璃窗，并限制外部装饰物的数量。有时，芝加哥学派摩天大楼中也会使用新古典主义建筑的元素。许多芝加哥学派摩天大楼包含如同古典柱式三个部分的构成型式：最底层是负责结构支撑，相当于柱座；中间的楼层通常很少有装饰性的细节，相当于柱子中的柱身；最顶的一二层通常覆有檐口，具有更多装饰性细节，相当于柱头。</p>",
+    "url": "https://zh.wikipedia.org/wiki/%E8%8A%9D%E5%8A%A0%E5%93%A5%E5%BB%BA%E7%AF%89%E5%AD%B8%E6%B4%BE",
+    "color": "#4EAA72"
   }
 ]
