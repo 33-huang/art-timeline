@@ -347,5 +347,15 @@
     "description": "<p><span style=\"color: var(--text); font-family: inherit;\">芝加哥的建筑举世闻名，其中一种风格称为</span><span style=\"color: var(--text); font-family: inherit;\">芝加哥建筑学派</span><span style=\"color: var(--text); font-family: inherit;\">，依照时间又可再细分为第一学派和第二学派，其早期作品很多也称作</span><span style=\"color: var(--text); font-family: inherit;\">商业风格</span><span style=\"color: var(--text); font-family: inherit;\">。</span></p><p>芝加哥学派的显著特点是使用钢结构建筑，并采用砖石包层（通常是陶瓦），允许大面积的平板玻璃窗，并限制外部装饰物的数量。有时，芝加哥学派摩天大楼中也会使用新古典主义建筑的元素。许多芝加哥学派摩天大楼包含如同古典柱式三个部分的构成型式：最底层是负责结构支撑，相当于柱座；中间的楼层通常很少有装饰性的细节，相当于柱子中的柱身；最顶的一二层通常覆有檐口，具有更多装饰性细节，相当于柱头。</p>",
     "url": "https://zh.wikipedia.org/wiki/%E8%8A%9D%E5%8A%A0%E5%93%A5%E5%BB%BA%E7%AF%89%E5%AD%B8%E6%B4%BE",
     "color": "#4EAA72"
+  },
+  {
+    "id": "mv35",
+    "zh": "帝政风格",
+    "start": 1800,
+    "end": 1830,
+    "region": "法",
+    "description": "帝政风格是新古典主义晚期的重要分支，约1800—1830年流行，其中1804—1815年（拿破仑帝国时期）达到鼎盛。它起源于法国，由拿破仑一世推动，目的是借鉴古罗马帝国的辉煌形象，塑造皇权威严、宣扬帝国荣耀，具有鲜明的政治宣传色彩。帝政风格继承了新古典主义的理性、对称和古典比例，同时更加庄严、宏伟和华丽，广泛运用古罗马建筑元素、鹰、月桂冠、战车、狮身鹰首兽、棕榈叶等象征胜利与权力的装饰，以及白色、金色、青铜和桃花心木等高贵材质。它不仅影响了法国，也传播至欧洲和美国，对19世纪建筑、家具和室内设计产生了深远影响。",
+    "url": "https://zh.wikipedia.org/wiki/%E5%B8%9D%E6%94%BF%E9%A3%8E%E6%A0%BC",
+    "color": "#48B8A0"
   }
 ]
