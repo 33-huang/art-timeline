@@ -265,18 +265,22 @@ export function ArtistEditForm({ formData, onChange, allMovements, allArtists, s
             onChange={mvs => onChange({ ...formData, movements: mvs })} />
         </div>
       </div>
-      {mvIds.length === 0 && (
-        <div style={s.field}>
-          <label style={s.fieldLabel}>位置</label>
-          <div style={{ flex: 1 }}>
-            <PosAfterSelector
-              value={formData.posAfter || ''}
-              options={allArtists.filter(a => a.id !== selfId)}
-              onPick={id => onChange({ ...formData, posAfter: id, posStart: computePosAfter(id, allMovements, allArtists, selfId) })}
-              onClear={() => onChange({ ...formData, posAfter: '', posStart: '' })} />
-          </div>
+      <div style={s.field}>
+        <label style={s.fieldLabel}>位置</label>
+        <div style={{ flex: 1 }}>
+          <PosAfterSelector
+            value={formData.posAfter || ''}
+            options={mvIds.length === 0
+              ? allArtists.filter(a => a.id !== selfId)
+              : allArtists.filter(a => a.id !== selfId && a.movements?.some(id => mvIds.includes(id)))}
+            onPick={id => onChange(mvIds.length === 0
+              ? { ...formData, posAfter: id, posStart: computePosAfter(id, allMovements, allArtists, selfId) }
+              : { ...formData, posAfter: id })}
+            onClear={() => onChange(mvIds.length === 0
+              ? { ...formData, posAfter: '', posStart: '' }
+              : { ...formData, posAfter: '' })} />
         </div>
-      )}
+      </div>
       <div style={s.fieldBlock}>
         <label style={s.blockLabel}>简介</label>
         <RichTextArea value={formData.description}

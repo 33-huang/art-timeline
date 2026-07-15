@@ -75,6 +75,34 @@ function orderGroups(groups, arts) {
   return out
 }
 
+// 同一流派内，艺术家按 posAfter「跟随」关系排一次序，再交给泳道装箱；
+// 跟 orderGroups 同一套逻辑，但只在传入的 arts 范围内找锚点（跨流派的 posAfter 不生效，退回出生年）。
+function orderArtistsByFollow(arts) {
+  const byId = new Map(arts.map(a => [a.id, a]))
+  const anchorOf = new Map()
+  for (const a of arts) { const pa = a.posAfter; anchorOf.set(a, pa ? byId.get(pa) : null) }
+  for (const a of arts) {
+    let cur = anchorOf.get(a); const seen = new Set([a])
+    while (cur) { if (seen.has(cur)) { anchorOf.set(a, null); break } seen.add(cur); cur = anchorOf.get(cur) }
+  }
+  const children = new Map(arts.map(a => [a, []]))
+  const roots = []
+  for (const a of arts) {
+    const anchor = anchorOf.get(a)
+    if (anchor && anchor !== a) children.get(anchor).push(a); else roots.push(a)
+  }
+  const bySort = (a, b) => a.birth - b.birth
+  const out = [], emitted = new Set()
+  function emit(a) {
+    if (emitted.has(a)) return
+    emitted.add(a); out.push(a)
+    for (const c of children.get(a).slice().sort(bySort)) emit(c)
+  }
+  roots.sort(bySort).forEach(emit)
+  arts.slice().sort(bySort).forEach(a => { if (!emitted.has(a)) emit(a) })   // 兜底
+  return out
+}
+
 function computeLayout(mvs, arts, filter, viewW) {
   const showMv  = filter !== 'artists'
   const showArt = filter !== 'movements'
@@ -83,7 +111,7 @@ function computeLayout(mvs, arts, filter, viewW) {
   const groups = [...mvs].sort((a, b) => (a.posStart ?? a.start) - (b.posStart ?? b.start) || a.start - b.start).map(m => {
     const thisArts = arts.filter(a => a.movements.includes(m.id))
     const lanes = []
-    ;[...thisArts].sort((a, b) => a.birth - b.birth).forEach(a => {
+    orderArtistsByFollow(thisArts).forEach(a => {
       let placed = false
       for (const lane of lanes) {
         const last = lane[lane.length - 1]
