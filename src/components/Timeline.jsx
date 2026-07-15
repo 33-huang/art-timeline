@@ -111,7 +111,7 @@ function computeLayout(mvs, arts, filter, viewW) {
   const sidePad  = 20
   const gapCount = Math.max(0, groups.length - 1)
   const mvW      = Math.max(MIN_MV_W, 28)
-  const artW     = Math.max(MIN_ART_W, Math.round(mvW * 0.7))
+  const artW     = Math.max(MIN_ART_W, 16)
 
   let totalContentW = 0
   groups.forEach(g => {
