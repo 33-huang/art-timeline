@@ -110,7 +110,7 @@ function computeLayout(mvs, arts, filter, viewW) {
   // 柱宽固定,不随流派/艺术家数量变化;画布按内容实际需要的宽度延伸,靠横向滚动容纳
   const sidePad  = 20
   const gapCount = Math.max(0, groups.length - 1)
-  const mvW      = Math.max(MIN_MV_W, 36)
+  const mvW      = Math.max(MIN_MV_W, 28)
   const artW     = Math.max(MIN_ART_W, Math.round(mvW * 0.7))
 
   let totalContentW = 0
