@@ -107,24 +107,11 @@ function computeLayout(mvs, arts, filter, viewW) {
   groups.length = 0
   groups.push(...ordered)
 
-  let totalSlots = 0
-  groups.forEach(g => {
-    if (showMv && !g.m.isHidden) totalSlots += 1
-    if (showArt) totalSlots += g.lanes.length
-  })
-  if (totalSlots === 0) totalSlots = 1
-
-  const sidePad      = 20
-  const artIndentTot = groups.reduce((s, g) => (showMv && !g.m.isHidden && showArt && g.lanes.length > 0) ? s + ART_INDENT : s, 0)
-  const artGapTot    = groups.reduce((s, g) => showArt && g.lanes.length > 1 ? s + (g.lanes.length - 1) * ART_GAP : s, 0)
-  const gapCount     = Math.max(0, groups.length - 1)
-  const minGapTot    = gapCount * MIN_COL_GAP
-  const availW       = viewW - sidePad * 2 - artIndentTot - artGapTot - minGapTot
-
-  let slotW = Math.max(MIN_MV_W, Math.floor(availW / totalSlots))
-  slotW = Math.min(slotW, 36)
-  const mvW  = slotW
-  const artW = Math.max(MIN_ART_W, Math.round(slotW * 0.7))
+  // 柱宽固定,不随流派/艺术家数量变化;画布按内容实际需要的宽度延伸,靠横向滚动容纳
+  const sidePad  = 20
+  const gapCount = Math.max(0, groups.length - 1)
+  const mvW      = Math.max(MIN_MV_W, 36)
+  const artW     = Math.max(MIN_ART_W, Math.round(mvW * 0.7))
 
   let totalContentW = 0
   groups.forEach(g => {
