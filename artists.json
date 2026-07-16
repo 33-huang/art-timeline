@@ -637,9 +637,12 @@
     "death": 1967,
     "description": "瑞士表现主义画家、设计师、教师、作家和理论家；与德裔美籍画家莱昂内尔·费宁格和德国雕塑家格哈德·马克斯，在德国建筑师瓦尔特·格罗皮乌斯的领导下，为魏玛包豪斯的核心成员。",
     "movements": [
-      "mv17"
+      "mv32",
+      "mv33"
     ],
-    "url": "https://zh.wikipedia.org/wiki/%E7%BA%A6%E7%BF%B0%E5%86%85%E6%96%AF%C2%B7%E4%BC%8A%E9%A1%BF"
+    "url": "https://zh.wikipedia.org/wiki/%E7%BA%A6%E7%BF%B0%E5%86%85%E6%96%AF%C2%B7%E4%BC%8A%E9%A1%BF",
+    "sub": "",
+    "works": []
   },
   {
     "id": "ar39",
