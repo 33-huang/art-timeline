@@ -693,8 +693,11 @@
     "death": 1956,
     "description": "德裔美国画家、卡通画家及讽刺画家，是表现主义的代表人物之一。",
     "movements": [
-      "mv32"
+      "mv32",
+      "mv33"
     ],
-    "url": "https://zh.wikipedia.org/wiki/%E8%90%8A%E6%98%82%E5%85%A7%E7%88%BE%C2%B7%E8%B2%BB%E5%AF%A7%E6%A0%BC"
+    "url": "https://zh.wikipedia.org/wiki/%E8%90%8A%E6%98%82%E5%85%A7%E7%88%BE%C2%B7%E8%B2%BB%E5%AF%A7%E6%A0%BC",
+    "sub": "",
+    "works": []
   }
 ]
