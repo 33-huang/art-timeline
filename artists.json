@@ -677,7 +677,10 @@
         "url": "https://editst.com/2021/150-years-of-modern-art/5A6123510F7C42CFB4C2EC29A73C1B1D.png.webp"
       }
     ],
-    "movements": [],
-    "url": "https://zh.wikipedia.org/wiki/%E7%93%A6%E7%88%BE%E7%89%B9%C2%B7%E6%A0%BC%E7%BE%85%E4%BD%A9%E6%96%AF"
+    "movements": [
+      "mv33"
+    ],
+    "url": "https://zh.wikipedia.org/wiki/%E7%93%A6%E7%88%BE%E7%89%B9%C2%B7%E6%A0%BC%E7%BE%85%E4%BD%A9%E6%96%AF",
+    "sub": ""
   }
 ]
