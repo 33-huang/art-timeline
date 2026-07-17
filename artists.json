@@ -704,5 +704,22 @@
         "url": "https://editst.com/2021/150-years-of-modern-art/Feininger_Lyonel_Titelblatt_Bauhaus_Manifest_Kathedrale_1919.jpg.webp"
       }
     ]
+  },
+  {
+    "id": "ar43",
+    "zh": "恩斯特·路德维希·基希纳",
+    "birth": 1880,
+    "death": 1938,
+    "description": "德国表现主义画家，也是表现主义艺术家团体桥社的创始人之一。",
+    "works": [
+      {
+        "title": "作为一个军人的自画像",
+        "url": "https://en.wikipedia.org/wiki/Self-Portrait_as_a_Soldier"
+      }
+    ],
+    "movements": [
+      "mv32"
+    ],
+    "url": "https://zh.wikipedia.org/wiki/%E6%81%A9%E6%96%AF%E7%89%B9%C2%B7%E8%B7%AF%E5%BE%B7%E7%BB%B4%E5%B8%8C%C2%B7%E5%9F%BA%E5%B8%8C%E7%BA%B3"
   }
 ]
