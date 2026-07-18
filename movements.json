@@ -373,5 +373,15 @@
     "color": "#5B9FD4",
     "sub": "",
     "isEvent": false
+  },
+  {
+    "id": "mv37",
+    "zh": "第二次世界大战",
+    "start": 1939,
+    "end": 1945,
+    "description": "",
+    "url": "",
+    "color": "#9B7DC8",
+    "isEvent": true
   }
 ]
