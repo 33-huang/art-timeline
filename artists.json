@@ -801,5 +801,22 @@
       "mv21"
     ],
     "url": "https://zh.wikipedia.org/wiki/%E8%AE%A9%C2%B7%E9%98%BF%E5%B0%94%E6%99%AE"
+  },
+  {
+    "id": "ar48",
+    "zh": "库尔特·施维特斯",
+    "birth": 1887,
+    "death": 1948,
+    "description": "<p>德国艺术家。他出生于德国汉诺威，自1937年起流亡海外。</p><p>施维特斯在多个艺术流派和媒介领域都有创作，包括达达主义、构成主义、超现实主义、诗歌、声音艺术、绘画、雕塑、平面设计、字体排印以及后来被称为\"装置艺术\"的领域。他最广为人知的是他的拼贴画作品，被称为\"梅尔茨图画\"（Merz Pictures）。</p>",
+    "works": [
+      {
+        "title": "旋转",
+        "url": "https://www.moma.org/collection/works/79211?locale=en"
+      }
+    ],
+    "movements": [
+      "mv21"
+    ],
+    "url": "https://en.wikipedia.org/wiki/Kurt_Schwitters"
   }
 ]
