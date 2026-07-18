@@ -742,5 +742,21 @@
       "mv33"
     ],
     "url": "https://zh.wikipedia.org/wiki/%E7%8E%9B%E4%B8%BD%E5%AE%89%C2%B7%E5%8B%83%E5%85%B0%E7%89%B9"
+  },
+  {
+    "id": "ar45",
+    "zh": "马塞尔·布劳耶",
+    "birth": 1902,
+    "death": 1981,
+    "description": "匈牙利裔现代主义设计及建筑师，是20世纪主要的现代主义艺术家之一。18岁离家前往包豪斯学习艺术，在校期间设计了瓦西里椅（Wassily Chair），1936年遵循瓦尔特格罗·皮乌斯的意见前往伦敦[2]，后来又随之前往美国哈佛大学设计学院，设计了包括1968年美国住房及城市发展部总部在内的上百座现代主义建筑，但是毁誉参半",
+    "works": [
+      {
+        "title": "瓦西里椅",
+        "url": "https://en.wikipedia.org/wiki/Wassily_chair"
+      }
+    ],
+    "movements": [
+      "mv33"
+    ]
   }
 ]
