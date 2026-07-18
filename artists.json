@@ -725,5 +725,22 @@
     "url": "https://zh.wikipedia.org/wiki/%E6%81%A9%E6%96%AF%E7%89%B9%C2%B7%E8%B7%AF%E5%BE%B7%E7%BB%B4%E5%B8%8C%C2%B7%E5%9F%BA%E5%B8%8C%E7%BA%B3",
     "sub": "",
     "posAfter": "ar39"
+  },
+  {
+    "id": "ar44",
+    "zh": "玛丽安·勃兰特",
+    "birth": 1893,
+    "death": 1983,
+    "description": "德国画家、雕塑家、摄影师、铁匠和设计师，曾在魏玛的包豪斯学习，后来于1927年成为德绍包豪斯车间的负责人。如今，勃兰特的灯具和烟灰缸等家居用品的设计被认为是现代工业设计的永恒典范。",
+    "works": [
+      {
+        "title": "银乌木茶壶",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Marianne_brandt_per_bauhaus%2C_servito_da_the%2C_in_argento_ed_ebano%2C_1924_%28prodotto_entro_il_1929%29_01.jpg/1280px-Marianne_brandt_per_bauhaus%2C_servito_da_the%2C_in_argento_ed_ebano%2C_1924_%28prodotto_entro_il_1929%29_01.jpg"
+      }
+    ],
+    "movements": [
+      "mv33"
+    ],
+    "url": "https://zh.wikipedia.org/wiki/%E7%8E%9B%E4%B8%BD%E5%AE%89%C2%B7%E5%8B%83%E5%85%B0%E7%89%B9"
   }
 ]
