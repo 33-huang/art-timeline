@@ -784,5 +784,22 @@
         "url": "https://www.moma.org/collection/works/4369?locale=en"
       }
     ]
+  },
+  {
+    "id": "ar47",
+    "zh": "让·阿尔普",
+    "birth": 1886,
+    "death": 1966,
+    "description": "德裔法国雕塑家、画家和诗人。1916年参与达达主义运动，第一次世界大战之后又与超现实主义者和表现主义者有着广泛的交往。阿尔普主张艺术的完全自由，注重内在情感的表达。阿尔普延续了布朗库西、扎德金、赫西埃等人的道路，实现了雕塑的全面抽象化。",
+    "works": [
+      {
+        "title": "根据随机法则排布的正方形的拼贴画",
+        "url": "https://www.moma.org/collection/works/37013?locale=en"
+      }
+    ],
+    "movements": [
+      "mv21"
+    ],
+    "url": "https://zh.wikipedia.org/wiki/%E8%AE%A9%C2%B7%E9%98%BF%E5%B0%94%E6%99%AE"
   }
 ]
