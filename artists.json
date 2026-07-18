@@ -812,11 +812,16 @@
       {
         "title": "旋转",
         "url": "https://www.moma.org/collection/works/79211?locale=en"
+      },
+      {
+        "title": "梅尔兹堡",
+        "url": "https://www.moma.org/explore/inside_out/2012/07/09/in-search-of-lost-art-kurt-schwitterss-merzbau/"
       }
     ],
     "movements": [
       "mv21"
     ],
-    "url": "https://en.wikipedia.org/wiki/Kurt_Schwitters"
+    "url": "https://en.wikipedia.org/wiki/Kurt_Schwitters",
+    "sub": ""
   }
 ]
