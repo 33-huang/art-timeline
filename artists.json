@@ -996,5 +996,26 @@
       "mv22"
     ],
     "url": "https://zh.wikipedia.org/wiki/%E6%A2%85%E9%9B%B7%E7%89%B9%C2%B7%E5%A5%A7%E6%9C%AC%E6%B5%B7%E5%A7%86"
+  },
+  {
+    "id": "ar57",
+    "zh": "弗里达·卡罗",
+    "birth": 1907,
+    "death": 1954,
+    "description": "墨西哥女画家、社会活动家、前墨西哥共产党成员[4]，以创作自画像著称，许多画作受到墨西哥自然及文化和个人经历的影响，表达了她对个人身份、痛苦以及生命意义的深刻探索。弗里达之夫为著名墨西哥画家迭戈·里维拉。",
+    "works": [
+      {
+        "title": "梦",
+        "url": "https://www.wikiart.org/en/frida-kahlo/the-dream-the-bed-1940"
+      },
+      {
+        "title": "自画像：框架",
+        "url": "https://www.wikiart.org/en/frida-kahlo/self-portrait-the-frame-1938"
+      }
+    ],
+    "movements": [
+      "mv22"
+    ],
+    "url": "https://zh.wikipedia.org/wiki/%E8%8A%99%E7%83%88%E9%81%94%C2%B7%E5%8D%A1%E8%98%BF"
   }
 ]
