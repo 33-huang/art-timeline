@@ -957,5 +957,22 @@
     "posStart": 1931.5,
     "posAfter": "ar49",
     "color": "#D45858"
+  },
+  {
+    "id": "ar55",
+    "zh": "曼·雷",
+    "birth": 1890,
+    "death": 1976,
+    "description": "<p>美国现代主义艺术家，虽然他从未正式参与达达主义运动和超现实主义运动，但他仍为这两次运动作出了巨大的贡献。</p><p>他先把自己看作是位画家。因先锋和超现实的摄影风格而为人所知，因他对“物影摄影”（photogram），也就是他口中的“雷影”（Rayograph）的发展所做出的贡献而闻名。</p>",
+    "works": [
+      {
+        "title": "物质相对于思想的第一性",
+        "url": "https://www.wikiart.org/en/man-ray/primacy-of-matter-over-thought-1929"
+      }
+    ],
+    "movements": [
+      "mv22"
+    ],
+    "url": "https://zh.wikipedia.org/wiki/%E6%9B%BC%C2%B7%E9%9B%B7"
   }
 ]
