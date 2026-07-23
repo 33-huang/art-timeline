@@ -1017,5 +1017,22 @@
       "mv22"
     ],
     "url": "https://zh.wikipedia.org/wiki/%E8%8A%99%E7%83%88%E9%81%94%C2%B7%E5%8D%A1%E8%98%BF"
+  },
+  {
+    "id": "ar58",
+    "zh": "利奥诺拉·卡林顿",
+    "birth": 1917,
+    "death": 2011,
+    "description": "超现实主义画家和小说家。她成年后大部分时间生活在墨西哥城，是20世纪30年代的超现实主义运动最后幸存的参与者之一。也是20世纪70年代墨西哥妇女解放运动团体的创始成员。",
+    "works": [
+      {
+        "title": "自画像：黎明马客栈 ",
+        "url": "https://arthur.io/art/leonora-carrington/self-portrait-inn-of-the-dawn-horse"
+      }
+    ],
+    "movements": [
+      "mv22"
+    ],
+    "url": "https://zh.wikipedia.org/wiki/%E5%88%A9%E5%A5%A5%E8%AF%BA%E6%8B%89%C2%B7%E5%8D%A1%E6%9E%97%E9%A1%BF"
   }
 ]
