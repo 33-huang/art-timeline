@@ -904,5 +904,22 @@
         "url": "https://www.tate.org.uk/art/artworks/ernst-forest-and-dove-t00548"
       }
     ]
+  },
+  {
+    "id": "ar52",
+    "zh": "勒内·马格里特",
+    "birth": 1898,
+    "death": 1967,
+    "description": "比利时超现实主义画家，并且因为其超现实主义作品中带有些许诙谐以及许多引人审思的符号语言而闻名。他的作品对于许多观察家对于事先设想现实状况的情况提出挑战，并且影响今日许多插画风格。",
+    "works": [
+      {
+        "title": "受威胁的暗杀者",
+        "url": "https://www.moma.org/collection/works/79267?locale=zh"
+      }
+    ],
+    "movements": [
+      "mv22"
+    ],
+    "url": "https://zh.wikipedia.org/wiki/%E9%9B%B7%E5%85%A7%C2%B7%E9%A6%AC%E6%A0%BC%E5%88%A9%E7%89%B9"
   }
 ]
