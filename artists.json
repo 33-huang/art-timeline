@@ -864,5 +864,22 @@
         "url": "https://en.wikipedia.org/wiki/Lobster_Telephone"
       }
     ]
+  },
+  {
+    "id": "ar50",
+    "zh": "胡安·米罗",
+    "birth": 1893,
+    "death": 1983,
+    "description": "西班牙加泰罗尼亚画家、雕塑家、陶艺家、版画家，超现实主义的代表人物。米罗与毕加索、达利并列为西班牙后现代三大艺术家。米罗的故乡巴塞罗那的蒙特惠奇山有米罗美术馆收藏米罗的作品。",
+    "works": [
+      {
+        "title": "小丑的狂欢夜",
+        "url": "https://en.wikipedia.org/wiki/The_Harlequin%27s_Carnival"
+      }
+    ],
+    "movements": [
+      "mv22"
+    ],
+    "url": "https://zh.wikipedia.org/wiki/%E8%83%A1%E5%AE%89%C2%B7%E7%B1%B3%E7%BE%85#%E5%90%8E%E6%9C%9F%E5%88%9B%E4%BD%9C%E4%B8%8E%E5%B1%95%E8%A7%88"
   }
 ]
