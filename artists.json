@@ -974,5 +974,22 @@
       "mv22"
     ],
     "url": "https://zh.wikipedia.org/wiki/%E6%9B%BC%C2%B7%E9%9B%B7"
+  },
+  {
+    "id": "ar56",
+    "zh": "梅雷特·奥本海姆",
+    "birth": 1913,
+    "death": 1985,
+    "description": "德国出生的瑞士超现实主义艺术家和摄影师。除了艺术创作外，奥本海姆也以曼·雷的摄影模特而出名，其中最引人注目的是她与印刷机互动的一系列裸体照片。",
+    "works": [
+      {
+        "title": "物体（皮毛餐具）",
+        "url": "https://www.moma.org/collection/works/80997?locale=en"
+      }
+    ],
+    "movements": [
+      "mv22"
+    ],
+    "url": "https://zh.wikipedia.org/wiki/%E6%A2%85%E9%9B%B7%E7%89%B9%C2%B7%E5%A5%A7%E6%9C%AC%E6%B5%B7%E5%A7%86"
   }
 ]
