@@ -1044,6 +1044,13 @@
     "movements": [
       "mv23"
     ],
-    "url": "https://zh.wikipedia.org/wiki/%E6%9D%B0%E5%85%8B%E9%80%8A%C2%B7%E6%B3%A2%E6%B4%9B%E5%85%8B"
+    "url": "https://zh.wikipedia.org/wiki/%E6%9D%B0%E5%85%8B%E9%80%8A%C2%B7%E6%B3%A2%E6%B4%9B%E5%85%8B",
+    "sub": "",
+    "works": [
+      {
+        "title": "速记人物",
+        "url": "https://www.moma.org/collection/works/79686?locale=en"
+      }
+    ]
   }
 ]
