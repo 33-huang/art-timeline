@@ -1,10 +1,27 @@
 import { useState } from 'react'
 import { s } from './styles'
+import { pickRepWork } from './helpers'
+
+// 流派代表作单条：纯展示，不可点击/不跳转，加载失败自动整格隐藏
+function MovementWorkItem({ artist, work }) {
+  const [imgError, setImgError] = useState(false)
+  if (imgError) return null
+  return (
+    <div style={s.workCard}>
+      <img src={work.imageUrl} alt={work.title} style={s.workThumbStatic} onError={() => setImgError(true)} />
+      <div style={s.workTitleQuote}>《{work.title}》</div>
+      <div style={s.workArtistName}>{artist.zh}</div>
+    </div>
+  )
+}
 
 // ── 公开卡：只读流派 ──────────────────────────────────
 export function MovementView({ data, artists }) {
   const [imgError, setImgError] = useState(false)
   const reps = artists.filter(a => a.movements.includes(data.id))
+  const repWorks = reps
+    .map(artist => ({ artist, work: pickRepWork(artist) }))
+    .filter(x => x.work)
   return (
     <>
       <div style={s.titleRow}>
@@ -26,6 +43,14 @@ export function MovementView({ data, artists }) {
         <div style={{ marginTop: 6, display: 'flex', gap: 10 }}>
           {data.url && <a href={data.url} target="_blank" rel="noreferrer" style={s.link}>↗ 维基百科</a>}
           {data.workUrl && <a href={data.workUrl} target="_blank" rel="noreferrer" style={s.link}>↗ 代表作</a>}
+        </div>
+      )}
+      {repWorks.length > 0 && (
+        <div style={s.section}>
+          <div style={s.sectionTitle}>流派代表作</div>
+          <div style={s.worksGrid}>
+            {repWorks.map(({ artist, work }) => <MovementWorkItem key={artist.id} artist={artist} work={work} />)}
+          </div>
         </div>
       )}
     </>
@@ -69,15 +94,23 @@ function WorkItem({ work }) {
 
 // ── 公开卡：只读艺术家 ────────────────────────────────
 export function ArtistView({ data, movements }) {
+  const [imgError, setImgError] = useState(false)
   const mvMap = new Map(movements.map(m => [m.id, m]))
   const mvNames = data.movements.map(id => mvMap.get(id)?.zh).filter(Boolean)
   return (
     <>
-      <div style={s.title}>{data.zh}</div>
-      {data.sub && <div style={s.sub}>{data.sub}</div>}
-      <div style={s.meta}>
-        {data.birth}–{data.death}
-        {mvNames.length > 0 && <><br />所属流派：{mvNames.join('、')}</>}
+      <div style={s.titleRow}>
+        <div style={s.titleCol}>
+          <div style={s.title}>{data.zh}</div>
+          {data.sub && <div style={s.sub}>{data.sub}</div>}
+          <div style={s.meta}>
+            {data.birth}–{data.death}
+            {mvNames.length > 0 && <><br />所属流派：{mvNames.join('、')}</>}
+          </div>
+        </div>
+        {data.imageUrl && !imgError && (
+          <img src={data.imageUrl} alt="" style={s.thumb} onError={() => setImgError(true)} />
+        )}
       </div>
       {data.description && (
         <div style={s.description} dangerouslySetInnerHTML={{ __html: data.description }} />

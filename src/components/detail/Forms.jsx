@@ -311,6 +311,14 @@ export function ArtistEditForm({ formData, onChange, allMovements, allArtists, s
         <input style={s.input} value={formData.url}
           onChange={e => onChange({ ...formData, url: e.target.value })} placeholder="https://..." />
       </div>
+      <div style={s.field}>
+        <label style={s.fieldLabel}>肖像</label>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+          <input style={s.input} value={formData.imageUrl || ''}
+            onChange={e => onChange({ ...formData, imageUrl: e.target.value })} placeholder="肖像图片链接 https://..." />
+          <ImagePreview key={formData.imageUrl} src={formData.imageUrl} />
+        </div>
+      </div>
       {mvIds.length === 0 && (
         <div style={s.field}>
           <label style={s.fieldLabel}>颜色</label>

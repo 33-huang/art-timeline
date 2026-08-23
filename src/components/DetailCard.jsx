@@ -40,7 +40,7 @@ export default function DetailCard({
       setFormData({ zh: '', sub: '', start: '', end: '', region: '', description: '', url: '', workUrl: '', imageUrl: '', color, isEvent: false })
       setSaveError(null); setConfirming(false)
     } else if (adding === 'artist') {
-      setFormData({ zh: '', sub: '', birth: '', death: '', description: '', works: [], movements: [], url: '', color: '' })
+      setFormData({ zh: '', sub: '', birth: '', death: '', description: '', works: [], movements: [], url: '', imageUrl: '', color: '' })
       setSaveError(null); setConfirming(false)
     }
   }, [adding, movements?.length])
@@ -75,7 +75,7 @@ export default function DetailCard({
         birth: data.birth, death: data.death,
         description: data.description ?? '',
         works: data.works ? JSON.parse(JSON.stringify(data.works)) : [],
-        movements: data.movements ?? [], url: data.url ?? '',
+        movements: data.movements ?? [], url: data.url ?? '', imageUrl: data.imageUrl ?? '',
         posStart: data.posStart ?? '', posAfter: data.posAfter ?? '', color: data.color ?? '',
       })
     }
