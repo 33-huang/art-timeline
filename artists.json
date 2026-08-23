@@ -1049,7 +1049,23 @@
     "works": [
       {
         "title": "速记人物",
-        "url": "https://www.moma.org/collection/works/79686?locale=en"
+        "url": "https://www.moma.org/collection/works/79686?locale=en",
+        "imageUrl": "https://editst.com/2021/150-years-of-modern-art/46D94217515F4836B5523B813D39770A.png.1440w.6f0f651458eb.webp"
+      },
+      {
+        "title": "壁画",
+        "url": "https://www.wikiart.org/en/jackson-pollock/mural-1943-1",
+        "imageUrl": "https://editst.com/2021/150-years-of-modern-art/A45F1330E4A34170B3D76BF210F83E9E.png.1440w.706ff39fda7c.webp"
+      },
+      {
+        "title": "母狼",
+        "url": "https://www.moma.org/collection/works/78719?locale=en",
+        "imageUrl": "https://editst.com/2021/150-years-of-modern-art/9A7DE1DEBD06425FADED0D94F4CC7985.png.1440w.06e7d0aa4b5c.webp"
+      },
+      {
+        "title": "满五英寻",
+        "url": "https://www.moma.org/collection/works/79070?locale=en",
+        "imageUrl": "https://editst.com/2021/150-years-of-modern-art/8E44D30777D34710A99383AA3B9573DF.png.768w.921abaf28605.webp"
       }
     ]
   }
