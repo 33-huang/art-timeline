@@ -75,6 +75,13 @@ export function RichTextArea({ value, onChange }) {
   )
 }
 
+// 图片链接预览：加载失败自动隐藏，不显示破图标
+function ImagePreview({ src }) {
+  const [error, setError] = useState(false)
+  if (!src || error) return null
+  return <img src={src} alt="" style={s.thumbPreview} onError={() => setError(true)} />
+}
+
 // 单选搜索下拉：输一个字弹关联选项，选中即"排在其后"；留空按年份
 export function PosAfterSelector({ value, options, onPick, onClear }) {
   const [search, setSearch] = useState('')
@@ -161,6 +168,19 @@ export function MovementEditForm({ formData, onChange, allMovements, allArtists,
         <label style={s.fieldLabel}>链接</label>
         <input style={s.input} value={formData.url}
           onChange={e => onChange({ ...formData, url: e.target.value })} placeholder="https://..." />
+      </div>
+      <div style={s.field}>
+        <label style={s.fieldLabel}>代表作</label>
+        <input style={s.input} value={formData.workUrl || ''}
+          onChange={e => onChange({ ...formData, workUrl: e.target.value })} placeholder="代表作详情页 https://..." />
+      </div>
+      <div style={s.field}>
+        <label style={s.fieldLabel}>配图</label>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+          <input style={s.input} value={formData.imageUrl || ''}
+            onChange={e => onChange({ ...formData, imageUrl: e.target.value })} placeholder="代表画缩略图 https://..." />
+          <ImagePreview key={formData.imageUrl} src={formData.imageUrl} />
+        </div>
       </div>
       <div style={{ ...s.field, marginTop: 2 }}>
         <label style={s.fieldLabel}>颜色</label>
@@ -311,6 +331,11 @@ export function ArtistEditForm({ formData, onChange, allMovements, allArtists, s
             </div>
             <input style={s.workUrlInp} placeholder="https://..." value={w.url}
               onChange={e => updateWork(i, 'url', e.target.value)} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 2 }}>
+              <input style={s.workUrlInp} placeholder="配图链接 https://..." value={w.imageUrl || ''}
+                onChange={e => updateWork(i, 'imageUrl', e.target.value)} />
+              <ImagePreview key={w.imageUrl} src={w.imageUrl} />
+            </div>
           </div>
         ))}
         <button onClick={addWork} style={s.workAddBtn}>＋ 新增作品</button>

@@ -37,7 +37,7 @@ export default function DetailCard({
   useEffect(() => {
     if (adding === 'movement') {
       const color = COLOR_PALETTE[movements.length % COLOR_PALETTE.length]
-      setFormData({ zh: '', sub: '', start: '', end: '', region: '', description: '', url: '', color, isEvent: false })
+      setFormData({ zh: '', sub: '', start: '', end: '', region: '', description: '', url: '', workUrl: '', imageUrl: '', color, isEvent: false })
       setSaveError(null); setConfirming(false)
     } else if (adding === 'artist') {
       setFormData({ zh: '', sub: '', birth: '', death: '', description: '', works: [], movements: [], url: '', color: '' })
@@ -65,7 +65,8 @@ export default function DetailCard({
         zh: data.zh ?? '', sub: data.sub ?? '',
         start: data.start, end: data.end,
         region: data.region ?? '', description: data.description ?? '',
-        url: data.url ?? '', color: data.color ?? '#888888', isEvent: !!data.isEvent,
+        url: data.url ?? '', workUrl: data.workUrl ?? '', imageUrl: data.imageUrl ?? '',
+        color: data.color ?? '#888888', isEvent: !!data.isEvent,
         posStart: data.posStart ?? '', posAfter: data.posAfter ?? '',
       })
     } else {
