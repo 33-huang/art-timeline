@@ -1164,7 +1164,9 @@
     "birth": 1924,
     "death": 2013,
     "description": "英国雕塑家，以创作大型抽象金属雕塑闻名，作品常直接摆放在地面而不设基座，改变了雕塑与观者空间的关系。",
-    "movements": [],
+    "movements": [
+      "mv23"
+    ],
     "posStart": 1924,
     "url": "https://zh.wikipedia.org/wiki/%E5%AE%89%E4%B8%9C%E5%B0%BC%C2%B7%E5%8D%A1%E6%B4%9B",
     "sub": "",
