@@ -21,7 +21,7 @@ export const s = {
     background: 'none', border: 'none', color: 'var(--text-faint)',
     fontSize: 16, cursor: 'pointer', lineHeight: 1, padding: '0 4px',
   },
-  titleRow:    { display: 'flex', alignItems: 'flex-start', gap: 10 },
+  titleRow:    { display: 'flex', alignItems: 'flex-end', gap: 10 },
   titleCol:    { flex: 1, minWidth: 0 },
   thumb:       { width: 72, height: 72, borderRadius: 6, objectFit: 'cover', flexShrink: 0, border: '1px solid var(--axis-border)' },
   thumbPreview:{ width: 48, height: 48, borderRadius: 6, objectFit: 'cover', flexShrink: 0, border: '1px solid var(--axis-border)' },

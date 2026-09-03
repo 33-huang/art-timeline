@@ -66,15 +66,14 @@ export function cleanPastedHtml(html) {
   return root.innerHTML
 }
 
-// 流派代表作：从一位艺术家「有配图的作品」里选一幅展示——取中间偏后一位（避开最早期不成熟的作品）
+// 流派代表作：从一位艺术家「有配图的作品」里选一幅展示
+// 优先用作品上手动标记的 repWork:true；没标记的话取中间偏后一位（避开最早期不成熟的作品）
 export function pickRepWork(artist) {
   const withImg = (artist.works || []).filter(w => w.imageUrl)
   if (withImg.length === 0) return null
-  const idx = Math.min(
-    Math.floor(withImg.length / 2) + (withImg.length % 2 === 0 ? 1 : 0),
-    withImg.length - 1,
-  )
-  return withImg[idx]
+  const manual = withImg.find(w => w.repWork)
+  if (manual) return manual
+  return withImg[Math.floor(withImg.length / 2)]
 }
 
 // contenteditable 的 onPaste 处理：阻止默认，插入清洗后的 HTML（无 HTML 时插纯文本）
