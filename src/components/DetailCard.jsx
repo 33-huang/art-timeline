@@ -37,10 +37,10 @@ export default function DetailCard({
   useEffect(() => {
     if (adding === 'movement') {
       const color = COLOR_PALETTE[movements.length % COLOR_PALETTE.length]
-      setFormData({ zh: '', sub: '', start: '', end: '', region: '', description: '', url: '', workUrl: '', imageUrl: '', color, isEvent: false })
+      setFormData({ zh: '', sub: '', start: '', end: '', region: '', description: '', url: '', workUrl: '', imageUrl: '', imageCredit: '', imageCreditUrl: '', color, isEvent: false })
       setSaveError(null); setConfirming(false)
     } else if (adding === 'artist') {
-      setFormData({ zh: '', sub: '', birth: '', death: '', description: '', works: [], movements: [], url: '', imageUrl: '', color: '' })
+      setFormData({ zh: '', sub: '', birth: '', death: '', description: '', works: [], movements: [], url: '', imageUrl: '', imageCredit: '', imageCreditUrl: '', color: '' })
       setSaveError(null); setConfirming(false)
     }
   }, [adding, movements?.length])
@@ -66,6 +66,7 @@ export default function DetailCard({
         start: data.start, end: data.end,
         region: data.region ?? '', description: data.description ?? '',
         url: data.url ?? '', workUrl: data.workUrl ?? '', imageUrl: data.imageUrl ?? '',
+        imageCredit: data.imageCredit ?? '', imageCreditUrl: data.imageCreditUrl ?? '',
         color: data.color ?? '#888888', isEvent: !!data.isEvent,
         posStart: data.posStart ?? '', posAfter: data.posAfter ?? '',
       })
@@ -76,6 +77,7 @@ export default function DetailCard({
         description: data.description ?? '',
         works: data.works ? JSON.parse(JSON.stringify(data.works)) : [],
         movements: data.movements ?? [], url: data.url ?? '', imageUrl: data.imageUrl ?? '',
+        imageCredit: data.imageCredit ?? '', imageCreditUrl: data.imageCreditUrl ?? '',
         posStart: data.posStart ?? '', posAfter: data.posAfter ?? '', color: data.color ?? '',
       })
     }

@@ -2,6 +2,18 @@ import { useState } from 'react'
 import { s } from './styles'
 import { pickRepWork } from './helpers'
 
+// 肖像/配图版权标注：只有非公共领域来源（如 CC BY-SA 需署名）才会填这两个字段
+function ImageCredit({ data }) {
+  if (!data.imageCredit) return null
+  return (
+    <div style={s.imageCredit}>
+      图片来源：{data.imageCreditUrl
+        ? <a href={data.imageCreditUrl} target="_blank" rel="noreferrer" style={s.imageCreditA}>{data.imageCredit}</a>
+        : data.imageCredit}
+    </div>
+  )
+}
+
 // 流派代表作单条：纯展示，不可点击/不跳转，加载失败自动整格隐藏
 function MovementWorkItem({ artist, work }) {
   const [imgError, setImgError] = useState(false)
@@ -53,6 +65,7 @@ export function MovementView({ data, artists }) {
           </div>
         </div>
       )}
+      <ImageCredit data={data} />
     </>
   )
 }
@@ -128,6 +141,7 @@ export function ArtistView({ data, movements }) {
           </div>
         </div>
       )}
+      <ImageCredit data={data} />
     </>
   )
 }

@@ -32,6 +32,8 @@ export const s = {
   section:     { marginTop: 8, paddingTop: 8, borderTop: '1px solid var(--axis-border)' },
   sectionTitle:{ fontSize: 10, fontWeight: 600, color: 'var(--text-faint)', marginBottom: 5, textTransform: 'uppercase', letterSpacing: '.5px' },
   link:        { color: 'inherit', opacity: 0.55, fontSize: 10.5, textDecoration: 'none' },
+  imageCredit: { marginTop: 8, fontSize: 9, color: 'var(--text-faint)' },
+  imageCreditA:{ color: 'inherit', textDecoration: 'underline' },
   workLink:    { fontSize: 11.5, borderBottom: '1px solid currentColor', opacity: 0.75, whiteSpace: 'nowrap' },
   workLinkA:   { color: 'inherit', textDecoration: 'none' },
   worksGrid:   { display: 'flex', flexWrap: 'wrap', gap: 10 },

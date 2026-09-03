@@ -182,6 +182,16 @@ export function MovementEditForm({ formData, onChange, allMovements, allArtists,
           <ImagePreview key={formData.imageUrl} src={formData.imageUrl} />
         </div>
       </div>
+      <div style={s.field}>
+        <label style={s.fieldLabel}>图片来源</label>
+        <input style={s.input} value={formData.imageCredit || ''}
+          onChange={e => onChange({ ...formData, imageCredit: e.target.value })} placeholder="仅非公共领域图需要，如「摄影 XXX · CC BY-SA」" />
+      </div>
+      <div style={s.field}>
+        <label style={s.fieldLabel}>来源链接</label>
+        <input style={s.input} value={formData.imageCreditUrl || ''}
+          onChange={e => onChange({ ...formData, imageCreditUrl: e.target.value })} placeholder="来源页面 https://..." />
+      </div>
       <div style={{ ...s.field, marginTop: 2 }}>
         <label style={s.fieldLabel}>颜色</label>
         <ColorPicker value={formData.color} onChange={c => onChange({ ...formData, color: c })} />
@@ -318,6 +328,16 @@ export function ArtistEditForm({ formData, onChange, allMovements, allArtists, s
             onChange={e => onChange({ ...formData, imageUrl: e.target.value })} placeholder="肖像图片链接 https://..." />
           <ImagePreview key={formData.imageUrl} src={formData.imageUrl} />
         </div>
+      </div>
+      <div style={s.field}>
+        <label style={s.fieldLabel}>图片来源</label>
+        <input style={s.input} value={formData.imageCredit || ''}
+          onChange={e => onChange({ ...formData, imageCredit: e.target.value })} placeholder="仅非公共领域图需要，如「摄影 XXX · CC BY-SA」" />
+      </div>
+      <div style={s.field}>
+        <label style={s.fieldLabel}>来源链接</label>
+        <input style={s.input} value={formData.imageCreditUrl || ''}
+          onChange={e => onChange({ ...formData, imageCreditUrl: e.target.value })} placeholder="来源页面 https://..." />
       </div>
       {mvIds.length === 0 && (
         <div style={s.field}>
