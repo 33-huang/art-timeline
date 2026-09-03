@@ -1105,5 +1105,78 @@
         "imageUrl": "https://editst.com/2021/150-years-of-modern-art/3CDD0976925344069F01A584CA1598F4.png.webp"
       }
     ]
+  },
+  {
+    "id": "ar61",
+    "zh": "巴尼特·纽曼",
+    "birth": 1905,
+    "death": 1970,
+    "description": "美国艺术家，抽象表现主义的重要代表之一，也是色域绘画流派的先锋，以大色块间的细窄「拉链」线条著称。",
+    "movements": [
+      "mv23"
+    ],
+    "url": "https://zh.wikipedia.org/wiki/%E5%B7%B4%E5%B0%BC%E7%89%B9%C2%B7%E7%BA%BD%E6%9B%BC",
+    "sub": "",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/22/Newman_Barnett.jpg",
+    "works": [
+      {
+        "title": "太一 1",
+        "url": "https://www.moma.org/collection/works/79601?locale=en",
+        "imageUrl": "https://editst.com/2021/150-years-of-modern-art/9F3303B7DCE84F35AF36ACB3FCDC24D9.png.768w.76926c012b94.webp"
+      },
+      {
+        "title": "人，英勇而崇高",
+        "url": "https://www.moma.org/collection/works/79250?locale=en",
+        "imageUrl": "https://editst.com/2021/150-years-of-modern-art/5E9B8089F1E146D3ACD2D119AFEAD4E1.png.1440w.c1132f34f09a.webp"
+      }
+    ]
+  },
+  {
+    "id": "ar62",
+    "zh": "马克·罗斯科",
+    "birth": 1903,
+    "death": 1970,
+    "description": "出生于拉脱维亚的美国画家，抽象表现主义色域绘画的创始成员之一，以大面积色块营造沉浸式情绪体验的画风著称。",
+    "movements": [
+      "mv23"
+    ],
+    "url": "https://zh.wikipedia.org/wiki/%E9%A9%AC%E5%85%8B%C2%B7%E7%BD%97%E6%96%AF%E7%A7%91",
+    "sub": "",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ea/Consuelo_Kanaga%2C_Mark_Rothko%2C_Yorktown_Heights%2C_ca._1949.jpg",
+    "imageCredit": "摄影 Consuelo Kanaga · Brooklyn Museum，无已知版权限制",
+    "imageCreditUrl": "https://commons.wikimedia.org/wiki/File:Consuelo_Kanaga,_Mark_Rothko,_Yorktown_Heights,_ca._1949.jpg",
+    "works": [
+      {
+        "title": "无题（白红上的紫罗兰色、黑色、橙色和黄色）",
+        "url": "https://www.guggenheim.org/artwork/3533",
+        "imageUrl": "https://editst.com/2021/150-years-of-modern-art/4351D06DB36E44F3A09CF137C5D8B402.png.768w.ca07d4439cbd.webp"
+      },
+      {
+        "title": "赭石，红上之红",
+        "url": "https://www.wikiart.org/en/mark-rothko/ochre-and-red-on-red-1",
+        "imageUrl": "https://editst.com/2021/150-years-of-modern-art/B0A775B349054B50820BB9095E98B814.png.webp"
+      }
+    ]
+  },
+  {
+    "id": "ar63",
+    "zh": "安东尼·卡洛",
+    "birth": 1924,
+    "death": 2013,
+    "description": "英国雕塑家，以创作大型抽象金属雕塑闻名，作品常直接摆放在地面而不设基座，改变了雕塑与观者空间的关系。",
+    "movements": [],
+    "posStart": 1924,
+    "url": "https://zh.wikipedia.org/wiki/%E5%AE%89%E4%B8%9C%E5%B0%BC%C2%B7%E5%8D%A1%E6%B4%9B",
+    "sub": "",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/24/Anthony_Caro_balanced.png",
+    "imageCredit": "摄影 Ruth Gledhill · CC BY-SA 2.5",
+    "imageCreditUrl": "https://commons.wikimedia.org/wiki/File:Anthony_Caro_balanced.png",
+    "works": [
+      {
+        "title": "一天清晨",
+        "url": "http://www.tate.org.uk/art/artworks/caro-early-one-morning-t00805",
+        "imageUrl": "https://editst.com/2021/150-years-of-modern-art/4B005A546B7246B28AA285B3CC41D38B.png.1440w.f295020761e9.webp"
+      }
+    ]
   }
 ]
