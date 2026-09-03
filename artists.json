@@ -1069,5 +1069,40 @@
       }
     ],
     "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Jackson_Pollock's_passport_(cropped).jpg"
+  },
+  {
+    "id": "ar60",
+    "zh": "威廉·德库宁",
+    "birth": 1904,
+    "death": 1997,
+    "description": "一位出生于荷兰的美国画家，抽象表现主义（行动绘画）代表人物之一，后来被视为纽约画派的一部分。他以极具张力的女性主题画作《女人》系列而著名。",
+    "movements": [
+      "mv23"
+    ],
+    "url": "https://zh.wikipedia.org/wiki/%E5%A8%81%E5%BB%89%C2%B7%E5%BE%B7%E5%BA%93%E5%AE%81",
+    "sub": "",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/09/Willem_de_Kooning_in_his_studio.jpg",
+    "works": [
+      {
+        "title": "画",
+        "url": "https://www.moma.org/collection/works/79242?locale=en",
+        "imageUrl": "https://editst.com/2021/150-years-of-modern-art/7E248A3D8F1144259F68D6E3982151EC.png.1440w.b94256c2f03e.webp"
+      },
+      {
+        "title": "挖掘",
+        "url": "https://www.wikiart.org/en/willem-de-kooning/excavation",
+        "imageUrl": "https://editst.com/2021/150-years-of-modern-art/E3FAFFE8A0954DB0BCF84E09EC864081.png.768w.316203546eda.webp"
+      },
+      {
+        "title": "女人 I",
+        "url": "https://www.moma.org/collection/works/79810?locale=en",
+        "imageUrl": "https://editst.com/2021/150-years-of-modern-art/7625DB68DCFB4914831675422A28DC8C.png.1440w.951292fe407a.webp"
+      },
+      {
+        "title": "女人 III",
+        "url": "https://en.wikipedia.org/wiki/Woman_III",
+        "imageUrl": "https://editst.com/2021/150-years-of-modern-art/3CDD0976925344069F01A584CA1598F4.png.webp"
+      }
+    ]
   }
 ]
