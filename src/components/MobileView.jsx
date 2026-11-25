@@ -30,8 +30,6 @@ const DEFAULT_ON = ['艺术和设计']
 const mvTags = m => m.tags?.length ? m.tags : [m.isEvent ? '历史大事件' : '艺术和设计']
 const artTags = a => a.tags?.length ? a.tags : ['艺术家']
 const LS_KEY = 'm_tags_v2'   // 2026-11-25 默认改为只选「艺术和设计」，换 key 让旧的选择失效
-// 人名太长时只显示最后一段（姓），全名在卡片里看
-const shortName = n => (n.length > 6 && n.includes('·') ? n.split('·').pop() : n)
 
 function loadTags() {
   try {
@@ -80,7 +78,7 @@ export default function MobileView({ movements, artists }) {
     }
     const mvRow = m => ({ key: m.id, kind: m.isEvent ? 'event' : 'mv', name: m.zh, start: m.start, end: m.end,
       color: m.isEvent ? EVENT_GRAY : m.color, sel: { type: 'movement', data: m } })
-    const personRow = (a, color, nested, keyPrefix = '') => ({ key: keyPrefix + a.id, kind: 'person', nested, name: shortName(a.zh),
+    const personRow = (a, color, nested, keyPrefix = '') => ({ key: keyPrefix + a.id, kind: 'person', nested, name: a.zh,
       start: a.birth, end: a.death, color, sel: { type: 'artist', data: a } })
 
     if (!mvs.length || !people.length) {
@@ -168,46 +166,45 @@ export default function MobileView({ movements, artists }) {
         </div>
         <div className="m-on" onClick={() => setPanel(true)}>
           {on.size ? TAG_ORDER.concat([...on].filter(t => !TAG_ORDER.includes(t))).filter(t => on.has(t)).join('、') : '未选标签'}
+          <span className="m-on-n"> · {rows.length} 条</span>
         </div>
       </header>
 
       <div className="tl-ruler">
-        <div className="tl-corner">{rows.length} 条</div>
-        <div className="tl-ruler-clip">
-          <div className="tl-axis" ref={rulerRef} style={{ width: AXIS_W }}>
-            {ticks.map(y => (
-              <span key={y} className={'tl-tick' + (y % 100 === 0 ? ' major' : '')} style={{ left: xOf(y) }}>{y}</span>
-            ))}
-          </div>
+        <div className="tl-axis" ref={rulerRef} style={{ width: AXIS_W }}>
+          {ticks.map(y => (
+            <span key={y} className={'tl-tick' + (y % 100 === 0 ? ' major' : '')} style={{ left: xOf(y) }}>{y}</span>
+          ))}
         </div>
       </div>
 
+      {/* 上下滚动区里叠两层：下层是全宽、可左右滑的时间轴；上层是名字，只跟着上下动、不跟着左右滑 */}
       <div className="tl-v" ref={vRef}>
-        {rows.length === 0 && <div className="tl-empty">没有选中的标签，点上面的标签来显示</div>}
+        {rows.length === 0 && <div className="tl-empty">没有选中的标签，点右上角的标签图标来选</div>}
         <div className="tl-body">
-          <div className="tl-names">
-            {rows.map(r => (
-              <button key={r.key} onClick={() => locate(r)}
-                className={`tl-name ${r.kind}${r.nested ? ' nested' : ''}${flash === r.key ? ' flash' : ''}`}>
-                <span className="tl-name-txt">{r.name}</span>
-              </button>
-            ))}
-          </div>
           <div className="tl-h" ref={hRef} onScroll={syncRuler}>
             <div style={{ width: AXIS_W }}>
               {rows.map(r => {
                 const x1 = xOf(r.start)
-                const w = Math.max(xOf(r.end) - x1, r.kind === 'event' ? 6 : 4)
-                const yrs = r.start === r.end ? `${r.start}` : `${r.start}–${r.end}`
+                const w = Math.max(xOf(r.end) - x1, r.kind === 'event' ? 5 : 4)
                 return (
                   <div key={r.key} onClick={() => open(r.sel)}
                     className={`tl-track ${r.kind}${flash === r.key ? ' flash' : ''}`}>
                     <span className="tl-bar" style={{ left: x1, width: w, background: r.color }} />
-                    <span className="tl-yr" style={{ left: x1 + w + 5 }}>{yrs}</span>
                   </div>
                 )
               })}
             </div>
+          </div>
+          <div className="tl-names">
+            {rows.map(r => (
+              <div key={r.key} className={`tl-name ${r.kind}${r.nested ? ' nested' : ''}`}>
+                <button className={'tl-name-btn' + (flash === r.key ? ' flash' : '')} onClick={() => locate(r)}>
+                  {r.name}
+                  <span className="tl-name-yr">{r.start === r.end ? r.start : `${r.start}–${r.end}`}</span>
+                </button>
+              </div>
+            ))}
           </div>
         </div>
       </div>
