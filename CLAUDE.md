@@ -3,6 +3,8 @@
 > 本文件每次对话自动加载,是日常改动的**首选参考**。
 > 更深的历史/背景在 `HANDOFF.md`(仅大改动或本文件没覆盖时才去读)。
 
+进程文档（给她看的，每次改完在进程表最上面加一行，界面改动备注写 UIUX）：「260807-艺术时间轴（进程）」https://docs.google.com/document/d/11ImGu9luXYO5Y0AJwfZV71Un09qGmycXieDJjtDipS0/edit ，在网盘「App 开发记录」文件夹。
+
 ## 一句话
 React + Vite 的**竖向**艺术史时间轴。公开艺术史数据 + 私密个人笔记;数据存 GitHub,Cloudflare 部署。访客只读,持 token 的作者能编辑。
 
