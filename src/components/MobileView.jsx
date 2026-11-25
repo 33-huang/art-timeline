@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from 'react'
+import { useState, useMemo, useEffect, useLayoutEffect, useRef } from 'react'
 import { MovementView, ArtistView } from './detail/PublicViews'
 import { ViewStyleContext } from './detail/viewStyle'
 import { sMobile } from './detail/styles'
@@ -47,6 +47,8 @@ export default function MobileView({ movements, artists }) {
   const vRef = useRef(null)      // 上下滚动区（名字列和时间轴一起动）
   const hRef = useRef(null)      // 左右滚动区（只有时间轴）
   const rulerRef = useRef(null)  // 顶部年份刻度，跟着 hRef 横移
+  const anchorRef = useRef(null) // 切换标签前记下要固定的那一条，换完放回原位
+  const touchedRef = useRef(null) // 最近点过的那一条（开过卡片或点过名字）
 
   useEffect(() => {
     try { localStorage.setItem(LS_KEY, JSON.stringify([...on])) } catch { /* 忽略 */ }
@@ -102,13 +104,44 @@ export default function MobileView({ movements, artists }) {
     return out
   }, [movements, artists, on, mvMap])
 
-  // 切换标签后，时间轴跳到最早的那一条，避免前面一大段空白
+  // 刚打开页面时，时间轴跳到最早的那一条，避免前面一大段空白（之后切换标签不再跳）
   useEffect(() => {
     const el = hRef.current
     if (!el || !rows.length) return
     const first = Math.min(...rows.map(r => r.start))
     el.scrollTo({ left: Math.max(0, xOf(first) - 16) })
-  }, [on]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 记下要固定的那一条：最近点过、且还在屏幕上的那条优先，否则用屏幕最上面那一条
+  function captureAnchor() {
+    const v = vRef.current
+    if (!v) return null
+    const { top, bottom } = v.getBoundingClientRect()
+    const els = [...v.querySelectorAll('.tl-name')]
+    const touched = els.find(e => e.dataset.id === touchedRef.current)
+    if (touched) {
+      const r = touched.getBoundingClientRect()
+      if (r.bottom > top && r.top < bottom) return { id: touched.dataset.id, start: Number(touched.dataset.start), offset: r.top - top }
+    }
+    for (const el of els) {
+      const r = el.getBoundingClientRect()
+      if (r.bottom > top + 1) return { id: el.dataset.id, start: Number(el.dataset.start), offset: r.top - top }
+    }
+    return null
+  }
+
+  // 切换标签后：把记下的那一条放回原位；它被隐藏了就找年份最接近的一条。左右位置不动。
+  useLayoutEffect(() => {
+    const a = anchorRef.current
+    const v = vRef.current
+    anchorRef.current = null
+    if (!a || !v) return
+    const els = [...v.querySelectorAll('.tl-name')]
+    if (!els.length) return
+    const el = els.find(e => e.dataset.id === a.id)
+      ?? els.reduce((best, e) => (Math.abs(Number(e.dataset.start) - a.start) < Math.abs(Number(best.dataset.start) - a.start) ? e : best))
+    v.scrollTop += el.getBoundingClientRect().top - v.getBoundingClientRect().top - a.offset
+  }, [rows])
 
   // 打开卡片时禁止背后的列表跟着滚
   useEffect(() => {
@@ -118,6 +151,7 @@ export default function MobileView({ movements, artists }) {
   }, [stack.length])
 
   function toggle(t) {
+    anchorRef.current = captureAnchor()
     setOn(prev => {
       const n = new Set(prev)
       if (n.has(t)) n.delete(t); else n.add(t)
@@ -133,11 +167,12 @@ export default function MobileView({ movements, artists }) {
     const x1 = xOf(r.start), x2 = xOf(r.end)
     const target = x2 - x1 < viewW - 40 ? (x1 + x2) / 2 - viewW / 2 : x1 - 24
     el.scrollTo({ left: Math.max(0, target), behavior: 'smooth' })
+    touchedRef.current = r.sel.data.id
     setFlash(r.key)
     setTimeout(() => setFlash(f => (f === r.key ? null : f)), 1200)
   }
 
-  const open = sel => setStack([sel])
+  const open = sel => { touchedRef.current = sel.data.id; setStack([sel]) }
   const push = sel => setStack(st => [...st, sel])
   const back = () => setStack(st => st.slice(0, -1))
   const close = () => setStack([])
@@ -198,7 +233,8 @@ export default function MobileView({ movements, artists }) {
           </div>
           <div className="tl-names">
             {rows.map(r => (
-              <div key={r.key} className={`tl-name ${r.kind}${r.nested ? ' nested' : ''}`}>
+              <div key={r.key} data-id={r.sel.data.id} data-start={r.start}
+                className={`tl-name ${r.kind}${r.nested ? ' nested' : ''}`}>
                 <button className={'tl-name-btn' + (flash === r.key ? ' flash' : '')} onClick={() => locate(r)}>
                   {r.name}
                   <span className="tl-name-yr">{r.start === r.end ? r.start : `${r.start}–${r.end}`}</span>
