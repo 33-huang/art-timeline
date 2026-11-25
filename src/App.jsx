@@ -4,6 +4,20 @@ import Timeline from './components/Timeline'
 import DetailCard from './components/DetailCard'
 import FilterBar from './components/FilterBar'
 import TokenSettings from './components/TokenSettings'
+import MobileView from './components/MobileView'
+
+// 屏宽 ≤ 700px 用手机视图（只读列表 + 底部弹卡）
+const MOBILE_MQ = '(max-width: 700px)'
+function useIsMobile() {
+  const [m, setM] = useState(() => window.matchMedia(MOBILE_MQ).matches)
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_MQ)
+    const on = () => setM(mq.matches)
+    mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [])
+  return m
+}
 
 function clampTip(el, cx, cy) {
   let lx = cx + 16, ly = cy - 12
@@ -19,6 +33,7 @@ export default function App() {
   const [movements, setMovements] = useState(null)
   const [artists, setArtists] = useState(null)
   const [error, setError] = useState(null)
+  const isMobile = useIsMobile()
   const [filter, setFilter] = useState('all')
   const [hasToken, setHasToken] = useState(() => !!localStorage.getItem(TOKEN_KEY))
   const [addingType, setAddingType] = useState(null)
@@ -267,6 +282,8 @@ export default function App() {
   if (!movements || !artists) return (
     <div style={{ padding: '2rem', color: '#aaa', fontFamily: 'sans-serif' }}>加载中…</div>
   )
+
+  if (isMobile) return <MobileView movements={movements} artists={artists} />
 
   // 决定卡片 mode
   let cardMode = null

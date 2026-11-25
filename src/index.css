@@ -231,3 +231,142 @@ body {
 .note-content img { max-width: 100%; height: auto; border-radius: 4px; margin: 4px 0; display: block; }
 .note-content h3 { font-size: 13px; font-weight: 600; margin: 6px 0 2px; }
 .note-content a  { color: var(--text-muted); text-decoration: underline; }
+
+/* ══ 手机视图（屏宽 ≤ 700px 时 App 换成 MobileView）═══════════ */
+.m-app {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+.m-header {
+  flex-shrink: 0;
+  padding: calc(env(safe-area-inset-top) + 12px) 16px 10px;
+  border-bottom: 1px solid var(--axis-border);
+  background: var(--bg);
+}
+.m-title { font-size: 17px; font-weight: 600; margin-bottom: 10px; letter-spacing: .5px; }
+.m-seg { display: flex; gap: 8px; }
+.m-seg button {
+  padding: 6px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--axis-border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-family: inherit;
+}
+.m-seg button.on { background: var(--text); color: var(--bg); border-color: var(--text); }
+
+.m-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 24px);
+}
+.m-century {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  margin: 0;
+  padding: 10px 16px 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-faint);
+  background: var(--bg);
+  letter-spacing: 1px;
+}
+.m-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-bottom: 1px solid var(--grid-major);
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.m-row:active { background: var(--grid-major); }
+.m-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; margin-top: 6px; }
+.m-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.m-line1 { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.m-name { font-size: 16px; font-weight: 500; }
+.m-tag {
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-faint);
+  border: 1px solid var(--axis-border);
+  vertical-align: 2px;
+}
+.m-years { font-size: 13px; color: var(--text-faint); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.m-sub { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+.m-track {
+  position: relative;
+  height: 4px;
+  margin-top: 6px;
+  border-radius: 2px;
+  background: var(--grid-major);
+}
+.m-track-tick { position: absolute; top: -2px; width: 1px; height: 8px; background: var(--axis-border); }
+.m-track-bar { position: absolute; top: 0; height: 4px; border-radius: 2px; }
+.m-foot { padding: 16px; text-align: center; font-size: 12px; color: var(--text-faint); }
+
+.m-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0,0,0,.35);
+  animation: m-fade .2s ease;
+}
+.m-sheet {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 51;
+  max-height: 88dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--tip-bg);
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -8px 32px var(--tip-shadow);
+  animation: m-up .25s ease;
+}
+.m-sheet-bar {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 8px 0 8px;
+}
+.m-sheet-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 15px;
+  font-family: inherit;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+.m-sheet-btn.close { font-size: 26px; line-height: 1; color: var(--text-faint); }
+.m-sheet-body {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: 0 20px calc(env(safe-area-inset-bottom) + 28px);
+  color: var(--text);
+}
+/* AI 撰写的简介是 <p><b>小标题</b>…</p> 和列表，给段落留出间距 */
+.m-sheet-body p { margin: 0 0 .9em; }
+.m-sheet-body ul, .m-sheet-body ol { margin: 0 0 .9em; padding-left: 1.3em; }
+.m-sheet-body li { margin-bottom: .35em; }
+.m-sheet-body h4 { font-size: 16px; margin: 1.2em 0 .4em; }
+@keyframes m-up   { from { transform: translateY(100%); } to { transform: none; } }
+@keyframes m-fade { from { opacity: 0; } to { opacity: 1; } }
