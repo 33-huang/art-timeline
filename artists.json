@@ -41,7 +41,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar04",
@@ -55,7 +56,8 @@
     "aiWritten": true,
     "tags": [
       "艺术家"
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar05",
@@ -69,7 +71,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar06",
@@ -83,7 +86,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar07",
@@ -131,7 +135,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar10",
@@ -148,7 +153,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar11",
@@ -162,7 +168,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar12",
@@ -176,7 +183,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar13",
@@ -190,7 +198,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar14",
@@ -220,7 +229,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar15",
@@ -246,7 +256,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar16",
@@ -263,7 +274,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar17",
@@ -281,7 +293,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar18",
@@ -305,7 +318,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar19",
@@ -326,7 +340,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar20",
@@ -348,7 +363,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar21",
@@ -377,7 +393,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar22",
@@ -433,7 +450,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar23",
@@ -458,7 +476,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar24",
@@ -491,7 +510,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar25",
@@ -520,7 +540,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar26",
@@ -560,7 +581,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar27",
@@ -582,7 +604,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar29",
@@ -602,7 +625,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar30",
@@ -626,7 +650,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar31",
@@ -688,7 +713,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar32",
@@ -714,7 +740,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar33",
@@ -728,7 +755,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar34",
@@ -769,7 +797,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar36",
@@ -796,7 +825,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar37",
@@ -811,7 +841,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar38",
@@ -861,7 +892,8 @@
     "tags": [
       "其他人物和团体"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar41",
@@ -887,7 +919,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar42",
@@ -911,7 +944,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar43",
@@ -937,7 +971,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar44",
@@ -958,7 +993,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar45",
@@ -980,7 +1016,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar46",
@@ -1006,7 +1043,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar47",
@@ -1027,7 +1065,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar48",
@@ -1053,7 +1092,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar49",
@@ -1079,7 +1119,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar50",
@@ -1101,7 +1142,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar51",
@@ -1127,7 +1169,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar52",
@@ -1148,7 +1191,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar53",
@@ -1167,7 +1211,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar54",
@@ -1190,7 +1235,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar55",
@@ -1216,7 +1262,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar56",
@@ -1237,7 +1284,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar57",
@@ -1262,7 +1310,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar58",
@@ -1283,7 +1332,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar59",
@@ -1319,7 +1369,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar60",
@@ -1354,7 +1405,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar61",
@@ -1381,7 +1433,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar62",
@@ -1410,7 +1463,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar63",
@@ -1434,7 +1488,8 @@
     "tags": [
       "艺术家"
     ],
-    "aiWritten": true
+    "aiWritten": true,
+    "fromBook": true
   },
   {
     "id": "ar64",
@@ -1455,7 +1510,8 @@
         "title": "城市里的人",
         "url": "https://www.guggenheim.org/artwork/2442"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar65",
@@ -1482,7 +1538,8 @@
         "title": "空间中的鸟",
         "url": "https://www.moma.org/collection/works/81033"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar66",
@@ -1503,7 +1560,8 @@
         "title": "澳大利亚",
         "url": "https://www.moma.org/collection/works/82047"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar67",
@@ -1524,7 +1582,8 @@
         "title": "我是一个有钱人的玩物",
         "url": "https://www.tate.org.uk/art/artworks/paolozzi-i-was-a-rich-mans-plaything-t01462"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar68",
@@ -1545,7 +1604,8 @@
         "title": "是什么让今天的家庭如此不同、如此富有魅力？",
         "url": "https://en.wikipedia.org/wiki/Just_what_is_it_that_makes_today%27s_homes_so_different%2C_so_appealing%3F"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar69",
@@ -1567,7 +1627,8 @@
         "title": "旗",
         "url": "https://www.moma.org/collection/works/78805"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar70",
@@ -1595,7 +1656,8 @@
         "title": "擦除的德·库宁绘画",
         "url": "https://www.sfmoma.org/artwork/98.298"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar71",
@@ -1623,7 +1685,8 @@
         "title": "玛丽莲双联画",
         "url": "https://www.tate.org.uk/art/artworks/warhol-marilyn-diptych-t03093"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar72",
@@ -1647,7 +1710,8 @@
       {
         "title": "笔触"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar73",
@@ -1668,7 +1732,8 @@
         "title": "两个一切都有的芝士汉堡",
         "url": "https://www.moma.org/collection/works/81183"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar74",
@@ -1690,7 +1755,8 @@
         "title": "透视风格的茶画",
         "url": "https://www.tate.org.uk/art/artworks/hockney-tea-painting-in-an-illusionistic-style-t07075"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar75",
@@ -1711,7 +1777,8 @@
         "title": "无题（堆叠）",
         "url": "https://www.moma.org/collection/works/81324"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar76",
@@ -1736,7 +1803,8 @@
         "title": "鬣狗爵士舞",
         "url": "https://www.tate.org.uk/art/artworks/stella-hyena-stomp-t00730"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar77",
@@ -1761,7 +1829,8 @@
         "title": "144块镁方砖",
         "url": "https://www.tate.org.uk/art/artworks/andre-144-magnesium-square-t01767"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar78",
@@ -1782,7 +1851,8 @@
         "title": "献给 V·塔特林之纪念碑 1",
         "url": "https://www.moma.org/collection/works/81337"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar79",
@@ -1803,7 +1873,8 @@
         "title": "序列工程 1（ABCD）",
         "url": "https://www.moma.org/collection/works/81533"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar80",
@@ -1824,7 +1895,8 @@
       {
         "title": "1000"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar81",
@@ -1845,7 +1917,8 @@
       {
         "title": "挥发物"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar82",
@@ -1866,7 +1939,8 @@
         "title": "空间概念：等待",
         "url": "https://www.tate.org.uk/art/artworks/fontana-spatial-concept-waiting-t00694"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar83",
@@ -1890,7 +1964,8 @@
       {
         "title": "在广场周边跳舞或锻炼"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar84",
@@ -1912,7 +1987,8 @@
         "title": "走出来的线",
         "url": "https://www.tate.org.uk/art/artworks/long-a-line-made-by-walking-p07149"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar85",
@@ -1933,7 +2009,8 @@
         "title": "螺旋形防波堤",
         "url": "https://en.wikipedia.org/wiki/Spiral_Jetty"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar86",
@@ -1962,7 +2039,8 @@
         "title": "怎样向一只死兔子解释绘画",
         "url": "https://en.wikipedia.org/wiki/How_to_Explain_Pictures_to_a_Dead_Hare"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar87",
@@ -1984,7 +2062,8 @@
         "title": "切片",
         "url": "https://en.wikipedia.org/wiki/Cut_Piece_1964"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar88",
@@ -2009,7 +2088,8 @@
         "title": "破衫中的维纳斯",
         "url": "https://www.tate.org.uk/art/artworks/pistoletto-venus-of-the-rags-t12200"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar89",
@@ -2029,7 +2109,8 @@
       {
         "title": "无题（12匹马）"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar90",
@@ -2050,7 +2131,8 @@
       {
         "title": "艺术家在现场"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar91",
@@ -2070,7 +2152,8 @@
       {
         "title": "6处18次即兴表演"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar92",
@@ -2090,7 +2173,8 @@
       {
         "title": "蓝色时期的人体测量"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar93",
@@ -2114,7 +2198,8 @@
       {
         "title": "重演"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar94",
@@ -2135,7 +2220,8 @@
         "title": "麦迪逊大道550号",
         "url": "https://en.wikipedia.org/wiki/550_Madison_Avenue"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar95",
@@ -2157,7 +2243,8 @@
         "title": "无题电影剧照 #21",
         "url": "https://en.wikipedia.org/wiki/Untitled_Film_Still_21"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar96",
@@ -2183,7 +2270,8 @@
         "title": "模拟",
         "url": "https://en.wikipedia.org/wiki/Mimic_%28photograph%29"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar97",
@@ -2208,7 +2296,8 @@
         "title": "无题（你的身体是战场）",
         "url": "https://www.thebroad.org/art/barbara-kruger/untitled-your-body-battleground"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar98",
@@ -2232,7 +2321,8 @@
       {
         "title": "怎么更好工作"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar99",
@@ -2256,7 +2346,8 @@
       {
         "title": "脚后跟"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar100",
@@ -2281,7 +2372,8 @@
       {
         "title": "天堂制造"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar101",
@@ -2310,7 +2402,8 @@
         "title": "献给上帝的爱",
         "url": "https://en.wikipedia.org/wiki/For_the_Love_of_God"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar102",
@@ -2331,7 +2424,8 @@
       {
         "title": "自己"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar103",
@@ -2353,7 +2447,8 @@
         "title": "迈拉",
         "url": "https://en.wikipedia.org/wiki/Myra_%28painting%29"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar104",
@@ -2377,7 +2472,8 @@
       {
         "title": "裸体"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar105",
@@ -2403,7 +2499,8 @@
         "title": "1963至1995年和我睡过的每一个人",
         "url": "https://en.wikipedia.org/wiki/Everyone_I_Have_Ever_Slept_With_1963%E2%80%931995"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar106",
@@ -2429,7 +2526,8 @@
         "title": "Hiropon",
         "url": "https://en.wikipedia.org/wiki/Hiropon_%28sculpture%29"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar107",
@@ -2455,7 +2553,8 @@
         "title": "摔破一个汉代陶罐",
         "url": "https://en.wikipedia.org/wiki/Dropping_a_Han_Dynasty_Urn"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar108",
@@ -2477,7 +2576,8 @@
         "title": "奥巴马「希望」海报",
         "url": "https://en.wikipedia.org/wiki/Barack_Obama_%22Hope%22_poster"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar109",
@@ -2498,7 +2598,8 @@
       {
         "title": "正在清扫的女佣"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar110",
@@ -2519,7 +2620,8 @@
       {
         "title": "第九时辰"
       }
-    ]
+    ],
+    "fromBook": true
   },
   {
     "id": "ar111",
@@ -2540,6 +2642,7 @@
         "title": "妈妈",
         "url": "https://en.wikipedia.org/wiki/Maman_%28sculpture%29"
       }
-    ]
+    ],
+    "fromBook": true
   }
 ]
