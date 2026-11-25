@@ -44,6 +44,7 @@ export default function MobileView({ movements, artists }) {
   const [stack, setStack] = useState([])   // 卡片里点名字会往下钻，可返回
   const [flash, setFlash] = useState(null)
   const [panel, setPanel] = useState(false)   // 右侧标签栏
+  const [zoom, setZoom] = useState(null)      // 简介里点了带图的词：{ src, title, page }
   const vRef = useRef(null)      // 上下滚动区（名字列和时间轴一起动）
   const hRef = useRef(null)      // 左右滚动区（只有时间轴）
   const rulerRef = useRef(null)  // 顶部年份刻度，跟着 hRef 横移
@@ -283,7 +284,7 @@ export default function MobileView({ movements, artists }) {
                 : <span />}
               <button className="m-sheet-btn close" onClick={close} aria-label="关闭">×</button>
             </div>
-            <div className="m-sheet-body" key={cur.data.id}>
+            <div className="m-sheet-body" key={cur.data.id} onClick={openImageLink}>
               <ViewStyleContext.Provider value={sMobile}>
                 {cur.type === 'movement'
                   ? <MovementView data={cur.data} artists={artists}
@@ -295,6 +296,35 @@ export default function MobileView({ movements, artists }) {
           </div>
         </>
       )}
+
+      {zoom && <ImageViewer {...zoom} onClose={() => setZoom(null)} />}
+    </div>
+  )
+
+  // 简介里带图的链接（<a data-img>）在页面里弹大图，不跳出去
+  function openImageLink(e) {
+    const a = e.target.closest('a[data-img]')
+    if (!a) return
+    e.preventDefault()
+    setZoom({ src: a.dataset.img, title: a.textContent, page: a.dataset.src })
+  }
+}
+
+function ImageViewer({ src, title, page, onClose }) {
+  const [state, setState] = useState('loading')
+  return (
+    <div className="m-viewer" onClick={onClose} role="dialog" aria-label={title}>
+      <button className="m-viewer-close" aria-label="关闭">×</button>
+      {state !== 'error' && (
+        <img src={src} alt={title} className={state === 'ok' ? 'on' : ''}
+          onLoad={() => setState('ok')} onError={() => setState('error')} />
+      )}
+      {state === 'loading' && <div className="m-viewer-msg">加载中…</div>}
+      {state === 'error' && <div className="m-viewer-msg">图片打不开</div>}
+      <div className="m-viewer-cap" onClick={e => e.stopPropagation()}>
+        <span>{title}</span>
+        {page && <a href={page} target="_blank" rel="noreferrer">来源 ↗&#xFE0E;</a>}
+      </div>
     </div>
   )
 }
