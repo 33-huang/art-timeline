@@ -25,11 +25,13 @@ React + Vite 的**竖向**艺术史时间轴。公开艺术史数据 + 私密个
   - `detail/Forms.jsx`(ColorPicker/RichTextArea/PosAfterSelector/MvSelector/MovementEditForm/ArtistEditForm)
   - `detail/Notes.jsx`(NoteSummary/NoteAccordion/ModuleEditor)
   - `detail/PublicViews.jsx`(MovementView/ArtistView)
+  - `detail/viewStyle.js`(`ViewStyleContext`:PublicViews 的样式;手机视图传入 `sMobile` 放大字号)
+- `src/components/MobileView.jsx` — **手机视图**(2026-11-25):屏宽 ≤700px 时 `App` 直接返回它。按世纪分组的只读列表(「流派和事件」「艺术家」两页,每行一条 1580–1990 细轴)+ 底部弹出卡片(复用 MovementView/ArtistView,卡片里点名字可往下钻、可返回)。**不含编辑、私密笔记、新增**。样式在 `index.css` 末尾 `.m-*`
 - `src/components/FilterBar.jsx`、`TokenSettings.jsx`
 - `src/index.css` — v2 浅色皮肤、CSS 变量、笔记 `.note-content`/`[contenteditable]` 样式
 
 ## 构建 / 推送 / 部署
-- Node 必须 nvm v22:`export PATH="/Users/dear33/.nvm/versions/node/v22.22.3/bin:$PATH"`(系统 node 20 有 ICU 冲突)
+- Node:大白那台必须 nvm v22(`export PATH="/Users/dear33/.nvm/versions/node/v22.22.3/bin:$PATH"`,系统 node 20 有 ICU 冲突);她这台(huangshan)系统 node v24 直接能 build
 - 构建:`npm run build` / 校验:`npm run lint`
 - 远程用 **SSH**(`git@github.com:33-huang/art-timeline.git`,不含 token)。**Claude sandbox 能直接 `git push`**(SSH 密钥 `~/.ssh/id_ed25519`)。改完直接 push,用户只刷新网页。
 - 部署:Cloudflare Workers 静态资源(`wrangler.jsonc` `assets.directory=./dist`),从 `main` push 后自动 build+deploy。线上:https://art-timeline.moncar8012.workers.dev/
@@ -50,6 +52,19 @@ React + Vite 的**竖向**艺术史时间轴。公开艺术史数据 + 私密个
 4. id 规则:流派 `mvNN`、艺术家 `arNN`,新增=现有最大数字+1 两位补零
 5. 孤儿艺术家(`movements` 为空)=独立先驱:单独成列、按 id 哈希自动配色
 6. 每步 build 通过再提交
+
+## 简介由 AI 撰写(2026-11-25 她定)
+维基百科式简介她觉得「说了跟没说一样」,改由 AI 按固定结构重写,条目加 `aiWritten: true`(卡片简介下方自动显示「简介由 AI 撰写」)。直接用 `gh api` 改 `data` 分支(先读最新、串行写、写完读回),不用改代码。
+- **流派**:一句话定位 → 为什么出现(反对什么、当时发生了什么)→ 发展阶段(每段带年份)→ 流派特征(看画时看什么:笔触、颜色、光、题材、构图)→ 代表人物和作品 → 后来影响了谁
+- **艺术家**:一句话定位 → 绘画特征(怎么认出他的画,和同流派的人比)→ 绘画的发展阶段(人生事件只写改变了画风的)。**不写「重要相关人」**(她删了)
+- 大事件(`isEvent`)照「工业革命」那条:起因 / 发生了什么 / 社会影响 / 对艺术的影响
+- HTML 格式:`<p><b>小标题</b></p><ul><li>…</li></ul>`,**不含换行符**(description 是 pre-wrap)。样板:印象派(mv10)、莫奈
+- 现状:只写了印象派、莫奈两条样稿,等她在手机上确认长度和写法后再批量写
+
+## 以后想做(还没做)
+- 对照用的「图层」:给大事件分组(如英国史),筛选栏开关、默认关;手机上按年份插进灰色小行。等她用一阵手机版再说
+- 界面颜色:她想改,定在手机版之后改(颜色集中在 `index.css` 的 CSS 变量)
+- 电脑版「新增条目」功能:不删、不再改进
 
 ## 核心常量
 `MIN_YEAR=1580, MAX_YEAR=1990, PX_PER_YEAR=4.5`;竖向 `yearToY(yr)=TOP_PAD+(yr-MIN_YEAR)*PX_PER_YEAR`(年→top)
