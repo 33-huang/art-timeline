@@ -498,8 +498,9 @@ body {
 @keyframes m-up   { from { transform: translateY(100%); } to { transform: none; } }
 @keyframes m-fade { from { opacity: 0; } to { opacity: 1; } }
 
-/* 简介里带图的词：下划线，点了看大图（手机在页面里弹出，电脑新标签页打开） */
-a[data-img] {
+/* 简介里带图的词：下划线，点了看大图（手机在页面里弹出，电脑新标签页打开）；
+   data-ext = 版权期内作品，链到美术馆官网作品页 */
+a[data-img], a[data-ext] {
   color: inherit;
   text-decoration: underline;
   text-decoration-color: var(--text-faint);
@@ -507,6 +508,7 @@ a[data-img] {
   text-decoration-thickness: 1px;
   cursor: zoom-in;
 }
+a[data-ext] { cursor: pointer; text-decoration-style: dashed; }
 .m-viewer {
   position: fixed;
   inset: 0;

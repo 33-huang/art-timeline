@@ -1,5 +1,7 @@
 import { useState, useContext } from 'react'
 import { ViewStyleContext } from './viewStyle'
+import { spanText } from '../../lib/dataStore'
+import ImageViewer from '../ImageViewer'
 
 // 简介由 AI 撰写时（数据里 aiWritten: true）在简介下方加一行小字
 function AiNote({ data }) {
@@ -29,7 +31,7 @@ function MovementWorkItem({ artist, work }) {
   if (imgError) return null
   return (
     <div style={s.workCard}>
-      <img src={work.imageUrl} alt={work.title} style={s.workThumbStatic} onError={() => setImgError(true)} />
+      <img src={work.thumbUrl || work.imageUrl} alt={work.title} style={s.workThumbStatic} onError={() => setImgError(true)} />
       <div style={s.workTitleQuote}>《{work.title}》</div>
       <div style={s.workArtistName}>{artist.zh}</div>
     </div>
@@ -50,7 +52,7 @@ export function MovementView({ data, artists, onPickArtist }) {
         <div style={s.titleCol}>
           <div style={s.title}>{data.zh}</div>
           <div style={s.meta}>
-            {data.start === data.end ? data.start : `${data.start}–${data.end}`}{data.region ? ` · ${data.region}` : ''}
+            {spanText(data.start, data.end, data.ongoing)}{data.region ? ` · ${data.region}` : ''}
             {reps.length > 0 && <><br />代表艺术家：{onPickArtist
               ? reps.map((a, i) => <span key={a.id}>{i > 0 && '、'}<span style={s.pickName} onClick={() => onPickArtist(a)}>{a.zh}</span></span>)
               : reps.map(a => a.zh).join('、')}</>}
@@ -92,21 +94,13 @@ function WorkItem({ work }) {
     return (
       <>
         <div style={s.workCard}>
-          <img src={work.imageUrl} alt={work.title} style={s.workThumb}
+          <img src={work.thumbUrl || work.imageUrl} alt={work.title} style={s.workThumb}
             onClick={() => setZoomed(true)} onError={() => setImgError(true)} />
           {work.url
             ? <a href={work.url} target="_blank" rel="noreferrer" style={s.workCaptionA}>{work.title} ↗</a>
             : <div style={s.workCaption}>{work.title}</div>}
         </div>
-        {zoomed && (
-          <>
-            <div onClick={() => setZoomed(false)} style={s.zoomOverlay} />
-            <div style={s.zoomBox}>
-              <button onClick={() => setZoomed(false)} style={s.zoomClose} aria-label="关闭">×</button>
-              <img src={work.imageUrl} alt={work.title} style={s.zoomImg} />
-            </div>
-          </>
-        )}
+        {zoomed && <ImageViewer src={work.imageUrl} title={work.title} page={work.imageSource} onClose={() => setZoomed(false)} />}
       </>
     )
   }
@@ -133,7 +127,7 @@ export function ArtistView({ data, movements, onPickMovement }) {
           <div style={s.title}>{data.zh}</div>
           {data.sub && <div style={s.sub}>{data.sub}</div>}
           <div style={s.meta}>
-            {data.birth}–{data.death}
+            {spanText(data.birth, data.death, data.alive)}
             {mvNames.length > 0 && <><br />所属流派：{onPickMovement
               ? mvList.map((m, i) => <span key={m.id}>{i > 0 && '、'}<span style={s.pickName} onClick={() => onPickMovement(m)}>{m.zh}</span></span>)
               : mvNames.join('、')}</>}
@@ -155,9 +149,21 @@ export function ArtistView({ data, movements, onPickMovement }) {
       {data.works?.length > 0 && (
         <div style={s.section}>
           <div style={s.sectionTitle}>代表作</div>
-          <div style={s.worksGrid}>
-            {data.works.map((w, i) => <WorkItem key={i} work={w} />)}
-          </div>
+          {/* 有图的排成缩略图，没图的另起一列文字链接，避免混排时下划线拉得很长 */}
+          {data.works.some(w => w.imageUrl) && (
+            <div style={s.worksGrid}>
+              {data.works.map((w, i) => w.imageUrl ? <WorkItem key={i} work={w} /> : null)}
+            </div>
+          )}
+          {data.works.some(w => !w.imageUrl) && (
+            <ul style={s.workTextList}>
+              {data.works.map((w, i) => w.imageUrl ? null : (
+                <li key={i} style={s.workTextItem}>
+                  {w.url ? <a href={w.url} target="_blank" rel="noreferrer" style={s.workTextA}>{w.title.trim()} ↗&#xFE0E;</a> : w.title.trim()}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
       <ImageCredit data={data} />

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 
 const MIN_YEAR    = 1580
-const MAX_YEAR    = 1990
+const MAX_YEAR    = 2030
 const PX_PER_YEAR = 4.5
 const TOP_PAD     = 20
 const BOTTOM_PAD  = 40
@@ -239,7 +239,7 @@ function buildRenderData(lo) {
 
       const hasSub = !!m.sub
       const mColor = m.isEvent ? EVENT_GRAY : m.color                       // 大事件名字用灰色
-      const mYr = m.start === m.end ? `${m.start}` : `${m.start}—${m.end}`  // 单年事件只显示一个年份
+      const mYr = m.ongoing ? `${m.start}—至今` : m.start === m.end ? `${m.start}` : `${m.start}—${m.end}`  // 单年事件只显示一个年份
       const { w: lblW, h: lblH } = estimateLblSize(m.zh, 10, hasSub, m.start, m.end)
       labelInfos.push({
         key: 'm:' + m.id, id: 'm:' + m.id, anchorX: barCx, anchorY: y1, lblW, lblH,
@@ -268,7 +268,7 @@ function buildRenderData(lo) {
           labelInfos.push({
             key: 'a:' + m.id + ':' + a.id, id: 'a:' + a.id, anchorX: artCx, anchorY: ay1, lblW, lblH,
             idealTop: ay1 - LABEL_GAP - lblH,
-            html: `<span class="lbl-name" style="color:${m.color}">${a.zh}</span>${hasSub ? `<span class="lbl-sub">${a.sub}</span>` : ''}<span class="lbl-yr">${a.birth}—${a.death}</span>`,
+            html: `<span class="lbl-name" style="color:${m.color}">${a.zh}</span>${hasSub ? `<span class="lbl-sub">${a.sub}</span>` : ''}<span class="lbl-yr">${a.birth}—${a.alive ? '至今' : a.death}</span>`,
             sel: { type: 'artist', data: a }, art: true, color: m.color,
           })
         })

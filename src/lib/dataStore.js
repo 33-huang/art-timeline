@@ -35,10 +35,29 @@ export async function loadData(filename) {
     c => c.charCodeAt(0),
   )
   const text = new TextDecoder('utf-8').decode(bytes)
-  return JSON.parse(text)
+  return fillOpenEnds(JSON.parse(text))
 }
 
+// 在世的人（alive，death 为 null）、延续到今天的流派（ongoing，end 为 null）：
+// 读进来时把空的年份临时填成今年，各处画图照常用；存回去时再还原成 null，今年不会写进数据。
+export const THIS_YEAR = new Date().getFullYear()
+function fillOpenEnds(list) {
+  if (!Array.isArray(list)) return list
+  return list.map(x => {
+    if (x.alive && x.death == null) return { ...x, death: THIS_YEAR }
+    if (x.ongoing && x.end == null) return { ...x, end: THIS_YEAR }
+    return x
+  })
+}
+function clearOpenEnds(list) {
+  if (!Array.isArray(list)) return list
+  return list.map(x => (x.alive ? { ...x, death: null } : x.ongoing ? { ...x, end: null } : x))
+}
+// 年份范围的显示：在世/延续到今天的写「至今」
+export const spanText = (start, end, open) => (open ? `${start}–至今` : start === end ? `${start}` : `${start}–${end}`)
+
 export async function saveData(filename, data) {
+  data = clearOpenEnds(data)
   // token 只在写入时从 localStorage 取，不进 React state / console.log / URL / 报错信息
   const token = localStorage.getItem(TOKEN_KEY)
   if (!token) throw new Error('请先在设置（⚙）中填写 GitHub token')

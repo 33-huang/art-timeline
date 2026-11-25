@@ -2,11 +2,13 @@ import { useState, useMemo, useEffect, useLayoutEffect, useRef } from 'react'
 import { MovementView, ArtistView } from './detail/PublicViews'
 import { ViewStyleContext } from './detail/viewStyle'
 import { sMobile } from './detail/styles'
+import ImageViewer from './ImageViewer'
+import { spanText } from '../lib/dataStore'
 
 // 手机视图：左列名字（横向滑动时固定）+ 右侧可横向滑动的时间轴。
 // 顶部一排多选标签决定显示哪些条目；点名字=时间轴滑到它的位置，点轴上那一行=弹出卡片。只读。
 const MIN_YEAR = 1580
-const MAX_YEAR = 2000
+const MAX_YEAR = 2030
 const PX = 3                 // 每年多少像素
 const PAD = 12               // 时间轴左右留白
 const AXIS_W = PAD + (MAX_YEAR - MIN_YEAR) * PX + 80   // 右边多留一点给年份文字
@@ -79,10 +81,10 @@ export default function MobileView({ movements, artists }) {
       const m = (a.movements ?? []).map(id => mvMap.get(id)).find(Boolean)
       return m ? m.color : autoColor(a.id)
     }
-    const mvRow = m => ({ key: m.id, kind: m.isEvent ? 'event' : 'mv', name: m.zh, start: m.start, end: m.end,
+    const mvRow = m => ({ key: m.id, kind: m.isEvent ? 'event' : 'mv', name: m.zh, start: m.start, end: m.end, open: !!m.ongoing,
       color: m.isEvent ? EVENT_GRAY : m.color, sel: { type: 'movement', data: m } })
     const personRow = (a, color, nested, keyPrefix = '') => ({ key: keyPrefix + a.id, kind: 'person', nested, name: a.zh,
-      start: a.birth, end: a.death, color, sel: { type: 'artist', data: a } })
+      start: a.birth, end: a.death, open: !!a.alive, color, sel: { type: 'artist', data: a } })
 
     if (!mvs.length || !people.length) {
       return [...mvs.map(mvRow), ...people.map(a => personRow(a, colorOf(a), false))]
@@ -238,7 +240,7 @@ export default function MobileView({ movements, artists }) {
                 className={`tl-name ${r.kind}${r.nested ? ' nested' : ''}`}>
                 <button className={'tl-name-btn' + (flash === r.key ? ' flash' : '')} onClick={() => locate(r)}>
                   {r.name}
-                  <span className="tl-name-yr">{r.start === r.end ? r.start : `${r.start}–${r.end}`}</span>
+                  <span className="tl-name-yr">{spanText(r.start, r.end, r.open)}</span>
                 </button>
               </div>
             ))}
@@ -308,25 +310,4 @@ export default function MobileView({ movements, artists }) {
     e.preventDefault()
     setZoom({ src: a.dataset.img, title: a.textContent, page: a.dataset.src })
   }
-}
-
-function ImageViewer({ src, title, page, onClose }) {
-  const [state, setState] = useState('loading')
-  return (
-    <div className="m-viewer" onClick={onClose} role="dialog" aria-label={title}>
-      <div className="m-viewer-box">
-        {state !== 'error' && (
-          <img src={src} alt={title} className={state === 'ok' ? 'on' : ''}
-            onLoad={() => setState('ok')} onError={() => setState('error')} />
-        )}
-        {state === 'ok' && <button className="m-viewer-close" aria-label="关闭">×</button>}
-        <div className="m-viewer-cap" onClick={e => e.stopPropagation()}>
-          <span>{title}</span>
-          {page && <a href={page} target="_blank" rel="noreferrer">来源 ↗&#xFE0E;</a>}
-        </div>
-      </div>
-      {state === 'loading' && <div className="m-viewer-msg">加载中…</div>}
-      {state === 'error' && <div className="m-viewer-msg">图片打不开</div>}
-    </div>
-  )
 }
