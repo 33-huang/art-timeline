@@ -314,17 +314,19 @@ function ImageViewer({ src, title, page, onClose }) {
   const [state, setState] = useState('loading')
   return (
     <div className="m-viewer" onClick={onClose} role="dialog" aria-label={title}>
-      <button className="m-viewer-close" aria-label="关闭">×</button>
-      {state !== 'error' && (
-        <img src={src} alt={title} className={state === 'ok' ? 'on' : ''}
-          onLoad={() => setState('ok')} onError={() => setState('error')} />
-      )}
+      <div className="m-viewer-box">
+        {state !== 'error' && (
+          <img src={src} alt={title} className={state === 'ok' ? 'on' : ''}
+            onLoad={() => setState('ok')} onError={() => setState('error')} />
+        )}
+        {state === 'ok' && <button className="m-viewer-close" aria-label="关闭">×</button>}
+        <div className="m-viewer-cap" onClick={e => e.stopPropagation()}>
+          <span>{title}</span>
+          {page && <a href={page} target="_blank" rel="noreferrer">来源 ↗&#xFE0E;</a>}
+        </div>
+      </div>
       {state === 'loading' && <div className="m-viewer-msg">加载中…</div>}
       {state === 'error' && <div className="m-viewer-msg">图片打不开</div>}
-      <div className="m-viewer-cap" onClick={e => e.stopPropagation()}>
-        <span>{title}</span>
-        {page && <a href={page} target="_blank" rel="noreferrer">来源 ↗&#xFE0E;</a>}
-      </div>
     </div>
   )
 }
