@@ -95,8 +95,7 @@
     "tags": [
       "艺术和设计"
     ],
-    "aiWritten": true,
-    "fromBook": true
+    "aiWritten": true
   },
   {
     "id": "mv09",
@@ -126,7 +125,9 @@
     "tags": [
       "艺术和设计"
     ],
-    "fromBook": true
+    "bookChapters": [
+      3
+    ]
   },
   {
     "id": "mv11",
@@ -140,7 +141,9 @@
       "艺术和设计"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      4
+    ]
   },
   {
     "id": "mv12",
@@ -205,7 +208,9 @@
       "艺术和设计"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      6
+    ]
   },
   {
     "id": "mv16",
@@ -222,7 +227,9 @@
       "艺术和设计"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      7
+    ]
   },
   {
     "id": "mv17",
@@ -255,7 +262,9 @@
       "艺术和设计"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      8
+    ]
   },
   {
     "id": "mv20",
@@ -272,7 +281,9 @@
       "艺术和设计"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      10
+    ]
   },
   {
     "id": "mv21",
@@ -289,7 +300,9 @@
       "艺术和设计"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      13
+    ]
   },
   {
     "id": "mv22",
@@ -306,7 +319,9 @@
       "艺术和设计"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      14
+    ]
   },
   {
     "id": "mv23",
@@ -323,7 +338,9 @@
       "艺术和设计"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      15
+    ]
   },
   {
     "id": "mv24",
@@ -337,7 +354,9 @@
       "艺术和设计"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      16
+    ]
   },
   {
     "id": "mv25",
@@ -354,7 +373,9 @@
       "艺术和设计"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      6
+    ]
   },
   {
     "id": "mv26",
@@ -371,7 +392,9 @@
       "艺术和设计"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      9
+    ]
   },
   {
     "id": "mv27",
@@ -389,7 +412,9 @@
       "艺术和设计"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      10
+    ]
   },
   {
     "id": "mv28",
@@ -424,7 +449,9 @@
       "艺术和设计"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      11
+    ]
   },
   {
     "id": "mv30",
@@ -491,7 +518,9 @@
       "建筑"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      12
+    ]
   },
   {
     "id": "mv34",
@@ -999,7 +1028,9 @@
     ],
     "aiWritten": true,
     "ongoing": true,
-    "fromBook": true
+    "bookChapters": [
+      17
+    ]
   },
   {
     "id": "mv70",
@@ -1014,7 +1045,9 @@
       "艺术和设计"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      17
+    ]
   },
   {
     "id": "mv71",
@@ -1029,7 +1062,9 @@
       "艺术和设计"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      17
+    ]
   },
   {
     "id": "mv72",
@@ -1045,7 +1080,9 @@
     ],
     "aiWritten": true,
     "ongoing": true,
-    "fromBook": true
+    "bookChapters": [
+      17
+    ]
   },
   {
     "id": "mv73",
@@ -1060,7 +1097,9 @@
       "艺术和设计"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      18
+    ]
   },
   {
     "id": "mv74",
@@ -1076,7 +1115,9 @@
       "建筑"
     ],
     "aiWritten": true,
-    "fromBook": true
+    "bookChapters": [
+      19
+    ]
   },
   {
     "id": "mv75",
@@ -1092,6 +1133,8 @@
     ],
     "aiWritten": true,
     "ongoing": true,
-    "fromBook": true
+    "bookChapters": [
+      20
+    ]
   }
 ]
