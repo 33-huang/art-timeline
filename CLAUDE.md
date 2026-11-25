@@ -28,7 +28,7 @@ React + Vite 的**竖向**艺术史时间轴。公开艺术史数据 + 私密个
   - `detail/Notes.jsx`(NoteSummary/NoteAccordion/ModuleEditor)
   - `detail/PublicViews.jsx`(MovementView/ArtistView)
   - `detail/viewStyle.js`(`ViewStyleContext`:PublicViews 的样式;手机视图传入 `sMobile` 放大字号)
-- `src/components/MobileView.jsx` — **手机视图**(2026-11-25 改版):屏宽 ≤700px 时 `App` 直接返回它。左列名字(sticky left)+ 右侧可横滑时间轴(1580–2000,3px/年),一个容器上下左右滚;点名字=横滑到它的位置并闪一下,点轴上那行=底部弹卡(复用 MovementView/ArtistView,可往下钻、可返回)。顶部**标签多选**决定显示什么,选择存 localStorage `m_tags`;流派和人物同时显示时人物缩进在自己流派下(多流派的人两处都出现,没流派/流派没显示的人按出生年插在中间),否则全部按开始年排。长人名只显示姓。**只读**:不含编辑、私密笔记、新增。样式在 `index.css` 末尾 `.m-*`/`.tl-*`
+- `src/components/MobileView.jsx` — **手机视图**(2026-11-25 改版):屏宽 ≤700px 时 `App` 直接返回它。上下滚动区 `.tl-v` 里放名字列 + 只能横滑的 `.tl-h`(1580–2000,3px/年),两个方向分开滚(**别改回一个容器双向滚 + sticky**,iPhone 上会晃);年份刻度在滚动区外、用 transform 跟着 `.tl-h` 横移;点名字=横滑到它的位置并闪一下,点轴上那行=底部弹卡(复用 MovementView/ArtistView,可往下钻、可返回)。顶部**标签多选**决定显示什么,选择存 localStorage `m_tags`;流派和人物同时显示时人物缩进在自己流派下(多流派的人两处都出现,没流派/流派没显示的人按出生年插在中间),否则全部按开始年排。长人名只显示姓。**只读**:不含编辑、私密笔记、新增。样式在 `index.css` 末尾 `.m-*`/`.tl-*`
 - `src/components/FilterBar.jsx`、`TokenSettings.jsx`
 - `src/index.css` — v2 浅色皮肤、CSS 变量、笔记 `.note-content`/`[contenteditable]` 样式
 
