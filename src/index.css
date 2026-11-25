@@ -234,7 +234,9 @@ body {
 
 /* ══ 手机视图（屏宽 ≤ 700px 时 App 换成 MobileView）═══════════ */
 .m-app {
-  height: 100dvh;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   background: var(--bg);
@@ -259,54 +261,28 @@ body {
 }
 .m-chips button.on { background: var(--text); color: var(--bg); border-color: var(--text); }
 
-/* 时间轴：一个容器上下左右都能滚；名字列 sticky left，年份刻度 sticky top */
-.tl-scroll {
-  flex: 1;
-  min-height: 0;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-  padding-bottom: calc(env(safe-area-inset-bottom) + 24px);
-}
-.tl-ruler, .tl-row { display: flex; width: max-content; }
+/* 时间轴：上下滚动区(.tl-v)里放「名字列 + 左右滚动区(.tl-h)」。
+   两个方向分开滚，手指斜着滑也只走一个方向；名字列不参与横滑，所以不会晃。
+   年份刻度在滚动区外面，横向靠 JS 跟着 .tl-h 平移。 */
 .tl-ruler {
-  position: sticky;
-  top: 0;
-  z-index: 3;
+  flex-shrink: 0;
+  display: flex;
   height: 26px;
   background: var(--bg);
   border-bottom: 1px solid var(--axis-border);
 }
-.tl-name {
-  position: sticky;
-  left: 0;
-  z-index: 2;
+.tl-corner {
   flex-shrink: 0;
   width: 108px;
   display: flex;
   align-items: center;
-  padding: 0 8px 0 14px;
-  border: none;
+  padding-left: 14px;
+  font-size: 11px;
+  color: var(--text-faint);
   border-right: 1px solid var(--axis-border);
-  background: var(--bg);
-  color: var(--text);
-  font-family: inherit;
-  font-size: 12.5px;
-  text-align: left;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
 }
-.tl-corner { z-index: 4; font-size: 11px; color: var(--text-faint); cursor: default; }
-.tl-name-txt {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-height: 1.25;
-  word-break: break-all;
-}
-.tl-row.person .tl-name-txt { -webkit-line-clamp: 1; white-space: nowrap; text-overflow: ellipsis; display: block; }
-.tl-axis { position: relative; flex-shrink: 0; }
+.tl-ruler-clip { flex: 1; min-width: 0; overflow: hidden; position: relative; }
+.tl-axis { position: relative; height: 100%; will-change: transform; }
 .tl-tick {
   position: absolute;
   bottom: 5px;
@@ -317,14 +293,60 @@ body {
 }
 .tl-tick.major { color: var(--text-muted); font-weight: 500; }
 
-.tl-row { height: 38px; }
-.tl-row.person { height: 24px; }
-.tl-row.person .tl-name { font-size: 11.5px; color: var(--text-muted); }
-.tl-row.nested .tl-name { padding-left: 26px; }
-.tl-row.event .tl-name { color: var(--text-muted); }
+.tl-v {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 24px);
+}
+.tl-body { display: flex; }
+.tl-names { flex-shrink: 0; width: 108px; border-right: 1px solid var(--axis-border); }
+.tl-h {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
+}
+
+/* 名字列和时间轴的行高必须一致 */
+.tl-name, .tl-track { height: 38px; }
+.tl-name.person, .tl-track.person { height: 24px; }
+
+.tl-name {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 8px 0 14px;
+  border: none;
+  border-bottom: 1px solid var(--grid-minor);
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 12.5px;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.tl-name.person { font-size: 11.5px; color: var(--text-muted); }
+.tl-name.nested { padding-left: 26px; }
+.tl-name.event { color: var(--text-muted); }
+.tl-name-txt {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.25;
+  word-break: break-all;
+}
+.tl-name.person .tl-name-txt { -webkit-line-clamp: 1; white-space: nowrap; text-overflow: ellipsis; display: block; }
+
 .tl-track {
   position: relative;
-  flex-shrink: 0;
   cursor: pointer;
   border-bottom: 1px solid var(--grid-minor);
   /* 每 50 年一条竖线，第一条在 1600 */
@@ -341,8 +363,8 @@ body {
   transform: translateY(-50%);
   border-radius: 3px;
 }
-.tl-row.person .tl-bar { height: 6px; opacity: .55; }
-.tl-row.event .tl-bar { height: 8px; opacity: .8; }
+.tl-track.person .tl-bar { height: 6px; opacity: .55; }
+.tl-track.event .tl-bar { height: 8px; opacity: .8; }
 .tl-yr {
   position: absolute;
   top: 50%;
@@ -353,10 +375,8 @@ body {
   pointer-events: none;
   font-variant-numeric: tabular-nums;
 }
-.tl-row.flash .tl-name, .tl-row.flash .tl-track { animation: tl-flash 1.2s ease; }
-@keyframes tl-flash { 0%, 40% { background-color: var(--grid-major); } 100% { background-color: transparent; } }
-.tl-row.flash .tl-name { animation-name: tl-flash-name; }
-@keyframes tl-flash-name { 0%, 40% { background-color: var(--axis-border); } 100% { background-color: var(--bg); } }
+.tl-name.flash, .tl-track.flash { animation: tl-flash 1.2s ease; }
+@keyframes tl-flash { 0%, 40% { background-color: var(--axis-border); } }
 .tl-empty { padding: 24px 16px; font-size: 13px; color: var(--text-faint); }
 
 .m-overlay {

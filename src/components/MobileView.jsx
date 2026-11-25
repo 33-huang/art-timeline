@@ -40,7 +40,9 @@ export default function MobileView({ movements, artists }) {
   const [on, setOn] = useState(loadTags)
   const [stack, setStack] = useState([])   // 卡片里点名字会往下钻，可返回
   const [flash, setFlash] = useState(null)
-  const scrollRef = useRef(null)
+  const vRef = useRef(null)      // 上下滚动区（名字列和时间轴一起动）
+  const hRef = useRef(null)      // 左右滚动区（只有时间轴）
+  const rulerRef = useRef(null)  // 顶部年份刻度，跟着 hRef 横移
 
   useEffect(() => {
     try { localStorage.setItem(LS_KEY, JSON.stringify([...on])) } catch { /* 忽略 */ }
@@ -95,7 +97,7 @@ export default function MobileView({ movements, artists }) {
 
   // 切换标签后，时间轴跳到最早的那一条，避免前面一大段空白
   useEffect(() => {
-    const el = scrollRef.current
+    const el = hRef.current
     if (!el || !rows.length) return
     const first = Math.min(...rows.map(r => r.start))
     el.scrollTo({ left: Math.max(0, xOf(first) - 16) })
@@ -103,7 +105,9 @@ export default function MobileView({ movements, artists }) {
 
   // 打开卡片时禁止背后的列表跟着滚
   useEffect(() => {
-    if (scrollRef.current) scrollRef.current.style.overflow = stack.length ? 'hidden' : 'auto'
+    const v = stack.length ? 'hidden' : 'auto'
+    if (vRef.current) vRef.current.style.overflowY = v
+    if (hRef.current) hRef.current.style.overflowX = v
   }, [stack.length])
 
   function toggle(t) {
@@ -116,10 +120,9 @@ export default function MobileView({ movements, artists }) {
 
   // 点名字：时间轴滑到这一条（短的居中，长的让开头露出来），并闪一下高亮
   function locate(r) {
-    const el = scrollRef.current
+    const el = hRef.current
     if (!el) return
-    const nameW = el.querySelector('.tl-name')?.offsetWidth ?? 0
-    const viewW = el.clientWidth - nameW
+    const viewW = el.clientWidth
     const x1 = xOf(r.start), x2 = xOf(r.end)
     const target = x2 - x1 < viewW - 40 ? (x1 + x2) / 2 - viewW / 2 : x1 - 24
     el.scrollTo({ left: Math.max(0, target), behavior: 'smooth' })
@@ -132,6 +135,11 @@ export default function MobileView({ movements, artists }) {
   const back = () => setStack(st => st.slice(0, -1))
   const close = () => setStack([])
   const cur = stack[stack.length - 1]
+
+  // 时间轴横滑时，刻度跟着移动（刻度在滚动区外面，所以不会跟着上下动）
+  const syncRuler = e => {
+    if (rulerRef.current) rulerRef.current.style.transform = `translateX(${-e.currentTarget.scrollLeft}px)`
+  }
 
   const ticks = []
   for (let y = 1600; y <= MAX_YEAR; y += 50) ticks.push(y)
@@ -147,34 +155,45 @@ export default function MobileView({ movements, artists }) {
         </div>
       </header>
 
-      <div className="tl-scroll" ref={scrollRef}>
-        <div className="tl-ruler">
-          <div className="tl-name tl-corner">{rows.length} 条</div>
-          <div className="tl-axis" style={{ width: AXIS_W }}>
+      <div className="tl-ruler">
+        <div className="tl-corner">{rows.length} 条</div>
+        <div className="tl-ruler-clip">
+          <div className="tl-axis" ref={rulerRef} style={{ width: AXIS_W }}>
             {ticks.map(y => (
               <span key={y} className={'tl-tick' + (y % 100 === 0 ? ' major' : '')} style={{ left: xOf(y) }}>{y}</span>
             ))}
           </div>
         </div>
+      </div>
 
+      <div className="tl-v" ref={vRef}>
         {rows.length === 0 && <div className="tl-empty">没有选中的标签，点上面的标签来显示</div>}
-
-        {rows.map(r => {
-          const x1 = xOf(r.start)
-          const w = Math.max(xOf(r.end) - x1, r.kind === 'event' ? 6 : 4)
-          const yrs = r.start === r.end ? `${r.start}` : `${r.start}–${r.end}`
-          return (
-            <div key={r.key} className={`tl-row ${r.kind}${r.nested ? ' nested' : ''}${flash === r.key ? ' flash' : ''}`}>
-              <button className="tl-name" onClick={() => locate(r)}>
+        <div className="tl-body">
+          <div className="tl-names">
+            {rows.map(r => (
+              <button key={r.key} onClick={() => locate(r)}
+                className={`tl-name ${r.kind}${r.nested ? ' nested' : ''}${flash === r.key ? ' flash' : ''}`}>
                 <span className="tl-name-txt">{r.name}</span>
               </button>
-              <div className="tl-track" style={{ width: AXIS_W }} onClick={() => open(r.sel)}>
-                <span className="tl-bar" style={{ left: x1, width: w, background: r.color }} />
-                <span className="tl-yr" style={{ left: x1 + w + 5 }}>{yrs}</span>
-              </div>
+            ))}
+          </div>
+          <div className="tl-h" ref={hRef} onScroll={syncRuler}>
+            <div style={{ width: AXIS_W }}>
+              {rows.map(r => {
+                const x1 = xOf(r.start)
+                const w = Math.max(xOf(r.end) - x1, r.kind === 'event' ? 6 : 4)
+                const yrs = r.start === r.end ? `${r.start}` : `${r.start}–${r.end}`
+                return (
+                  <div key={r.key} onClick={() => open(r.sel)}
+                    className={`tl-track ${r.kind}${flash === r.key ? ' flash' : ''}`}>
+                    <span className="tl-bar" style={{ left: x1, width: w, background: r.color }} />
+                    <span className="tl-yr" style={{ left: x1 + w + 5 }}>{yrs}</span>
+                  </div>
+                )
+              })}
             </div>
-          )
-        })}
+          </div>
+        </div>
       </div>
 
       {cur && (
