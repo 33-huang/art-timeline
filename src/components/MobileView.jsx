@@ -147,7 +147,7 @@ export default function MobileView({ movements, artists }) {
   return (
     <div className="m-app">
       <header className="m-header">
-        <div className="m-title">艺术时间轴</div>
+        <div className="m-title">知识时间轴</div>
         <div className="m-chips">
           {allTags.map(t => (
             <button key={t} className={on.has(t) ? 'on' : ''} onClick={() => toggle(t)}>{t}</button>
