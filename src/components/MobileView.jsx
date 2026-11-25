@@ -20,11 +20,16 @@ function autoColor(id) {
 const xOf = yr => PAD + (Math.min(Math.max(yr, MIN_YEAR), MAX_YEAR) - MIN_YEAR) * PX
 
 // 标签：数据里没有 tags 的条目按类型给默认值
-const TAG_ORDER = ['艺术和设计', '建筑', '历史大事件', '艺术家', '其他人物和团体']
-const DEFAULT_ON = ['艺术和设计', '历史大事件']
+// 侧栏里分两组显示；数据里新出现的标签（如以后的「英国史」）放进「其他」
+const TAG_GROUPS = [
+  { title: '流派和事件', tags: ['艺术和设计', '建筑', '历史大事件', '艺术相关事件'] },
+  { title: '人物', tags: ['艺术家', '其他人物和团体'] },
+]
+const TAG_ORDER = TAG_GROUPS.flatMap(g => g.tags)
+const DEFAULT_ON = ['艺术和设计']
 const mvTags = m => m.tags?.length ? m.tags : [m.isEvent ? '历史大事件' : '艺术和设计']
 const artTags = a => a.tags?.length ? a.tags : ['艺术家']
-const LS_KEY = 'm_tags'
+const LS_KEY = 'm_tags_v2'   // 2026-11-25 默认改为只选「艺术和设计」，换 key 让旧的选择失效
 // 人名太长时只显示最后一段（姓），全名在卡片里看
 const shortName = n => (n.length > 6 && n.includes('·') ? n.split('·').pop() : n)
 
@@ -40,6 +45,7 @@ export default function MobileView({ movements, artists }) {
   const [on, setOn] = useState(loadTags)
   const [stack, setStack] = useState([])   // 卡片里点名字会往下钻，可返回
   const [flash, setFlash] = useState(null)
+  const [panel, setPanel] = useState(false)   // 右侧标签栏
   const vRef = useRef(null)      // 上下滚动区（名字列和时间轴一起动）
   const hRef = useRef(null)      // 左右滚动区（只有时间轴）
   const rulerRef = useRef(null)  // 顶部年份刻度，跟着 hRef 横移
@@ -48,13 +54,16 @@ export default function MobileView({ movements, artists }) {
     try { localStorage.setItem(LS_KEY, JSON.stringify([...on])) } catch { /* 忽略 */ }
   }, [on])
 
-  // 所有标签：固定顺序在前，数据里新出现的（如以后的「英国史」）接在后面
-  const allTags = useMemo(() => {
-    const seen = new Set(TAG_ORDER)
-    const extra = []
-    for (const m of movements) for (const t of mvTags(m)) if (!seen.has(t)) { seen.add(t); extra.push(t) }
-    for (const a of artists) for (const t of artTags(a)) if (!seen.has(t)) { seen.add(t); extra.push(t) }
-    return [...TAG_ORDER, ...extra]
+  // 侧栏分组：固定分组在前，数据里新出现的标签放进「其他」；每个标签带条目数
+  const tagGroups = useMemo(() => {
+    const count = new Map()
+    const add = t => count.set(t, (count.get(t) || 0) + 1)
+    for (const m of movements) mvTags(m).forEach(add)
+    for (const a of artists) artTags(a).forEach(add)
+    const known = new Set(TAG_ORDER)
+    const extra = [...count.keys()].filter(t => !known.has(t))
+    const groups = extra.length ? [...TAG_GROUPS, { title: '其他', tags: extra }] : TAG_GROUPS
+    return groups.map(g => ({ ...g, tags: g.tags.map(t => ({ t, n: count.get(t) || 0 })) }))
   }, [movements, artists])
 
   const mvMap = useMemo(() => new Map(movements.map(m => [m.id, m])), [movements])
@@ -147,11 +156,18 @@ export default function MobileView({ movements, artists }) {
   return (
     <div className="m-app">
       <header className="m-header">
-        <div className="m-title">知识时间轴</div>
-        <div className="m-chips">
-          {allTags.map(t => (
-            <button key={t} className={on.has(t) ? 'on' : ''} onClick={() => toggle(t)}>{t}</button>
-          ))}
+        <div className="m-head-row">
+          <div className="m-title">知识时间轴</div>
+          <button className="m-tag-btn" onClick={() => setPanel(true)} aria-label="选择标签">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z" />
+              <circle cx="7.5" cy="7.5" r="1.5" />
+            </svg>
+            <span className="m-tag-count">{on.size}</span>
+          </button>
+        </div>
+        <div className="m-on" onClick={() => setPanel(true)}>
+          {on.size ? TAG_ORDER.concat([...on].filter(t => !TAG_ORDER.includes(t))).filter(t => on.has(t)).join('、') : '未选标签'}
         </div>
       </header>
 
@@ -195,6 +211,34 @@ export default function MobileView({ movements, artists }) {
           </div>
         </div>
       </div>
+
+      {panel && (
+        <>
+          <div className="m-overlay" onClick={() => setPanel(false)} />
+          <aside className="m-panel" role="dialog" aria-label="标签">
+            <div className="m-panel-head">
+              <span>显示哪些</span>
+              <button className="m-sheet-btn close" onClick={() => setPanel(false)} aria-label="关闭">×</button>
+            </div>
+            <div className="m-panel-body">
+              {tagGroups.map(g => (
+                <section key={g.title}>
+                  <h3>{g.title}</h3>
+                  {g.tags.map(({ t, n }) => (
+                    <button key={t} className={'m-panel-item' + (on.has(t) ? ' on' : '')} onClick={() => toggle(t)}>
+                      <span className="m-check" aria-hidden="true">
+                        {on.has(t) && <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 6.2 5 8.6l4.5-5" /></svg>}
+                      </span>
+                      <span className="m-panel-name">{t}</span>
+                      <span className="m-panel-n">{n}</span>
+                    </button>
+                  ))}
+                </section>
+              ))}
+            </div>
+          </aside>
+        </>
+      )}
 
       {cur && (
         <>
